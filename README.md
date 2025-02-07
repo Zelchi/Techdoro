@@ -1,50 +1,24 @@
-# React + TypeScript + Vite
+# Techdoro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Techdoro é uma aplicação de Pomodoro desenvolvida utilizando Electron. A técnica Pomodoro é uma metodologia de gerenciamento de tempo que ajuda a aumentar a produtividade, dividindo o trabalho em intervalos de tempo, geralmente de 25 minutos, separados por breves intervalos.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Temporizador Pomodoro personalizável
+- Notificações de início e fim de intervalo
+- Interface amigável e intuitiva
+- Suporte multiplataforma
 
-## Expanding the ESLint configuration
+## Tecnologias Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Electron
+- HTML/CSS
+- JavaScript
 
-- Configure the top-level `parserOptions` property like this:
+## Como Usar
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone o repositório
+2. Instale as dependências com `npm install`
+3. Inicie a aplicação com `npm start`
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Aproveite e aumente sua produtividade com Techdoro!
