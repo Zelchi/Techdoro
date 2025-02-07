@@ -1,14 +1,18 @@
-import { app, BrowserWindow, nativeTheme } from 'electron';
-import path from 'path';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const createWindow = () => {
-    nativeTheme.themeSource = 'dark';
     const win = new BrowserWindow({
         icon: './src/assets/iconTechDoro.png',
-        frame: false,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join('.', 'preload.js'),
+            contextIsolation: true,
+            sandbox: false,
+            preload: path.join(__dirname, 'preload.cjs')
         },
         width: 800,
         height: 600,
@@ -16,6 +20,21 @@ const createWindow = () => {
         minHeight: 300,
     });
     win.loadURL('http://localhost:5173');
+
+    ipcMain.on('minimizar', () => {
+        console.log('minimizar');
+        win.minimize();
+    })
+    
+    ipcMain.on('maximizar', () => {
+        console.log('maximizar');
+        win.maximize();
+    })
+    
+    ipcMain.on('fechar', () => {
+        console.log('fechar');
+        win.close();
+    })
 };
 
 app.whenReady().then(() => {

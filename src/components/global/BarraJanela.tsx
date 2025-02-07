@@ -38,28 +38,46 @@ const Caixa2 = styled.div`
 `
 
 const Minimizar = styled.div`
+    -webkit-app-region: no-drag;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 2px solid black;
     background-color: #9c9c9c;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #bcff92;
+    }
 `
 
 const Maximizar = styled.div`
+    -webkit-app-region: no-drag;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 2px solid black;
     background-color: #6c6c6c;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #77b2ff;
+    }
 `
 
 const Fechar = styled.div`
+    -webkit-app-region: no-drag;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 2px solid black;
     background-color: #3c3c3c;
     margin-right: 5px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #ff5454;
+    }
 `
 
 export const BarraJanela = () => {
@@ -71,9 +89,9 @@ export const BarraJanela = () => {
             <Titulo>Techdoro</Titulo>
 
             <Caixa2>
-                <Minimizar />
-                <Maximizar />
-                <Fechar />
+                <Minimizar onClick={() => { window.api('minimizar') }} />
+                <Maximizar onClick={() => { window.api('maximizar') }} />
+                <Fechar onClick={() => { window.api('fechar') }} />
             </Caixa2>
         </Barra>
     )
