@@ -28,14 +28,14 @@ const createWindow = () => {
     ipcMain.on('minimizar', () => {
         win.minimize();
     })
-    
+
     ipcMain.on('maximizar', () => {
         win.isMaximized() ? win.unmaximize() : win.maximize();
     })
-    
+
     ipcMain.on('fechar', () => {
         win.close();
-    })
+    });
 };
 
 app.whenReady().then(() => {
