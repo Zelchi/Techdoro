@@ -20,8 +20,8 @@ const Barra = styled.div`
     align-items: center;
     width: 100%;
     background-color: #3c3c3c;
-    border: 2px solid white;
-    border-radius: 10px 10px 0 0; 
+    border: 2px inset white;
+    /* border-radius: 10px 10px 0 0;  */
 `
 
 const Caixa = styled.div`
@@ -35,9 +35,9 @@ const Caixa = styled.div`
     padding: 10px;
     width: 100%;
 
-    border: 2px solid white;
+    border: 2px inset white;
     border-top: none;
-    border-radius: 0 0 10px 10px;
+    /* border-radius: 0 0 10px 10px; */
 `
 
 const Buttons = styled.div`
@@ -57,8 +57,8 @@ const Button = styled.button`
     color: white;
     padding: 10px;
     border: none;
-    border-radius: 5px;
-    border: 2px solid white;
+    /* border-radius: 5px; */
+    border: 2px inset white;
     
     &:hover {
         cursor: pointer;
@@ -70,6 +70,11 @@ const Reset = styled(SlReload)`
     width: 30px;
     height: 30px;
     padding: 5px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #9c9c9c;
+    }
 `
 
 const Branco = styled.button`

@@ -42,8 +42,8 @@ const Minimizar = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 2px solid black;
-    background-color: #9c9c9c;
+    border: 2px inset black;
+    background-color: #3f5e2c;
 
     &:hover {
         cursor: pointer;
@@ -70,8 +70,8 @@ const Fechar = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 2px solid black;
-    background-color: #3c3c3c;
+    border: 2px inset black;
+    background-color: #682323;
     margin-right: 3px;
 
     &:hover {

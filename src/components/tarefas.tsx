@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import click from '../sound/click.mp3';
+import seta from '../assets/seta.png';
 
 const Container = styled.div`
     display: flex;
@@ -18,16 +20,16 @@ const Barra = styled.div`
     align-items: center;
     background-color: #3c3c3c;
     width: 100%;
-    border: 2px solid white;
-    border-radius: 10px 10px 0 0;
+    border: 2px inset white;
+    /* border-radius: 10px 10px 0 0; */
 `;
 
 const Caixa = styled.div`
     width: 100%;
     height: 100%;
     background-color: #6c6c6c;
-    border: 2px solid white;
-    border-radius: 0 0 10px 10px;
+    border: 2px inset white;
+    /* border-radius: 0 0 10px 10px; */
     padding: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -44,7 +46,7 @@ const Form = styled.form`
 
     background-color: #6c6c6c;
     
-    border: 2px solid white;
+    border: 2px inset white;
     border-top: none;
     border-bottom: none;
 `;
@@ -52,21 +54,29 @@ const Form = styled.form`
 const Input = styled.input`
     font-family: 'Press Start 2P';
     padding: 10px;
-    border: 2px solid white;
+    border: 2px inset white;
     background-color: #9c9c9c;
-    border-radius: 5px 0 0 5px;
+    /* border-radius: 5px 0 0 5px; */
     width: 100%;
     height: 40px;
     outline: none;
 `;
 
 const Button = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
     height: 40px;
     background-color: #3c3c3c;
+    background-image: url(${seta});
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
     color: white;
-    border: 2px solid white;
+    border: 2px inset white;
     border-left: none;
-    border-radius: 0px 5px 5px 0px;
+    /* border-radius: 0px 5px 5px 0px; */
     padding-left: 40px;
 
     &:hover {
@@ -139,11 +149,8 @@ const TaskButton = styled.button`
     padding: 10px;
     background-color: #3c3c3c;
     color: white;
-    border: 2px solid white;
-    border-radius: 5px;
-    transition: all 0.5s;
+    /* border-radius: 2px; */
     
-
     &:hover {
         cursor: pointer;
         background-color: #970000;
@@ -161,6 +168,14 @@ export const Tarefas = () => {
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);
     const [tarefaEditada, setTarefaEditada] = useState('');
+    const audioClick = useRef<HTMLAudioElement>(null)
+
+    const playClick = (): void => {
+        if (audioClick.current) {
+            audioClick.current.volume = 0.3;
+            audioClick.current?.play()
+        }
+    }
 
     useEffect(() => {
         const tarefasSalvas = localStorage.getItem('tarefas');
@@ -209,7 +224,7 @@ export const Tarefas = () => {
         return textWidth > containerWidth;
     };
 
-    return (
+    return (<>
         <Container>
             <Barra><p>Tarefas</p></Barra>
             <Form onSubmit={adicionarTarefa}>
@@ -218,7 +233,7 @@ export const Tarefas = () => {
                     value={novaTarefa}
                     onChange={(e) => setNovaTarefa(e.target.value)}
                 />
-                <Button type="submit" />
+                <Button type="submit" onClick={() => novaTarefa && playClick()}/>
             </Form>
             <Caixa>
                 {tarefas.map((tarefa, index) => (
@@ -230,14 +245,15 @@ export const Tarefas = () => {
                                 onChange={(e) => setTarefaEditada(e.target.value)}
                                 onBlur={() => salvarEdicao(index)}
                                 onKeyDown={(e) => e.key === 'Enter' && salvarEdicao(index)}
+                                onClick={playClick}
                             />
-                            <Button onClick={() => salvarEdicao(index)} />
+                            <Button onClick={() => { salvarEdicao(index); playClick() }} />
                         </>) : (
                             <TaskTextContainer>
                                 <TaskText
                                     completed={tarefa.completed}
                                     shouldScroll={shouldScroll(tarefa.text, 210)}
-                                    onClick={() => editarTarefa(index)}
+                                    onClick={() => { editarTarefa(index); playClick() }}
                                 >
                                     {tarefa.text}
                                 </TaskText>
@@ -249,13 +265,17 @@ export const Tarefas = () => {
                                     type="checkbox"
                                     checked={tarefa.completed}
                                     onChange={() => marcarTarefa(index)}
+                                    onClick={playClick}
                                 />
-                                <TaskButton onClick={() => apagarTarefa(index)}></TaskButton>
+                                <TaskButton onClick={() => { apagarTarefa(index); playClick() }}></TaskButton>
                             </Botoes>
                         )}
                     </TaskContainer>
                 ))}
             </Caixa>
         </Container>
-    );
+        <audio ref={audioClick}>
+            <source src={click} type="audio/mpeg" />
+        </audio>
+    </>);
 };
