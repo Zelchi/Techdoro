@@ -7,15 +7,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+  height: 100vh;
+  width: 100vw;
 `
 
 const App = () => {
   return (
     <Container>
       <BarraJanela />
-      <Pomodoro/>
-      <Tarefas/>
+      <Pomodoro />
+      <Tarefas />
     </Container>
   )
 }
