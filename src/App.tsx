@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Pomodoro } from './components/relogio'
 import { BarraJanela } from './components/global/BarraJanela'
+import { Tarefas } from './components/tarefas'
 
 const Container = styled.div`
   display: flex;
@@ -13,7 +14,8 @@ const App = () => {
   return (
     <Container>
       <BarraJanela />
-      <Pomodoro></Pomodoro>
+      <Pomodoro/>
+      <Tarefas/>
     </Container>
   )
 }
