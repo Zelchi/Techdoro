@@ -238,10 +238,7 @@ export const Tarefas = () => {
         const context = canvas.getContext('2d');
         if (context) {
             context.font = '16px "Press Start 2P"';
-            console.log(context)
             const textWidth = context.measureText(text).width + 100;
-            console.log(textWidth)
-            console.log(containerWidth)
             return textWidth > containerWidth;
         }
         return false;
