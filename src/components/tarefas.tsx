@@ -123,6 +123,7 @@ const scrollText = keyframes`
 
 const TaskText = styled.p<{ completed: boolean; shouldScroll: boolean }>`
     font-family: 'Press Start 2P';
+    font-size: 16px;
     display: inline-block;
     text-overflow: ellipsis;
     width: 100%;
@@ -131,7 +132,6 @@ const TaskText = styled.p<{ completed: boolean; shouldScroll: boolean }>`
     white-space: nowrap;
     ${({ shouldScroll }) => shouldScroll && css`
         animation: ${scrollText} 10s linear infinite;
-        animation-delay: 2s;
     `}
 `;
 
@@ -237,8 +237,11 @@ export const Tarefas = () => {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         if (context) {
-            context.font = '16px Press Start 2P';
-            const textWidth = context.measureText(text).width * 3 + 80;
+            context.font = '16px "Press Start 2P"';
+            console.log(context)
+            const textWidth = context.measureText(text).width + 100;
+            console.log(textWidth)
+            console.log(containerWidth)
             return textWidth > containerWidth;
         }
         return false;
