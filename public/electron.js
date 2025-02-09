@@ -23,7 +23,7 @@ const createWindow = () => {
         minHeight: 600,
         resizable: false,
     });
-    win.loadFile('./index.html');
+    win.loadFile(path.join(__dirname, 'index.html'));
 
     ipcMain.on('minimizar', () => {
         win.minimize();

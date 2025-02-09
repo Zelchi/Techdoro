@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import click from '../sound/click.mp3';
-import seta from '../assets/seta.png';
+import seta from '../assets/seta2.png';
 
 const Container = styled.div`
     display: flex;
