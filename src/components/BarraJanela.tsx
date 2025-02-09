@@ -56,7 +56,7 @@ const Maximizar = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 2px solid black;
+    border: 2px inset black;
     background-color: #244064;
 
     &:hover {
