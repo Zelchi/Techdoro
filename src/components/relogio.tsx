@@ -114,7 +114,7 @@ export const Pomodoro = () => {
         }, 1000)
 
         return () => clearInterval(intervalo)
-    }, [isRunning]);
+    }, [isRunning, tempo]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
