@@ -21,7 +21,6 @@ const Barra = styled.div`
     background-color: #3c3c3c;
     width: 100%;
     border: 2px inset white;
-    /* border-radius: 10px 10px 0 0; */
 `;
 
 const Caixa = styled.div`
@@ -29,7 +28,6 @@ const Caixa = styled.div`
     height: 100%;
     background-color: #6c6c6c;
     border: 2px inset white;
-    /* border-radius: 0 0 10px 10px; */
     padding: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -56,7 +54,6 @@ const Input = styled.input`
     padding: 10px;
     border: 2px inset white;
     background-color: #9c9c9c;
-    /* border-radius: 5px 0 0 5px; */
     width: 100%;
     height: 40px;
     outline: none;
@@ -76,7 +73,6 @@ const Button = styled.button`
     color: white;
     border: 2px inset white;
     border-left: none;
-    /* border-radius: 0px 5px 5px 0px; */
     padding-left: 40px;
 
     &:hover {
@@ -117,11 +113,11 @@ const TaskTextContainer = styled.div`
 `;
 
 const scrollText = keyframes`
-    0% {
-        transform: translateX(-100%);
+     0%, 10% {
+        transform: translateX(0);
     }
-    100% {
-        transform: translateX(100%);
+    90%, 95% {
+        transform: translateX(-100%);
     }
 `;
 
@@ -129,11 +125,13 @@ const TaskText = styled.p<{ completed: boolean; shouldScroll: boolean }>`
     font-family: 'Press Start 2P';
     display: inline-block;
     text-overflow: ellipsis;
+    width: 100%;
     text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
     cursor: pointer;
     white-space: nowrap;
     ${({ shouldScroll }) => shouldScroll && css`
         animation: ${scrollText} 10s linear infinite;
+        animation-delay: 2s;
     `}
 `;
 
@@ -149,7 +147,6 @@ const TaskButton = styled.button`
     padding: 10px;
     background-color: #3c3c3c;
     color: white;
-    /* border-radius: 2px; */
     
     &:hover {
         cursor: pointer;
@@ -168,14 +165,16 @@ export const Tarefas = () => {
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);
     const [tarefaEditada, setTarefaEditada] = useState('');
-    const audioClick = useRef<HTMLAudioElement>(null)
+    const [containerWidth, setContainerWidth] = useState(0);
+    const audioClick = useRef<HTMLAudioElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const playClick = (): void => {
         if (audioClick.current) {
             audioClick.current.volume = 0.3;
-            audioClick.current?.play()
+            audioClick.current?.play();
         }
-    }
+    };
 
     useEffect(() => {
         const tarefasSalvas = localStorage.getItem('tarefas');
@@ -187,6 +186,21 @@ export const Tarefas = () => {
     useEffect(() => {
         localStorage.setItem('tarefas', JSON.stringify(tarefas));
     }, [tarefas]);
+
+    useEffect(() => {
+        const updateContainerWidth = () => {
+            if (containerRef.current) {
+                setContainerWidth(containerRef.current.offsetWidth);
+            }
+        };
+
+        updateContainerWidth();
+        window.addEventListener('resize', updateContainerWidth);
+
+        return () => {
+            window.removeEventListener('resize', updateContainerWidth);
+        };
+    }, []);
 
     const adicionarTarefa = (e: React.FormEvent) => {
         e.preventDefault();
@@ -219,9 +233,15 @@ export const Tarefas = () => {
         setTarefaEditada('');
     };
 
-    const shouldScroll = (text: string, containerWidth: number) => {
-        const textWidth = text.length * 8;
-        return textWidth > containerWidth;
+    const shouldScroll = (text: string) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (context) {
+            context.font = '16px Press Start 2P';
+            const textWidth = context.measureText(text).width * 3 + 80;
+            return textWidth > containerWidth;
+        }
+        return false;
     };
 
     return (<>
@@ -233,9 +253,9 @@ export const Tarefas = () => {
                     value={novaTarefa}
                     onChange={(e) => setNovaTarefa(e.target.value)}
                 />
-                <Button type="submit" onClick={() => novaTarefa && playClick()}/>
+                <Button type="submit" onClick={() => novaTarefa && playClick()} />
             </Form>
-            <Caixa>
+            <Caixa ref={containerRef}>
                 {tarefas.map((tarefa, index) => (
                     <TaskContainer key={index}>
                         {editando === index ? (<>
@@ -252,7 +272,7 @@ export const Tarefas = () => {
                             <TaskTextContainer>
                                 <TaskText
                                     completed={tarefa.completed}
-                                    shouldScroll={shouldScroll(tarefa.text, 210)}
+                                    shouldScroll={shouldScroll(tarefa.text)}
                                     onClick={() => { editarTarefa(index); playClick() }}
                                 >
                                     {tarefa.text}

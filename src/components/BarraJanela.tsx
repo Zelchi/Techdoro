@@ -51,19 +51,19 @@ const Minimizar = styled.div`
     }
 `
 
-// const Maximizar = styled.div`
-//     -webkit-app-region: no-drag;
-//     width: 20px;
-//     height: 20px;
-//     border-radius: 50%;
-//     border: 2px solid black;
-//     background-color: #6c6c6c;
+const Maximizar = styled.div`
+    -webkit-app-region: no-drag;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid black;
+    background-color: #6c6c6c;
 
-//     &:hover {
-//         cursor: pointer;
-//         background-color: #77b2ff;
-//     }
-// `
+    &:hover {
+        cursor: pointer;
+        background-color: #77b2ff;
+    }
+`
 
 const Fechar = styled.div`
     -webkit-app-region: no-drag;
@@ -90,7 +90,7 @@ export const BarraJanela = () => {
 
             <Caixa2>
                 <Minimizar onClick={() => { window.api('minimizar') }} />
-                {/* <Maximizar onClick={() => { window.api('maximizar') }} /> */}
+                <Maximizar onClick={() => { window.api('maximizar') }} />
                 <Fechar onClick={() => { window.api('fechar') }} />
             </Caixa2>
         </Barra>

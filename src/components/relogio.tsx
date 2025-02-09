@@ -21,7 +21,6 @@ const Barra = styled.div`
     width: 100%;
     background-color: #3c3c3c;
     border: 2px inset white;
-    /* border-radius: 10px 10px 0 0;  */
 `
 
 const Caixa = styled.div`
@@ -37,7 +36,6 @@ const Caixa = styled.div`
 
     border: 2px inset white;
     border-top: none;
-    /* border-radius: 0 0 10px 10px; */
 `
 
 const Buttons = styled.div`
@@ -57,7 +55,6 @@ const Button = styled.button`
     color: white;
     padding: 10px;
     border: none;
-    /* border-radius: 5px; */
     border: 2px inset white;
     
     &:hover {
@@ -91,20 +88,27 @@ export const Pomodoro = () => {
     const [isRunning, setIsRunning] = useState(false)
     const audioClick = useRef<HTMLAudioElement>(null)
     const audioAlarme = useRef<HTMLAudioElement>(null)
+    const startTimeRef = useRef<number | null>(null)
 
     useEffect(() => {
         if (!isRunning) return;
 
+        startTimeRef.current = Date.now();
+
         const intervalo = setInterval(() => {
-            setTime((time) => {
-                if (time === 0) {
+            setTime(() => {
+                const elapsed = Math.floor((Date.now() - (startTimeRef.current || 0)) / 1000);
+                const newTime = tempo - elapsed;
+
+                if (newTime <= 0) {
                     clearInterval(intervalo)
                     playAlarme()
-                    setIsRunning(!isRunning);
+                    setIsRunning(false);
                     setTime(tempo);
-                    return time
+                    return 0;
                 }
-                return time - 1
+
+                return newTime;
             })
         }, 1000)
 
