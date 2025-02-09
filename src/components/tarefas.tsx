@@ -109,7 +109,7 @@ const TaskTextContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: start;
-    width: 400px;
+    width: 100%;
     height: 30px;
     margin-right: 5px;
     overflow: hidden;
@@ -220,7 +220,7 @@ export const Tarefas = () => {
     };
 
     const shouldScroll = (text: string, containerWidth: number) => {
-        const textWidth = text.length * 12;
+        const textWidth = text.length * 8;
         return textWidth > containerWidth;
     };
 

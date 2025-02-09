@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Pomodoro } from './components/relogio'
-import { BarraJanela } from './components/global/BarraJanela'
+import { BarraJanela } from './components/BarraJanela'
 import { Tarefas } from './components/tarefas'
 
 const Container = styled.div`

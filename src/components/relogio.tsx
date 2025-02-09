@@ -85,7 +85,9 @@ const Branco = styled.button`
 `
 
 export const Pomodoro = () => {
-    const [time, setTime] = useState(25 * 60)
+    const tempo = 25 * 60
+
+    const [time, setTime] = useState(tempo)
     const [isRunning, setIsRunning] = useState(false)
     const audioClick = useRef<HTMLAudioElement>(null)
     const audioAlarme = useRef<HTMLAudioElement>(null)
@@ -99,7 +101,7 @@ export const Pomodoro = () => {
                     clearInterval(intervalo)
                     playAlarme()
                     setIsRunning(!isRunning);
-                    setTime(25 * 60);
+                    setTime(tempo);
                     return time
                 }
                 return time - 1
@@ -137,11 +139,11 @@ export const Pomodoro = () => {
                 <Caixa>
                     <h1>{formatTime(time)}</h1>
                     <Buttons>
-                        {!isRunning && !(time === (25 * 60)) && <Branco />}
+                        {!isRunning && !(time === (tempo)) && <Branco />}
                         <Button onClick={() => { setIsRunning(!isRunning); playClick() }} >
                             {isRunning ? 'Pause' : 'Start'}
                         </Button>
-                        {!isRunning && !(time === (25 * 60)) && (<Reset onClick={() => { setTime(25 * 60); playClick() }}></Reset>)}
+                        {!isRunning && !(time === (tempo)) && (<Reset onClick={() => { setTime(tempo); playClick() }}></Reset>)}
                     </Buttons>
                 </Caixa>
             </Container>
