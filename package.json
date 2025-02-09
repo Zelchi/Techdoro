@@ -1,15 +1,38 @@
 {
-  "name": "vite-project",
+  "name": "techdoro",
   "private": true,
   "version": "0.0.0",
-  "main": "main.js",
+  "main": "dist/electron.js",
+  "author": {
+    "name": "Zelchi",
+    "email": "tininhakawaii@gmail.com"
+  },
+  "description": "Techdoro é um Pomodoro retro!",
+  "homepage": "./",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron": "electron ."
+    "electron": "electron .",
+    "electron:win": "npm run build && electron-builder --w",
+    "electron:mac": "npm run build && electron-builder --m",
+    "electron:linux": "npm run build && electron-builder --l"
+  },
+  "build": {
+    "appId": "com.techdoro",
+    "productName": "Techdoro",
+    "win": {
+      "icon": "dist/iconTechDoro.png"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    }
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -23,12 +46,14 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "electron": "^34.1.1",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.22.0",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vite-plugin-singlefile": "^2.1.0"
   }
 }

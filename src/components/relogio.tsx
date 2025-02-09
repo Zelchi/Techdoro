@@ -53,7 +53,7 @@ const Buttons = styled.div`
 const Button = styled.button`
     font-family: 'Press Start 2P';
     font-size: 15px;
-    background-color: #6c6c6c;
+    background-color: #3c3c3c;
     color: white;
     padding: 10px;
     border: none;
@@ -62,7 +62,7 @@ const Button = styled.button`
     
     &:hover {
         cursor: pointer;
-        background-color: #9c9c9c;
+        background-color: #4c4c4c;
     }
 `
 
@@ -73,7 +73,7 @@ const Reset = styled(SlReload)`
 
     &:hover {
         cursor: pointer;
-        background-color: #9c9c9c;
+        background-color: #4c4c4c;
     }
 `
 

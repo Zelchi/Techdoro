@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import icon from '../../assets/iconTechDoro.png'
+import icon from '../../../public/iconTechDoro.png'
 
 const Barra = styled.div`
     width: 100vw;

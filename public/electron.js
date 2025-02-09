@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        icon: './public/iconTechDoro.png',
+        icon: 'iconTechDoro.png',
         frame: false,
         webPreferences: {
             nodeIntegration: true,
@@ -23,7 +23,7 @@ const createWindow = () => {
         minHeight: 600,
         resizable: false,
     });
-    win.loadURL('http://localhost:5173');
+    win.loadFile('./index.html');
 
     ipcMain.on('minimizar', () => {
         win.minimize();
