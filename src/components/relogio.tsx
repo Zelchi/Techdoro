@@ -54,7 +54,6 @@ const Button = styled.button`
     background-color: #3c3c3c;
     color: white;
     padding: 10px;
-    border: none;
     border: 2px inset white;
     
     &:hover {
@@ -66,6 +65,8 @@ const Button = styled.button`
 const Reset = styled(SlReload)`
     width: 30px;
     height: 30px;
+    background-color: #3c3c3c;
+    border: 2px inset white;
     padding: 5px;
 
     &:hover {
