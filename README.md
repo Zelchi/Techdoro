@@ -8,21 +8,19 @@ Techdoro é uma aplicação de Pomodoro desenvolvida utilizando Electron. A téc
 
 ## Funcionalidades
 
-- Temporizador Pomodoro personalizável
-- Notificações de início e fim de intervalo
+- Temporizador Pomodoro 25 minutos.
+- Sem notificações chatas, apenas uma musica relaxante!
 - Interface amigável e intuitiva
-- Suporte multiplataforma
+- Suporte multiplataforma: Win, Mac, Linux.
 
 ## Tecnologias Utilizadas
 
 - Electron
-- HTML/CSS
-- JavaScript
+- React
+- TypeScript
 
 ## Como Usar
 
 1. Clone o repositório
 2. Instale as dependências com `npm install`
-3. Inicie a aplicação com `npm start`
-
-Aproveite e aumente sua produtividade com Techdoro!
+3. Compile a aplicação com `npm run electron:win`
