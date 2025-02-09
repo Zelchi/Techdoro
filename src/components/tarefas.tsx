@@ -9,9 +9,10 @@ const Container = styled.div`
     align-items: center;
     justify-content: start;
     margin-top: 3%;
+    margin-bottom: 3%;
 
     width: 90%;
-    height: 62%;
+    height: 100%;
 `;
 
 const Barra = styled.div`
