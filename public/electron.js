@@ -21,7 +21,7 @@ const createWindow = () => {
         maxHeight: 600,
         minWidth: 500,
         minHeight: 600,
-        resizable: false,
+        resizable: true,
     });
     win.loadFile(path.join(__dirname, 'index.html'));
 
