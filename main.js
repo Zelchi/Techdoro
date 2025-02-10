@@ -17,11 +17,8 @@ const createWindow = () => {
         },
         width: 500,
         height: 600,
-        maxWidth: 500,
-        maxHeight: 600,
         minWidth: 500,
         minHeight: 600,
-        resizable: false,
     });
     win.loadURL('http://localhost:5173');
 

@@ -27,8 +27,7 @@
       "icon": "dist/iconTechDoro.png"
     },
     "files": [
-      "dist/**/*",
-      "node_modules/**/*"
+      "dist/**/*"
     ],
     "directories": {
       "buildResources": "public"

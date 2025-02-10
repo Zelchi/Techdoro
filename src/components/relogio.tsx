@@ -10,7 +10,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: start;
     
-    margin-top: 3%;
+    margin-top: 15px;
     width: 90%;
 `
 

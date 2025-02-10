@@ -8,11 +8,11 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    margin-top: 3%;
-    margin-bottom: 3%;
-
+    margin-top: 15px;
     width: 90%;
-    height: 100%;
+    margin-bottom: 15px;
+    flex: 1;
+    overflow: hidden;
 `;
 
 const Barra = styled.div`
