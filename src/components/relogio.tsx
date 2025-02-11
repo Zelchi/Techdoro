@@ -94,7 +94,11 @@ export const Pomodoro = () => {
     useEffect(() => {
         if (!isRunning) return;
 
-        startTimeRef.current = Date.now();
+        if (startTimeRef.current === null) {
+            startTimeRef.current = Date.now();
+        } else {
+            startTimeRef.current = Date.now() - (tempo - time) * 1000;
+        }
 
         const intervalo = setInterval(() => {
             setTime(() => {
