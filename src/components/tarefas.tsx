@@ -123,16 +123,16 @@ const scrollText = keyframes`
     }
 `;
 
-const TaskText = styled.p<{ completed: boolean; shouldScroll: boolean }>`
+const TaskText = styled.p<{ $completed: boolean; $shouldScroll: boolean }>`
     font-family: 'Press Start 2P';
     font-size: 16px;
     display: inline-block;
     text-overflow: ellipsis;
     width: 100%;
-    text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
+    text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
     cursor: pointer;
     white-space: nowrap;
-    ${({ shouldScroll }) => shouldScroll && css`
+    ${({ $shouldScroll }) => $shouldScroll && css`
         animation: ${scrollText} 10s linear infinite;
     `}
 `;
@@ -276,8 +276,8 @@ export const Tarefas = () => {
                         </>) : (
                             <TaskTextContainer>
                                 <TaskText
-                                    completed={tarefa.completed}
-                                    shouldScroll={shouldScroll(tarefa.text)}
+                                    $completed={tarefa.completed}
+                                    $shouldScroll={shouldScroll(tarefa.text)}
                                     onClick={() => { editarTarefa(index); playClick() }}
                                 >
                                     {tarefa.text}

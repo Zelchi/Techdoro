@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { LongClock } from './relogios/LongClock'
 import { ShortClock } from './relogios/ShortClock'
 import { useState } from 'react'
+import { useSound } from '../hooks/useSound'
 
 const Container = styled.div`
     display: flex;
@@ -45,9 +46,24 @@ const Volume = styled.div`
 `
 
 export const Pomodoro = () => {
-    const [clock, setClock] = useState(true);
 
-    const troca = () => {
+    const timeMaxLong = 25 * 60
+    const timeMaxShort = 5 * 60
+
+    const [clock, setClock] = useState(true);
+    const [longClock, setLongClock] = useState({
+        timeMax: timeMaxLong,
+        timeNow: 25 * 60,
+    });
+    const [shortClock, setShortClock] = useState({
+        timeNow: timeMaxShort,
+        timeMax: 5 * 60,
+    });
+
+    const [playClick] = useSound('click');
+    const [playAlarm] = useSound("alarm");
+
+    const swap = () => {
         setClock(!clock)
     }
 
@@ -55,12 +71,14 @@ export const Pomodoro = () => {
         <Container>
             <Barra>
                 <Caixa>
-                    <ButtonSwitch onClick={troca} $clicked={clock} />
+                    <ButtonSwitch onClick={() => { swap(); playClick() }} $clicked={clock} />
                 </Caixa>
                 <p>Relógio</p>
                 <Volume></Volume>
             </Barra>
-            {clock ? <LongClock /> : <ShortClock />}
+            {clock ?
+                <LongClock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} /> :
+                <ShortClock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} />}
         </Container>
     )
 }

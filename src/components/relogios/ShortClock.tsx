@@ -62,44 +62,34 @@ const Branco = styled.button`
     border: none;
 `
 
-export const ShortClock = () => {
-    const tempo = 5 * 60
+export const ShortClock = ({ swap, alarm, clock }: propClock) => {
+    const { time: { timeMax, timeNow }, setTime } = clock;
 
-    const [time, setTime] = useState(tempo)
     const [isRunning, setIsRunning] = useState(false)
     const [playClick] = useSound("click");
-    const [playAlarm] = useSound("alarm");
 
     const startTimeRef = useRef<number | null>(null)
 
     useEffect(() => {
         if (!isRunning) return;
 
-        if (startTimeRef.current === null) {
-            startTimeRef.current = Date.now();
-        } else {
-            startTimeRef.current = Date.now() - (tempo - time) * 1000;
-        }
+        startTimeRef.current = Date.now() - (timeMax - timeNow) * 1000;
 
         const intervalo = setInterval(() => {
-            setTime(() => {
-                const elapsed = Math.floor((Date.now() - (startTimeRef.current || 0)) / 1000);
-                const newTime = tempo - elapsed;
+            const elapsed = Math.floor((Date.now() - (startTimeRef.current || 0)) / 1000);
+            const newTime = timeMax - elapsed;
 
-                if (newTime <= 0) {
-                    clearInterval(intervalo)
-                    playAlarm()
-                    setIsRunning(false);
-                    setTime(tempo);
-                    return 0;
-                }
+            if (newTime <= 0) {
+                alarm();
+                swap();
+            } else {
+                setTime({ timeNow: newTime, timeMax });
+            }
 
-                return newTime;
-            })
         }, 1000)
 
         return () => clearInterval(intervalo)
-    }, [isRunning, tempo, time, playAlarm]);
+    }, [isRunning, timeMax, timeNow, alarm, swap, setTime]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -109,13 +99,13 @@ export const ShortClock = () => {
 
     return (<>
         <Caixa>
-            <h1>{formatTime(time)}</h1>
+            <h1>{formatTime(timeNow)}</h1>
             <Buttons onClick={playClick}>
-                {!isRunning && !(time === (tempo)) && <Branco />}
+                {!isRunning && !(timeNow === (timeMax)) && <Branco />}
                 <Button onClick={() => { setIsRunning(!isRunning) }} >
                     {isRunning ? 'Pause' : 'Start'}
                 </Button>
-                {!isRunning && !(time === (tempo)) && (<Reset onClick={() => { setTime(tempo) }}></Reset>)}
+                {!isRunning && !(timeNow === timeMax) && (<Reset onClick={() => clock.setTime({ timeNow: timeMax, timeMax })}></Reset>)}
             </Buttons>
         </Caixa>
     </>)
