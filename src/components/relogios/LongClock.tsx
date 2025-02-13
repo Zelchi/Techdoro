@@ -1,27 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
-import { SlReload } from "react-icons/sl";
-import click from '../sound/click.mp3'
-import alarme from '../sound/alarme.mp3'
-import styled from 'styled-components'
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: start;
-    
-    margin-top: 15px;
-    width: 90%;
-`
-
-const Barra = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background-color: #3c3c3c;
-    border: 2px inset white;
-`
+import { useState, useRef, useEffect } from 'react'
+import { useSound } from '../../hooks/useSound'
+import { SlReload } from 'react-icons/sl'
+import styled from "styled-components"
 
 const Caixa = styled.div`
     font-family: 'Press Start 2P';
@@ -29,7 +9,7 @@ const Caixa = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    background-color: #5c5c5c;
+    background-color: #5c2c2c;
 
     padding: 10px;
     width: 100%;
@@ -82,13 +62,14 @@ const Branco = styled.button`
     border: none;
 `
 
-export const Pomodoro = () => {
+export const LongClock = () => {
     const tempo = 25 * 60
 
     const [time, setTime] = useState(tempo)
     const [isRunning, setIsRunning] = useState(false)
-    const audioClick = useRef<HTMLAudioElement>(null)
-    const audioAlarme = useRef<HTMLAudioElement>(null)
+    const [playClick] = useSound("click");
+    const [playAlarm] = useSound("alarm");
+
     const startTimeRef = useRef<number | null>(null)
 
     useEffect(() => {
@@ -107,7 +88,7 @@ export const Pomodoro = () => {
 
                 if (newTime <= 0) {
                     clearInterval(intervalo)
-                    playAlarme()
+                    playAlarm()
                     setIsRunning(false);
                     setTime(tempo);
                     return 0;
@@ -118,7 +99,7 @@ export const Pomodoro = () => {
         }, 1000)
 
         return () => clearInterval(intervalo)
-    }, [isRunning, tempo, time]);
+    }, [isRunning, tempo, time, playAlarm]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -126,42 +107,16 @@ export const Pomodoro = () => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
     }
 
-    const playClick = (): void => {
-        if (audioClick.current) {
-            audioClick.current.volume = 0.3;
-            audioClick.current?.play()
-        }
-    }
-
-    const playAlarme = (): void => {
-        if (audioAlarme.current) {
-            audioAlarme.current.volume = 0.3;
-            audioAlarme.current?.play()
-        }
-    }
-
-    return (
-        <>
-
-            <Container>
-                <Barra><p>Relógio</p></Barra>
-                <Caixa>
-                    <h1>{formatTime(time)}</h1>
-                    <Buttons>
-                        {!isRunning && !(time === (tempo)) && <Branco />}
-                        <Button onClick={() => { setIsRunning(!isRunning); playClick() }} >
-                            {isRunning ? 'Pause' : 'Start'}
-                        </Button>
-                        {!isRunning && !(time === (tempo)) && (<Reset onClick={() => { setTime(tempo); playClick() }}></Reset>)}
-                    </Buttons>
-                </Caixa>
-            </Container>
-            <audio ref={audioClick}>
-                <source src={click} type="audio/mpeg" />
-            </audio>
-            <audio ref={audioAlarme}>
-                <source src={alarme} type="audio/mpeg" />
-            </audio>
-        </>
-    )
+    return (<>
+        <Caixa>
+            <h1>{formatTime(time)}</h1>
+            <Buttons onClick={playClick}>
+                {!isRunning && !(time === (tempo)) && <Branco />}
+                <Button onClick={() => { setIsRunning(!isRunning) }} >
+                    {isRunning ? 'Pause' : 'Start'}
+                </Button>
+                {!isRunning && !(time === (tempo)) && (<Reset onClick={() => { setTime(tempo) }}></Reset>)}
+            </Buttons>
+        </Caixa>
+    </>)
 }

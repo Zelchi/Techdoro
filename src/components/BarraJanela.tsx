@@ -14,8 +14,8 @@ const Barra = styled.div`
 `
 
 const Icon = styled.img`
-    width: 20px;
     height: 20px;
+    width: 20px;
     margin-left: 5px;
 `
 
@@ -98,7 +98,7 @@ export const BarraJanela = () => {
 
                 <Maximizar onClick={() => { window.api('maximizar') }} />
 
-                <Fechar onClick={() => { window.api('fechar') }} />
+                <Fechar onClick={() => { window.api('fechar'); }} />
             </Caixa2>
         </Barra>
     )

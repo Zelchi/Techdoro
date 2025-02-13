@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
-import click from '../sound/click.mp3';
+import { CheckBox } from './tarefas/CheckBox'
 import seta from '../assets/seta2.png';
+import { useSound } from '../hooks/useSound';
 
 const Container = styled.div`
     display: flex;
@@ -144,38 +145,32 @@ const Botoes = styled.div`
     gap: 5px;
 `;
 
-const TaskButton = styled.button`
+const DeleteButton = styled.button`
     padding: 10px;
     background-color: #3c3c3c;
-    color: white;
+    border: 2px outset gray;
     
     &:hover {
         cursor: pointer;
-        background-color: #970000;
+        background-color: #6C1C1C;
+        border: 2px outset gray;
     }
 `;
 
-const Checkbox = styled.input`
-    height: 25px;
-    width: 25px;
-    cursor: pointer;
-`;
+export type Tarefa = {
+    id: number,
+    text: string,
+    completed: boolean,
+}
 
 export const Tarefas = () => {
-    const [tarefas, setTarefas] = useState<{ text: string, completed: boolean }[]>([]);
+    const [tarefas, setTarefas] = useState<Tarefa[]>([]);
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);
     const [tarefaEditada, setTarefaEditada] = useState('');
     const [containerWidth, setContainerWidth] = useState(0);
-    const audioClick = useRef<HTMLAudioElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-
-    const playClick = (): void => {
-        if (audioClick.current) {
-            audioClick.current.volume = 0.3;
-            audioClick.current?.play();
-        }
-    };
+    const [playClick] = useSound("click");
 
     useEffect(() => {
         const tarefasSalvas = localStorage.getItem('tarefas');
@@ -203,10 +198,18 @@ export const Tarefas = () => {
         };
     }, []);
 
+    const geraProximoId = () => {
+        if (tarefas.length) {
+            return tarefas[tarefas.length - 1].id + 1;
+        } else {
+            return 1;
+        }
+    }
+
     const adicionarTarefa = (e: React.FormEvent) => {
         e.preventDefault();
         if (novaTarefa.trim() !== '') {
-            setTarefas([...tarefas, { text: novaTarefa, completed: false }]);
+            setTarefas([...tarefas, { id: geraProximoId(), text: novaTarefa, completed: false }]);
             setNovaTarefa('');
         }
     };
@@ -215,10 +218,12 @@ export const Tarefas = () => {
         setTarefas(tarefas.filter((_, i) => i !== index));
     };
 
-    const marcarTarefa = (index: number) => {
-        const novasTarefas = [...tarefas];
-        novasTarefas[index].completed = !novasTarefas[index].completed;
-        setTarefas(novasTarefas);
+    const marcarTarefa = (marcada: Tarefa) => {
+        const tarefa = tarefas.find((tarefa) => tarefa.id === marcada.id)
+        if (tarefa) {
+            tarefa.completed = !tarefa.completed;
+            setTarefas([...tarefas]);
+        }
     };
 
     const editarTarefa = (index: number) => {
@@ -245,7 +250,7 @@ export const Tarefas = () => {
         return false;
     };
 
-    return (<>
+    return (
         <Container>
             <Barra><p>Tarefas</p></Barra>
             <Form onSubmit={adicionarTarefa}>
@@ -264,9 +269,8 @@ export const Tarefas = () => {
                                 type="text"
                                 value={tarefaEditada}
                                 onChange={(e) => setTarefaEditada(e.target.value)}
-                                onBlur={() => salvarEdicao(index)}
-                                onKeyDown={(e) => e.key === 'Enter' && salvarEdicao(index)}
-                                onClick={playClick}
+                                onBlur={() => { salvarEdicao(index); playClick() }}
+                                onKeyDown={(e) => { if (e.key === 'Enter') { salvarEdicao(index); playClick(); } }}
                             />
                             <Button onClick={() => { salvarEdicao(index); playClick() }} />
                         </>) : (
@@ -281,22 +285,17 @@ export const Tarefas = () => {
                             </TaskTextContainer>
                         )}
                         {editando !== index && (
-                            <Botoes>
-                                <Checkbox
-                                    type="checkbox"
-                                    checked={tarefa.completed}
-                                    onChange={() => marcarTarefa(index)}
-                                    onClick={playClick}
+                            <Botoes onClick={playClick}>
+                                <CheckBox
+                                    tarefa={tarefa}
+                                    marcarTarefa={marcarTarefa}
                                 />
-                                <TaskButton onClick={() => { apagarTarefa(index); playClick() }}></TaskButton>
+                                <DeleteButton onClick={() => { apagarTarefa(index); playClick() }}></DeleteButton>
                             </Botoes>
                         )}
                     </TaskContainer>
                 ))}
             </Caixa>
         </Container>
-        <audio ref={audioClick}>
-            <source src={click} type="audio/mpeg" />
-        </audio>
-    </>);
+    );
 };
