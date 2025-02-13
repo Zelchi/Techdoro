@@ -80,6 +80,7 @@ export const ShortClock = ({ swap, alarm, clock }: propClock) => {
             const newTime = timeMax - elapsed;
 
             if (newTime <= 0) {
+                setTime({ timeNow: timeMax, timeMax });
                 alarm();
                 swap();
             } else {

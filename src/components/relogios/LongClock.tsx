@@ -63,7 +63,6 @@ const Branco = styled.button`
 `
 
 export const LongClock = ({ swap, alarm, clock }: propClock) => {
-
     const { time: { timeMax, timeNow }, setTime } = clock;
 
     const [isRunning, setIsRunning] = useState(false)
@@ -81,6 +80,7 @@ export const LongClock = ({ swap, alarm, clock }: propClock) => {
             const newTime = timeMax - elapsed;
 
             if (newTime <= 0) {
+                setTime({ timeNow: timeMax, timeMax });
                 alarm();
                 swap();
             } else {
