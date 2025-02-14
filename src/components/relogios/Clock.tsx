@@ -1,21 +1,27 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSound } from '../../hooks/useSound'
 import { SlReload } from 'react-icons/sl'
+import { BarraProgresso } from './BarraProgresso'
 import styled from "styled-components"
 
-const Caixa = styled.div`
+const Caixa = styled.div<{ $type: boolean }>`
     font-family: 'Press Start 2P';
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    background-color: #5c2c2c;
+    background-color: ${({ $type }) => $type ? "#5c2c2c" : "#1C2C2C"};
 
     padding: 10px;
     width: 100%;
 
     border: 2px inset white;
     border-top: none;
+`
+
+const Hora = styled.div`
+    width: auto;
+    height: auto;
 `
 
 const Buttons = styled.div`
@@ -62,7 +68,7 @@ const Branco = styled.button`
     border: none;
 `
 
-export const LongClock = ({ swap, alarm, clock }: propClock) => {
+export const Clock = ({ swap, alarm, clock, type }: propClock) => {
     const { time: { timeMax, timeNow }, setTime } = clock;
 
     const [isRunning, setIsRunning] = useState(false)
@@ -92,6 +98,10 @@ export const LongClock = ({ swap, alarm, clock }: propClock) => {
         return () => clearInterval(intervalo)
     }, [isRunning, timeMax, timeNow, alarm, swap, setTime]);
 
+    useEffect(() => {
+        setIsRunning(false);
+    }, [type])
+
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
         const seconds = time % 60
@@ -99,8 +109,11 @@ export const LongClock = ({ swap, alarm, clock }: propClock) => {
     }
 
     return (<>
-        <Caixa>
-            <h1>{formatTime(timeNow)}</h1>
+        <Caixa $type={type}>
+            <Hora>
+                <h1>{formatTime(timeNow)}</h1>
+                <BarraProgresso {...{ timeNow, timeMax }} />
+            </Hora>
             <Buttons onClick={playClick}>
                 {!isRunning && !(timeNow === (timeMax)) && <Branco />}
                 <Button onClick={() => { setIsRunning(!isRunning) }} >

@@ -14,4 +14,5 @@ type propClock = {
         time: time
         setTime: (t: time) => void,
     },
+    type: boolean,
 }

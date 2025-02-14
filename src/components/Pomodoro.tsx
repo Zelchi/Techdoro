@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import { LongClock } from './relogios/LongClock'
-import { ShortClock } from './relogios/ShortClock'
+import { Clock } from './relogios/Clock'
 import { useState } from 'react'
 import { useSound } from '../hooks/useSound'
 
@@ -74,11 +73,13 @@ export const Pomodoro = () => {
                     <ButtonSwitch onClick={() => { swap(); playClick() }} $clicked={clock} />
                 </Caixa>
                 <p>Relógio</p>
-                <Volume></Volume>
+                <Volume />
             </Barra>
-            {clock ?
-                <LongClock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} /> :
-                <ShortClock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} />}
+            {clock ? (
+                <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
+            ) : (
+                <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
+            )}
         </Container>
     )
 }

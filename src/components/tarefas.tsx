@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import { useState, useEffect, useRef } from 'react';
 import { CheckBox } from './tarefas/CheckBox'
-import seta from '../assets/seta2.png';
 import { useSound } from '../hooks/useSound';
+import seta from '../assets/seta2.png';
 
 const Container = styled.div`
     display: flex;
