@@ -89,20 +89,25 @@ const createWindow = () => {
     tray.setToolTip('Techdoro')
     tray.setContextMenu(contextMenu)
     tray.on('click', () => {
-        win.show()
+        if (win.isVisible()) {
+            win.hide();
+        } else {
+            win.show();
+        }
     });
 };
 
-const gotTheLock = app.requestSingleInstanceLock();
-
-if (!gotTheLock) {
+if (!app.requestSingleInstanceLock()) {
     app.quit();
 } else {
     app.on('second-instance', () => {
         const win = BrowserWindow.getAllWindows()[0];
         if (win) {
-            if (win.isMinimized()) win.restore();
-            win.focus();
+            if (win.isMinimized()) {
+                win.show(); win.restore();
+            } else {
+                win.show(); win.focus();
+            }
         }
     });
 
