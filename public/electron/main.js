@@ -93,16 +93,29 @@ const createWindow = () => {
     });
 };
 
-app.whenReady().then(() => {
-    app.setName(app.name)
-    app.setAppUserModelId(app.name)
-    createWindow();
-    app.on("activate", () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        const win = BrowserWindow.getAllWindows()[0];
+        if (win) {
+            if (win.isMinimized()) win.restore();
+            win.focus();
+        }
     });
 
-})
+    app.whenReady().then(() => {
+        app.setName(app.name)
+        app.setAppUserModelId(app.name)
+        createWindow();
+        app.on("activate", () => {
+            if (BrowserWindow.getAllWindows().length === 0) createWindow();
+        });
+    });
 
-app.on("window-all-closed", () => {
-    if (process.platform !== 'darwin') app.quit();
-})
+    app.on("window-all-closed", () => {
+        if (process.platform !== 'darwin') app.quit();
+    });
+}

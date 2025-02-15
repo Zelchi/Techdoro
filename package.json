@@ -1,13 +1,13 @@
 {
   "name": "techdoro",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/electron/main.js",
   "author": {
     "name": "Zelchi",
     "email": "tininhakawaii@gmail.com"
   },
-  "description": "Techdoro é um Pomodoro retro!",
+  "description": "Techdoro",
   "homepage": "./",
   "type": "module",
   "scripts": {
