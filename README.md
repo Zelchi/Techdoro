@@ -3,7 +3,7 @@
 Techdoro é uma aplicação de Pomodoro desenvolvida utilizando Electron, React e TypeScript. A técnica Pomodoro é uma metodologia de gerenciamento de tempo que ajuda a aumentar a produtividade, dividindo o trabalho em intervalos de tempo, geralmente de 25 minutos, separados por breves intervalos.
 
 <p align="center">
-  <img src="./Techdoro.png" alt="Texto Alternativo">
+  <img src="https://github.com/user-attachments/assets/78d2a8b0-7dee-404b-8162-a50f692cfe86">
 </p>
 
 ## Funcionalidades
