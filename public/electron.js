@@ -33,6 +33,36 @@ const createWindow = () => {
     ipcMain.on('fechar', () => {
         win.close();
     });
+
+    ipcMain.on('notifiTimeLong', () => {
+        const title = 'Tempo acabou!'
+        const body = 'Vai dar uma esticada nas pernas! ò.ó'
+        const silent = true
+        const icon = './public/iconTechDoro.png'
+        const timeoutType = 'default'
+        new Notification({
+            title,
+            body,
+            silent,
+            icon,
+            timeoutType,
+        }).show()
+    });
+
+    ipcMain.on('notifiTimeShort', () => {
+        const title = 'Intervalo acabou!'
+        const body = 'Retome os estudos imediatamente!!! ò.ó'
+        const silent = true
+        const icon = './public/iconTechDoro.png'
+        const timeoutType = 'default'
+        new Notification({
+            title,
+            body,
+            silent,
+            icon,
+            timeoutType,
+        }).show()
+    });
 };
 
 app.whenReady().then(() => {
