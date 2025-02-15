@@ -1,8 +1,8 @@
 {
   "name": "techdoro",
   "private": true,
-  "version": "0.0.5",
-  "main": "dist/electron.js",
+  "version": "0.0.6",
+  "main": "main.js",
   "author": {
     "name": "Zelchi",
     "email": "tininhakawaii@gmail.com"

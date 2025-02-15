@@ -88,6 +88,7 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
             if (newTime <= 0) {
                 setTime({ timeNow: timeMax, timeMax });
                 alarm();
+                window.api(type ? 'notifiTimeLong' : 'notifiTimeShort');
                 swap();
             } else {
                 setTime({ timeNow: newTime, timeMax });
@@ -96,7 +97,7 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
         }, 1000)
 
         return () => clearInterval(intervalo)
-    }, [isRunning, timeMax, timeNow, alarm, swap, setTime]);
+    }, [isRunning, timeMax, timeNow, alarm, swap, setTime, type]);
 
     useEffect(() => {
         setIsRunning(false);
