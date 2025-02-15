@@ -16,3 +16,8 @@ type propClock = {
     },
     type: boolean,
 }
+
+type ProgressBar = {
+    time: time,
+    type: boolean,
+}

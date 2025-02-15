@@ -4,6 +4,7 @@
     outline: none;
     box-sizing: border-box;
     user-select: none;
+    -webkit-appearance: none;
 }
 
 :root {
@@ -35,6 +36,11 @@ body {
     color: #ffffff;
 
     overflow: hidden;
+
+}
+
+::-webkit-slider-thumb {
+    -webkit-appearance: none;
 }
 
 ::-webkit-scrollbar {

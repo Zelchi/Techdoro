@@ -112,7 +112,7 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
         <Caixa $type={type}>
             <Hora>
                 <h1>{formatTime(timeNow)}</h1>
-                <BarraProgresso {...{ timeNow, timeMax }} />
+                <BarraProgresso {...{ time: { timeNow, timeMax }, type }} />
             </Hora>
             <Buttons onClick={playClick}>
                 {!isRunning && !(timeNow === (timeMax)) && <Branco />}

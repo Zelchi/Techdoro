@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Clock } from './relogios/Clock'
 import { useState } from 'react'
 import { useSound } from '../hooks/useSound'
+import { Volume } from './relogios/Volume'
 
 const Container = styled.div`
     display: flex;
@@ -17,9 +18,9 @@ const Barra = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     background-color: #3c3c3c;
     border: 2px inset white;
+    width: 100%;
     height: 30px;
 `
 
@@ -37,11 +38,6 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
     margin-left: 10%;
     background-color: ${({ $clicked }) => ($clicked ? '#3C3C3C' : '#3C3C3C')};
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
-`
-
-const Volume = styled.div`
-    height: 100%;
-    width: 30%;
 `
 
 export const Pomodoro = () => {

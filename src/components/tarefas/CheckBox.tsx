@@ -9,8 +9,8 @@ type Props = {
 const Caixa = styled.div<{ $marcado: boolean }>`
     cursor: pointer;
     padding: 10px;
-    background-color: ${({ $marcado }) => ($marcado ? '#1C2C2C' : '#6C6C6C')};
-    border: 2px ${({ $marcado }) => ($marcado ? 'outset' : 'inset')} gray;
+    background-color: ${({ $marcado }) => ($marcado ? '#1C3C1C' : '#6C6C6C')};
+    border: 2px ${({ $marcado }) => ($marcado ? 'outset' : 'outset')} gray;
 `
 
 export const CheckBox = ({ tarefa, marcarTarefa }: Props) => {

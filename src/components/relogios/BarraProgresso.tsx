@@ -1,9 +1,9 @@
 import { ReactElement } from 'react';
 import styled from 'styled-components'
 
-const Caixa = styled.div`
+const Caixa = styled.div<{ $clock: boolean }>`
     display: flex;
-    justify-content: start;
+    justify-content: ${({ $clock }) => $clock ? 'start' : 'end'};
     align-items: center;
     width: 100%;
     background-color: #9C9C9C;
@@ -18,13 +18,13 @@ const Barra = styled.div<{ $progresso: number }>`
     height: 100%;
 `;
 
-export function BarraProgresso({ timeNow, timeMax }: time): ReactElement {
+export function BarraProgresso({ time: { timeNow, timeMax }, type }: ProgressBar): ReactElement {
 
     const progresso = (timeNow / timeMax) * 100;
     const progressoInvertido = Math.abs(progresso - 100);
 
     return (
-        <Caixa >
+        <Caixa $clock={type}>
             <Barra $progresso={progressoInvertido} />
         </Caixa>
     );
