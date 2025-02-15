@@ -1,13 +1,16 @@
 import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import { fileURLToPath } from "url";
+import { isDev } from './utils.js'
 import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const icon = path.join(__dirname, '../iconTechDoro.png');
+
 const createWindow = () => {
     const win = new BrowserWindow({
-        icon: 'iconTechDoro.png',
+        icon,
         frame: false,
         webPreferences: {
             nodeIntegration: true,
@@ -20,7 +23,8 @@ const createWindow = () => {
         minWidth: 500,
         minHeight: 600,
     });
-    win.loadFile(path.join(__dirname, 'index.html'));
+
+    (isDev()) ? win.loadURL('http://localhost:5174/') : win.loadFile(path.join(__dirname, '../index.html'))
 
     ipcMain.on('minimizar', () => {
         win.minimize();
@@ -34,43 +38,45 @@ const createWindow = () => {
         win.close();
     });
 
+
+    const notifica = new Notification({
+        silent: true,
+        icon,
+        timeoutType: 'default',
+    })
+
     ipcMain.on('notifiTimeLong', () => {
         const title = 'Tempo acabou!'
-        const body = 'Vai dar uma esticada nas pernas! ò.ó'
-        const silent = true
-        const icon = './public/iconTechDoro.png'
-        const timeoutType = 'default'
-        new Notification({
-            title,
-            body,
-            silent,
-            icon,
-            timeoutType,
-        }).show()
+        const body = 'Vai dar uma esticada nas pernas!'
+        notifica.title = title;
+        notifica.body = body;
+        notifica.show();
     });
 
     ipcMain.on('notifiTimeShort', () => {
         const title = 'Intervalo acabou!'
-        const body = 'Retome os estudos imediatamente!!! ò.ó'
-        const silent = true
-        const icon = './public/iconTechDoro.png'
-        const timeoutType = 'default'
-        new Notification({
-            title,
-            body,
-            silent,
-            icon,
-            timeoutType,
-        }).show()
+        const body = 'Retome os estudos imediatamente!!!'
+        notifica.title = title;
+        notifica.body = body;
+        notifica.show();
     });
+
+    notifica.on('click', () => {
+        console.log('Cliquei')
+        win.isMinimized() ? win.restore() : win.focus()
+    })
 };
 
-app.whenReady().then(() => {
-    createWindow();
+const NAME_APP = 'Techdoro'
 
+app.whenReady().then(() => {
+    app.setName(NAME_APP)
+    app.setAppUserModelId(NAME_APP)
+    createWindow();
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+
 })
 
 app.on("window-all-closed", () => {

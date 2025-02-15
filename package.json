@@ -1,8 +1,8 @@
 {
   "name": "techdoro",
   "private": true,
-  "version": "0.0.7",
-  "main": "dist/electron.js",
+  "version": "0.1.2",
+  "main": "dist/electron/main.js",
   "author": {
     "name": "Zelchi",
     "email": "tininhakawaii@gmail.com"
@@ -13,9 +13,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "electron": "electron .",
+    "electron:dev": "cross-env NODE_ENV=DEV electron public/electron/main.js",
     "electron:win": "npm run build && electron-builder --w",
     "electron:mac": "npm run build && electron-builder --m",
     "electron:linux": "npm run build && electron-builder --l"
@@ -46,6 +44,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^7.0.3",
     "electron": "^34.1.1",
     "electron-builder": "^25.1.8",
     "eslint": "^9.19.0",
