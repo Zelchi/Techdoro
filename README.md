@@ -24,3 +24,5 @@ Techdoro é uma aplicação de Pomodoro desenvolvida utilizando Electron, React 
 1. Clone o repositório
 2. Instale as dependências com `npm install`
 3. Compile a aplicação com `npm run electron:win`
+
+## Baixe aqui: [Techdoro](https://github.com/Zelchi/Techdoro/releases/download/1.0.0/Techdoro.Setup.1.0.0.exe)
