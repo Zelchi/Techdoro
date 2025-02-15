@@ -86,9 +86,9 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
             const newTime = timeMax - elapsed;
 
             if (newTime <= 0) {
+                window.api(type ? 'notifiTimeLong' : 'notifiTimeShort');
                 setTime({ timeNow: timeMax, timeMax });
                 alarm();
-                window.api(type ? 'notifiTimeLong' : 'notifiTimeShort');
                 swap();
             } else {
                 setTime({ timeNow: newTime, timeMax });
