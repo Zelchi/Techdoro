@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Notification } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification, Tray, Menu } from 'electron';
 import { fileURLToPath } from "url";
 import { isDev } from './utils.js'
 import path from "path";
@@ -35,9 +35,8 @@ const createWindow = () => {
     })
 
     ipcMain.on('fechar', () => {
-        win.close();
+        win.hide();
     });
-
 
     const notifica = new Notification({
         silent: true,
@@ -46,32 +45,57 @@ const createWindow = () => {
     })
 
     ipcMain.on('notifiTimeLong', () => {
-        const title = 'Tempo acabou!'
-        const body = 'Vai dar uma esticada nas pernas!'
-        notifica.title = title;
-        notifica.body = body;
+        notifica.title = 'Tempo acabou!';
+        notifica.body = 'Vai dar uma esticada nas pernas!';
         notifica.show();
     });
 
     ipcMain.on('notifiTimeShort', () => {
-        const title = 'Intervalo acabou!'
-        const body = 'Retome os estudos imediatamente!!!'
-        notifica.title = title;
-        notifica.body = body;
+        notifica.title = 'Intervalo acabou!';
+        notifica.body = 'Retome os estudos imediatamente!!!';
         notifica.show();
     });
 
     notifica.on('click', () => {
-        console.log('Cliquei')
-        win.isMinimized() ? win.restore() : win.focus()
+        if (win.isMinimized()) {
+            win.show(); win.restore();
+        }
+        else {
+            win.show(); win.focus();
+        }
     })
+
+    const tray = new Tray(icon);
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Mostrar Janela',
+            icon: path.join(__dirname, '../abrir.png'),
+            role: 'window',
+            type: 'normal',
+            click: () => {
+                win.show();
+            },
+        },
+        {
+            label: 'Fechar Techdoro',
+            icon: path.join(__dirname, '../sair.png'),
+            role: 'close',
+            type: 'normal',
+            click: () => {
+                win.close();
+            },
+        },
+    ]);
+    tray.setToolTip('Techdoro')
+    tray.setContextMenu(contextMenu)
+    tray.on('click', () => {
+        win.show()
+    });
 };
 
-const NAME_APP = 'Techdoro'
-
 app.whenReady().then(() => {
-    app.setName(NAME_APP)
-    app.setAppUserModelId(NAME_APP)
+    app.setName(app.name)
+    app.setAppUserModelId(app.name)
     createWindow();
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();

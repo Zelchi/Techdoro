@@ -42,8 +42,8 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
 
 export const Pomodoro = () => {
 
-    const timeMaxLong = 3
-    const timeMaxShort = 3
+    const timeMaxLong = 25 * 60
+    const timeMaxShort = 5 * 60
 
     const [clock, setClock] = useState(true);
     const [longClock, setLongClock] = useState({
