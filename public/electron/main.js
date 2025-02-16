@@ -24,7 +24,7 @@ const createWindow = () => {
         minHeight: 600,
     });
 
-    (isDev()) ? win.loadURL('http://localhost:5174/') : win.loadFile(path.join(__dirname, '../index.html'))
+    (isDev()) ? win.loadURL('http://localhost:5173/') : win.loadFile(path.join(__dirname, '../index.html'))
 
     ipcMain.on('minimizar', () => {
         win.minimize();

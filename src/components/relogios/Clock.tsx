@@ -73,17 +73,29 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
 
     const [isRunning, setIsRunning] = useState(false)
     const [playClick] = useSound("click");
+    const [newNow, setNewNow] = useState(timeNow);
 
     const startTimeRef = useRef<number | null>(null)
 
     useEffect(() => {
-        if (!isRunning) return;
+        setIsRunning(false);
+    }, [type])
 
-        startTimeRef.current = Date.now() - (timeMax - timeNow) * 1000;
+    useEffect(() => {
+        if (isRunning) {
+            startTimeRef.current = Date.now();
+            setNewNow(timeNow);
+        } else {
+            startTimeRef.current = null
+        }
+    }, [isRunning])
+
+    useEffect(() => {
+        if (!isRunning) return;
 
         const intervalo = setInterval(() => {
             const elapsed = Math.floor((Date.now() - (startTimeRef.current || 0)) / 1000);
-            const newTime = timeMax - elapsed;
+            const newTime = newNow - elapsed;
 
             if (newTime <= 0) {
                 window.api(type ? 'notifiTimeLong' : 'notifiTimeShort');
@@ -94,14 +106,10 @@ export const Clock = ({ swap, alarm, clock, type }: propClock) => {
                 setTime({ timeNow: newTime, timeMax });
             }
 
-        }, 1000)
+        }, 500)
 
         return () => clearInterval(intervalo)
-    }, [isRunning, timeMax, timeNow, alarm, swap, setTime, type]);
-
-    useEffect(() => {
-        setIsRunning(false);
-    }, [type])
+    }, [isRunning, timeMax, timeNow, type, newNow, alarm, swap, setTime]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
