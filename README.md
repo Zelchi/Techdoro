@@ -6,13 +6,6 @@ Techdoro é uma aplicação de Pomodoro desenvolvida utilizando Electron, React 
   <img src="https://github.com/user-attachments/assets/78d2a8b0-7dee-404b-8162-a50f692cfe86">
 </p>
 
-## Funcionalidades
-
-- Temporizador Pomodoro 25 minutos.
-- Sem notificações chatas, apenas uma musica relaxante!
-- Interface amigável e intuitiva
-- Suporte multiplataforma: Win, Mac, Linux.
-
 ## Tecnologias Utilizadas
 
 - Electron
