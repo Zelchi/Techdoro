@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Clock } from './relogios/Clock'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSound } from '../hooks/useSound'
 import { Volume } from './relogios/Volume'
 
@@ -40,10 +40,20 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
 
+const getInitialStreak = () => {
+    const savedStreak = localStorage.getItem('streak');
+    return savedStreak ? parseInt(savedStreak, 10) : 0;
+};
+
+const getInitialHoursStudied = () => {
+    const savedHours = localStorage.getItem('hoursStudied');
+    return savedHours ? parseFloat(savedHours) : 0;
+};
+
 export const Pomodoro = () => {
 
-    const timeMaxLong = 25 * 60
-    const timeMaxShort = 5 * 60
+    const timeMaxLong = 25 * 60;
+    const timeMaxShort = 5 * 60;
 
     const [clock, setClock] = useState(true);
     const [longClock, setLongClock] = useState({
@@ -58,15 +68,57 @@ export const Pomodoro = () => {
     const [playClick] = useSound('click');
     const [playAlarm] = useSound("alarm");
 
+    const [streak, setStreak] = useState(getInitialStreak);
+    const [hoursStudied, setHoursStudied] = useState(getInitialHoursStudied);
+
     const swap = () => {
-        setClock(!clock)
-    }
+        setClock(!clock);
+    };
+
+    const handleSessionComplete = () => {
+        setHoursStudied((prev) => {
+            const newHours = prev + (timeMaxLong / 3600);
+            localStorage.setItem('hoursStudied', newHours.toString());
+            return newHours;
+        });
+
+        const lastUsed = localStorage.getItem('lastUsed');
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayString = yesterday.toISOString().split('T')[0];
+
+        if (lastUsed !== today) {
+            if (lastUsed === yesterdayString) {
+                setStreak((prev) => {
+                    const newStreak = prev + 1;
+                    localStorage.setItem('streak', newStreak.toString());
+                    return newStreak;
+                });
+            } else {
+                setStreak(1);
+                localStorage.setItem('streak', '1');
+            }
+            localStorage.setItem('lastUsed', today);
+        }
+    };
+
+    useEffect(() => {
+        if (clock && longClock.timeNow === 0) {
+            playAlarm();
+            handleSessionComplete();
+            setLongClock({ timeMax: timeMaxLong, timeNow: timeMaxLong });
+        } else if (!clock && shortClock.timeNow === 0) {
+            playAlarm();
+            setShortClock({ timeMax: timeMaxShort, timeNow: timeMaxShort });
+        }
+    }, [longClock.timeNow, shortClock.timeNow]);
 
     return (
         <Container>
             <Barra>
                 <Caixa>
-                    <ButtonSwitch onClick={() => { swap(); playClick() }} $clicked={clock} />
+                    <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
                 </Caixa>
                 <p>Relógio</p>
                 <Volume />
@@ -76,6 +128,10 @@ export const Pomodoro = () => {
             ) : (
                 <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
             )}
+            <Container style={{ backgroundColor: '#3c3c3c', width: '100%', border: '2px inset white', display: 'flex', alignItems: 'center' }}>
+                <p>Streak: {streak}</p>
+                <p>Horas: {hoursStudied.toFixed(0)}</p>
+            </Container>
         </Container>
-    )
-}
+    );
+};

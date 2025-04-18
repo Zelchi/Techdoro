@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Pomodoro } from './components/Pomodoro'
 import { BarraJanela } from './components/BarraJanela'
-import { Tarefas } from './components/Tarefas'
+import { Tarefas } from './components/tarefa'
 
 const Container = styled.div`
     display: flex;
