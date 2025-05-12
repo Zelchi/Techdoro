@@ -22,6 +22,7 @@ const Barra = styled.div`
     border: 2px inset white;
     width: 100%;
     height: 30px;
+    border-radius: 15px 15px 0px 0px;
 `
 
 const Caixa = styled.div`
@@ -33,22 +34,13 @@ const Caixa = styled.div`
 `
 
 const ButtonSwitch = styled.div<{ $clicked: boolean }>`
+    border-radius: 50%;
     height: 20px;
     width: 20px;
     margin-left: 10%;
     background-color: ${({ $clicked }) => ($clicked ? '#3C3C3C' : '#3C3C3C')};
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
-
-const getInitialStreak = () => {
-    const savedStreak = localStorage.getItem('streak');
-    return savedStreak ? parseInt(savedStreak, 10) : 0;
-};
-
-const getInitialHoursStudied = () => {
-    const savedHours = localStorage.getItem('hoursStudied');
-    return savedHours ? parseFloat(savedHours) : 0;
-};
 
 export const Pomodoro = () => {
 
@@ -68,45 +60,13 @@ export const Pomodoro = () => {
     const [playClick] = useSound('click');
     const [playAlarm] = useSound("alarm");
 
-    const [streak, setStreak] = useState(getInitialStreak);
-    const [hoursStudied, setHoursStudied] = useState(getInitialHoursStudied);
-
     const swap = () => {
         setClock(!clock);
-    };
-
-    const handleSessionComplete = () => {
-        setHoursStudied((prev) => {
-            const newHours = prev + (timeMaxLong / 3600);
-            localStorage.setItem('hoursStudied', newHours.toString());
-            return newHours;
-        });
-
-        const lastUsed = localStorage.getItem('lastUsed');
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayString = yesterday.toISOString().split('T')[0];
-
-        if (lastUsed !== today) {
-            if (lastUsed === yesterdayString) {
-                setStreak((prev) => {
-                    const newStreak = prev + 1;
-                    localStorage.setItem('streak', newStreak.toString());
-                    return newStreak;
-                });
-            } else {
-                setStreak(1);
-                localStorage.setItem('streak', '1');
-            }
-            localStorage.setItem('lastUsed', today);
-        }
     };
 
     useEffect(() => {
         if (clock && longClock.timeNow === 0) {
             playAlarm();
-            handleSessionComplete();
             setLongClock({ timeMax: timeMaxLong, timeNow: timeMaxLong });
         } else if (!clock && shortClock.timeNow === 0) {
             playAlarm();
@@ -128,10 +88,6 @@ export const Pomodoro = () => {
             ) : (
                 <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
             )}
-            <Container style={{ backgroundColor: '#3c3c3c', width: '100%', border: '2px inset white', display: 'flex', alignItems: 'center' }}>
-                <p>Streak: {streak}</p>
-                <p>Horas: {hoursStudied.toFixed(0)}</p>
-            </Container>
         </Container>
     );
 };

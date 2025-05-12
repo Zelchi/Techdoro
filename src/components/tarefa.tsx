@@ -23,6 +23,13 @@ const Barra = styled.div`
     background-color: #3c3c3c;
     width: 100%;
     border: 2px inset white;
+    &:first-child {
+     border-radius: 15px 15px 0 0;   
+    }
+    &:last-child {
+        border-top: 0px;
+        border-radius: 0 0 15px 15px;
+    }
 `;
 
 const Caixa = styled.div`
@@ -59,6 +66,7 @@ const Input = styled.input`
     width: 100%;
     height: 40px;
     outline: none;
+    border-radius: 15px 0 0 15px;
 `;
 
 const Button = styled.button`
@@ -76,6 +84,7 @@ const Button = styled.button`
     border: 2px inset white;
     border-left: none;
     padding-left: 40px;
+    border-radius: 0 15px 15px 0;
 
     &:hover {
         cursor: pointer;
@@ -296,6 +305,7 @@ export const Tarefas = () => {
                     </TaskContainer>
                 ))}
             </Caixa>
+            <Barra><p>Tarefas</p></Barra>
         </Container>
     );
 };

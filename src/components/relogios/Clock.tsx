@@ -17,6 +17,7 @@ const Caixa = styled.div<{ $type: boolean }>`
 
     border: 2px inset white;
     border-top: none;
+    border-radius: 0 0 15px 15px;
 `
 
 const Hora = styled.div`
@@ -41,6 +42,7 @@ const Button = styled.button`
     color: white;
     padding: 10px;
     border: 2px inset white;
+    border-radius: 15px;
     
     &:hover {
         cursor: pointer;

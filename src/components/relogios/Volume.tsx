@@ -26,6 +26,7 @@ const BarraVolume = styled.input`
         border: 2px outset gray;
         cursor: pointer;
     }
+    border-radius: 15px;
 `
 
 const Button = styled.button` 
@@ -34,6 +35,7 @@ const Button = styled.button`
     background-color: #3C3C3C;
     border: 2px inset gray;
     margin-right: 10%;
+    border-radius: 50%;
 `
 
 export const Volume = () => {

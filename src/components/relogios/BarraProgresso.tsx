@@ -9,6 +9,7 @@ const Caixa = styled.div<{ $clock: boolean }>`
     background-color: #9C9C9C;
     height: 10px;
     border: 2px inset gray;
+    border-radius: 15px;
 `;
 
 const Barra = styled.div<{ $progresso: number }>`
@@ -16,6 +17,7 @@ const Barra = styled.div<{ $progresso: number }>`
     width: ${({ $progresso }) => ($progresso)}%;
     border: 2px outset gray;
     height: 100%;
+    border-radius: 15px;
 `;
 
 export function BarraProgresso({ time: { timeNow, timeMax }, type }: ProgressBar): ReactElement {
