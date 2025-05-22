@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../../public/iconTechDoro.png'
 
@@ -48,19 +48,19 @@ const Minimizar = styled.div<{ $minicolor: boolean }>`
     background-color: ${({ $minicolor }) => ($minicolor ? '#bcff92' : '#3f5e2c')};
 `
 
-const Maximizar = styled.div`
-    -webkit-app-region: no-drag;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px inset black;
-    background-color: #244064;
+// const Maximizar = styled.div`
+//     -webkit-app-region: no-drag;
+//     width: 20px;
+//     height: 20px;
+//     border-radius: 50%;
+//     border: 2px inset black;
+//     background-color: #244064;
 
-    &:hover {
-        cursor: pointer;
-        background-color: #77b2ff;
-    }
-`
+//     &:hover {
+//         cursor: pointer;
+//         background-color: #77b2ff;
+//     }
+// `
 
 const Fechar = styled.div`
     -webkit-app-region: no-drag;
@@ -80,8 +80,13 @@ const Fechar = styled.div`
 export const BarraJanela = () => {
     const [miniColor, setMiniColor] = useState(false);
 
+    const handleDoubleClick = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
     return (
-        <Barra>
+        <Barra onDoubleClick={handleDoubleClick}>
             <Caixa1>
                 <Icon src={icon} />
             </Caixa1>
@@ -96,7 +101,7 @@ export const BarraJanela = () => {
                     $minicolor={miniColor}
                 />
 
-                <Maximizar onClick={() => { window.api('maximizar') }} />
+                {/* <Maximizar onClick={() => { window.api('maximizar') }} /> */}
 
                 <Fechar onClick={() => { window.api('fechar'); }} />
             </Caixa2>

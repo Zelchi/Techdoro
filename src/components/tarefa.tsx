@@ -11,7 +11,7 @@ const Container = styled.div`
     justify-content: start;
     margin-top: 15px;
     margin-bottom: 15px;
-    width: 90%;
+    width: calc(100% - 30px);
     flex: 1;
     overflow: hidden;
 `;
@@ -23,13 +23,13 @@ const Barra = styled.div`
     background-color: #3c3c3c;
     width: 100%;
     border: 2px inset white;
-    &:first-child {
+    /* &:first-child {
      border-radius: 15px 15px 0 0;   
     }
     &:last-child {
         border-top: 0px;
         border-radius: 0 0 15px 15px;
-    }
+    } */
 `;
 
 const Caixa = styled.div`
@@ -305,7 +305,6 @@ export const Tarefas = () => {
                     </TaskContainer>
                 ))}
             </Caixa>
-            <Barra><p>Tarefas</p></Barra>
         </Container>
     );
 };

@@ -17,7 +17,7 @@ const Caixa = styled.div<{ $type: boolean }>`
 
     border: 2px inset white;
     border-top: none;
-    border-radius: 0 0 15px 15px;
+    /* border-radius: 0 0 15px 15px; */
 `
 
 const Hora = styled.div`

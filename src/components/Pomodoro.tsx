@@ -11,7 +11,7 @@ const Container = styled.div`
     justify-content: start;
     
     margin-top: 15px;
-    width: 90%;
+    width: calc(100% - 30px);
 `
 
 const Barra = styled.div`
@@ -22,7 +22,7 @@ const Barra = styled.div`
     border: 2px inset white;
     width: 100%;
     height: 30px;
-    border-radius: 15px 15px 0px 0px;
+    /* border-radius: 15px 15px 0px 0px; */
 `
 
 const Caixa = styled.div`
@@ -57,6 +57,15 @@ export const Pomodoro = () => {
         timeMax: timeMaxShort,
     });
 
+    const [repeat, setRepeat] = useState(0);
+
+    useEffect(() => {
+        const rep = localStorage.getItem('repeat');
+        if (rep) {
+            setRepeat(parseInt(rep));
+        }
+    });
+
     const [playClick] = useSound('click');
     const [playAlarm] = useSound("alarm");
 
@@ -67,6 +76,11 @@ export const Pomodoro = () => {
     useEffect(() => {
         if (clock && longClock.timeNow === 0) {
             playAlarm();
+            setRepeat((prev) => {
+                const newRepeat = prev + 1;
+                localStorage.setItem('repeat', newRepeat.toString());
+                return newRepeat;
+            })
             setLongClock({ timeMax: timeMaxLong, timeNow: timeMaxLong });
         } else if (!clock && shortClock.timeNow === 0) {
             playAlarm();
@@ -75,19 +89,33 @@ export const Pomodoro = () => {
     }, [longClock.timeNow, shortClock.timeNow]);
 
     return (
-        <Container>
-            <Barra>
-                <Caixa>
-                    <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
-                </Caixa>
-                <p>Relógio</p>
-                <Volume />
-            </Barra>
-            {clock ? (
-                <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
-            ) : (
-                <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
-            )}
-        </Container>
+        <>
+            <p style={
+                {
+                    color: 'white',
+                    fontSize: '20px',
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: '110px',
+                    left: '80px',
+                }
+            }>{repeat}</p>
+            <Container>
+                <Barra>
+                    <Caixa>
+                        <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
+                    </Caixa>
+                    <p>Relógio</p>
+                    <Volume />
+                </Barra>
+                {clock ? (
+                    <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
+                ) : (
+                    <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
+                )}
+            </Container>
+        </>
     );
 };

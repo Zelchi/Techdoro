@@ -22,6 +22,11 @@ const createWindow = () => {
         height: 600,
         minWidth: 500,
         minHeight: 600,
+        resizable: false,
+    });
+
+    win.on('maximize', () => {
+        win.unmaximize();
     });
 
     (isDev()) ? win.loadURL('http://localhost:5173/') : win.loadFile(path.join(__dirname, '../index.html'))
@@ -30,9 +35,9 @@ const createWindow = () => {
         win.minimize();
     })
 
-    ipcMain.on('maximizar', () => {
-        win.isMaximized() ? win.unmaximize() : win.maximize();
-    })
+    // ipcMain.on('maximizar', () => {
+    //     win.isMaximized() ? win.unmaximize() : win.maximize();
+    // })
 
     ipcMain.on('fechar', () => {
         win.hide();
