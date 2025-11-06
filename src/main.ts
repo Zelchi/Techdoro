@@ -8,6 +8,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let isQuiting = false;
+let notifica: Notification | null = null;
 
 if (started) {
     app.quit();
@@ -46,6 +47,14 @@ const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string
     return path.join(basePath, iconName);
 };
 
+// Ícone para notificação (PNG é mais compatível)
+const getNotificationIcon = (): string | undefined => {
+    const basePath = app.isPackaged
+        ? process.resourcesPath
+        : path.join(process.cwd(), 'src', 'assets');
+    return path.join(basePath, 'dice_icon.png');
+};
+
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
@@ -61,7 +70,8 @@ if (!gotTheLock) {
 }
 
 const createWindow = () => {
-    let mainWindow = new BrowserWindow({
+    // Corrige variável sombreada: usa a global
+    mainWindow = new BrowserWindow({
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -182,100 +192,90 @@ const createTray = () => {
         ]));
 }
 
-/**
- * Minimiza a janela principal.
- * Canal IPC: window-minimize
- */
 ipcMain.handle('window-minimize', () => {
     mainWindow?.minimize();
 });
 
-/**
- * Maximiza a janela, se ainda não estiver maximizada.
- * Canal IPC: window-maximize
- */
 ipcMain.handle('window-maximize', () => {
     if (mainWindow && !mainWindow.isMaximized()) {
         mainWindow.maximize();
     }
 });
 
-/**
- * Restaura a janela se estiver maximizada.
- * Canal IPC: window-unmaximize
- */
 ipcMain.handle('window-unmaximize', () => {
     if (mainWindow && mainWindow.isMaximized()) {
         mainWindow.unmaximize();
     }
 });
 
-/**
- * Fecha a janela principal.
- * Canal IPC: window-close
- */
 ipcMain.handle('window-close', () => {
     mainWindow?.close();
 });
 
-/**
- * Informa se a janela está maximizada.
- * Canal IPC: window-is-maximized
- * Retorna: boolean
- */
 ipcMain.handle('window-is-maximized', () => {
     return mainWindow?.isMaximized() ?? false;
 });
 
-/**
- * Alterna o modo de tela cheia (on/off).
- * Canal IPC: window-toggle-fullscreen
- */
 ipcMain.handle('window-toggle-fullscreen', () => {
     if (mainWindow) {
         mainWindow.setFullScreen(!mainWindow.isFullScreen());
     }
 });
 
-/**
- * Informa se a janela está em tela cheia.
- * Canal IPC: window-is-fullscreen
- * Retorna: boolean
- */
 ipcMain.handle('window-is-fullscreen', () => {
     return mainWindow?.isFullScreen() ?? false;
 });
 
-/**
- * Cria a janela quando o app estiver pronto.
- */
 app.whenReady().then(() => {
-    // Ensure correct taskbar icon behavior on Windows (pinning/notifications)
     if (process.platform === 'win32') {
-        app.setAppUserModelId('app');
+        app.setAppUserModelId('com.techdoro.app');
     }
+
     createWindow();
     createTray();
+
+    notifica = new Notification({
+        silent: true,
+        icon: getNotificationIcon(),
+        timeoutType: 'default',
+    });
+
+    notifica.on('click', () => {
+        if (!mainWindow) return;
+        if (mainWindow.isMinimized()) {
+            mainWindow.show();
+            mainWindow.restore();
+        } else {
+            mainWindow.show();
+            mainWindow.focus();
+        }
+    });
+
+    ipcMain.on('notifiTimeLong', () => {
+        if (!notifica) return;
+        notifica.title = 'Tempo acabou!';
+        notifica.body = 'Vai dar uma esticada nas pernas!';
+        notifica.show();
+    });
+
+    ipcMain.on('notifiTimeShort', () => {
+        if (!notifica) return;
+        notifica.title = 'Intervalo acabou!';
+        notifica.body = 'Retome os estudos imediatamente!!!';
+        notifica.show();
+    });
 });
 
-/**
- * Encerra a aplicação quando todas as janelas forem fechadas,
- * exceto no macOS, onde é comum manter o app ativo até reativação.
- */
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
-/**
- * No macOS, recria a janela ao reativar o app se não houver janelas abertas.
- */
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     } else if (mainWindow) {
-        // No macOS, reexibir janela ao ativar o app
         if (!mainWindow.isVisible()) {
             mainWindow.setSkipTaskbar(false);
             mainWindow.show();
