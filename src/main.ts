@@ -79,10 +79,10 @@ const createWindow = () => {
     });
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-        win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+        mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     } else {
-        win.loadFile(
-            path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
+        mainWindow.loadFile(
+            path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
         );
     }
 
@@ -99,45 +99,38 @@ const createWindow = () => {
         }
     });
 
-    win.on('maximize', () => {
-        win.unmaximize();
+    mainWindow.once('ready-to-show', () => {
+        mainWindow?.show();
     });
 
-    ipcMain.on('minimizar', () => {
-        win.minimize();
-    })
-
-    ipcMain.on('fechar', () => {
-        win.hide();
+    mainWindow.on('maximize', () => {
+        mainWindow?.webContents.send('window-maximized');
     });
 
-    const notifica = new Notification({
-        silent: true,
-        icon: techdoroIcon,
-        timeoutType: 'default',
-    })
-
-    ipcMain.on('notifiTimeLong', () => {
-        notifica.title = 'Tempo acabou!';
-        notifica.body = 'Vai dar uma esticada nas pernas!';
-        notifica.show();
+    mainWindow.on('unmaximize', () => {
+        mainWindow?.webContents.send('window-unmaximized');
     });
 
-    ipcMain.on('notifiTimeShort', () => {
-        notifica.title = 'Intervalo acabou!';
-        notifica.body = 'Retome os estudos imediatamente!!!';
-        notifica.show();
+    mainWindow.on('enter-full-screen', () => {
+        mainWindow?.webContents.send('window-fullscreen', true);
     });
 
-    notifica.on('click', () => {
-        if (win.isMinimized()) {
-            win.show(); win.restore();
+    mainWindow.on('leave-full-screen', () => {
+        mainWindow?.webContents.send('window-fullscreen', false);
+    });
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
+
+    mainWindow.on('close', (event) => {
+        if (!isQuiting) {
+            event.preventDefault();
+            mainWindow?.hide();
+            mainWindow?.setSkipTaskbar(true);
         }
-        else {
-            win.show(); win.focus();
-        }
-    })
-};
+    });
+}
 
 const createTray = () => {
     if (tray) return;
