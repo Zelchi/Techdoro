@@ -2,7 +2,7 @@ import styled, { keyframes, css } from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
 import { CheckBox } from './Taskbar-Checkbox'
 import { useSound } from '../../hooks/useSound';
-import seta from '../assets/Seta.png';
+import seta from '../../assets/Seta.png';
 
 const Container = styled.div`
     display: flex;
@@ -165,7 +165,7 @@ export type Tarefa = {
     completed: boolean,
 }
 
-export const Tarefas = () => {
+export default () => {
     const [tarefas, setTarefas] = useState<Tarefa[]>([]);
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);

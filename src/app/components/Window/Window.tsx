@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Clock } from '../Clock/Clock'
+import Clock from '../Clock/Clock'
 import { useState, useEffect } from 'react'
 import { useSound } from '../../hooks/useSound'
 import { Volume } from '../Clock/Clock-Volume'
@@ -40,7 +40,7 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
 
-export const Pomodoro = () => {
+export default () => {
 
     const timeMaxLong = 3;
     const timeMaxShort = 3;
@@ -87,33 +87,19 @@ export const Pomodoro = () => {
     }, [longClock.timeNow, shortClock.timeNow]);
 
     return (
-        <>
-            <p style={
-                {
-                    color: 'white',
-                    fontSize: '20px',
-                    marginTop: '10px',
-                    marginBottom: '10px',
-                    textAlign: 'center',
-                    position: 'absolute',
-                    top: '110px',
-                    left: '80px',
-                }
-            }>{repeat}</p>
-            <Container>
-                <Barra>
-                    <Caixa>
-                        <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
-                    </Caixa>
-                    <p>Relógio</p>
-                    <Volume />
-                </Barra>
-                {clock ? (
-                    <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
-                ) : (
-                    <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
-                )}
-            </Container>
-        </>
+        <Container>
+            <Barra>
+                <Caixa>
+                    <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
+                </Caixa>
+                <p>Relógio</p>
+                <Volume />
+            </Barra>
+            {clock ? (
+                <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
+            ) : (
+                <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
+            )}
+        </Container>
     );
 };

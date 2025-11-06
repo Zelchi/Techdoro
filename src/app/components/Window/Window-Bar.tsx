@@ -1,9 +1,10 @@
 import { useState, MouseEvent } from 'react'
 import styled from 'styled-components'
-import icon from '../assets/icon.png'
+import icon from '../../assets/icon.png'
 
 const Barra = styled.div`
-    width: 100vw;
+    width: 100%;
+    height: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -63,7 +64,7 @@ const Fechar = styled.div`
     }
 `
 
-export const BarraJanela = () => {
+export default () => {
     const [miniColor, setMiniColor] = useState(false);
 
     const handleDoubleClick = (e: MouseEvent) => {
@@ -81,8 +82,8 @@ export const BarraJanela = () => {
 
             <Caixa2>
                 <Minimizar
-                    onMouseEnter={() => { setMiniColor(true) }}
-                    onMouseLeave={() => { setMiniColor(false) }}
+                    onMouseOver={() => { setMiniColor(true) }}
+                    onMouseOut={() => { setMiniColor(false) }}
                     onClick={() => { window.api('window-minimize'); setMiniColor(false) }}
                     $minicolor={miniColor}
                 />
