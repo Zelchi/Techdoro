@@ -61,7 +61,7 @@ if (!gotTheLock) {
 }
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    let mainWindow = new BrowserWindow({
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
