@@ -36,11 +36,11 @@ export default memo(({ children }: Props) => {
         const storedTheme = localStorage.getItem('theme');
         const storedTime = localStorage.getItem('time');
         const storedVolume = localStorage.getItem('volume');
-        if (windowState) setWindow(windowState);
-        if (storedClock) setClock(storedClock);
-        if (storedTheme) setTheme(storedTheme);
-        if (storedTime) setMaxTime(Number(storedTime));
-        if (storedVolume) setVolume(Number(storedVolume));
+        if (windowState) setWindow(windowState || 'home');
+        if (storedClock) setClock(storedClock || 'longClock');
+        if (storedTheme) setTheme(storedTheme || 'dark');
+        if (storedTime) setMaxTime(Number(storedTime) || 25);
+        if (storedVolume) setVolume(Number(storedVolume) || 50);
     }, []);
 
     useEffect(() => {

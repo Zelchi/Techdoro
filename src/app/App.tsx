@@ -1,23 +1,23 @@
-import styled from 'styled-components'
+import WindowBar from './components/Window-Bar'
+import Frame from './components/Frame/Frame'
 import Taskbar from './components/Taskbar/Taskbar'
-import Clock from './components/Clock/Clock'
-import WindowBar from './components/Window/Window-Bar'
+import styled from 'styled-components'
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 `
 
 export default () => {
     return (
         <Container>
             <WindowBar />
+            <Frame />
             <Taskbar />
-            <Clock />
         </Container>
     )
 }

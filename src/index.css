@@ -10,7 +10,7 @@
 
 @font-face {
     font-family: 'Press Start 2P';
-    src: url('./assets/PressStart2P-Regular.ttf') format('truetype');
+    src: url('./app/assets/PressStart2P-Regular.ttf') format('truetype');
 }
 
 :root {

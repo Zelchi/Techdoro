@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell, globalShortcut } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -8,11 +8,17 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let isQuiting = false;
-let notifica: Notification | null = null;
+let notification: Notification | null = null;
 
 if (started) {
     app.quit();
 }
+
+app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('disable-gpu-compositing');
+app.commandLine.appendSwitch('disable-gpu-rasterization');
+app.commandLine.appendSwitch('disable-accelerated-video-decode');
+app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
 const getIconPath = (): string | undefined => {
     const isWin = process.platform === 'win32';
@@ -86,6 +92,11 @@ const createWindow = () => {
         backgroundColor: '#1c1c1c',
         titleBarStyle: 'hidden',
     });
+
+    const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged;
+    if (isDev) {
+        mainWindow.webContents.openDevTools({ mode: 'detach' });
+    }
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
@@ -241,13 +252,23 @@ app.whenReady().then(() => {
     createWindow();
     createTray();
 
-    notifica = new Notification({
+    globalShortcut.register('CommandOrControl+Shift+I', () => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            if (mainWindow.webContents.isDevToolsOpened()) {
+                mainWindow.webContents.closeDevTools();
+            } else {
+                mainWindow.webContents.openDevTools({ mode: 'detach' });
+            }
+        }
+    });
+
+    notification = new Notification({
         silent: true,
         icon: getNotificationIcon(),
         timeoutType: 'default',
     });
 
-    notifica.on('click', () => {
+    notification.on('click', () => {
         if (!mainWindow) return;
         if (mainWindow.isMinimized()) {
             mainWindow.show();
@@ -259,17 +280,17 @@ app.whenReady().then(() => {
     });
 
     ipcMain.on('notifiTimeLong', () => {
-        if (!notifica) return;
-        notifica.title = 'Tempo acabou!';
-        notifica.body = 'Vai dar uma esticada nas pernas!';
-        notifica.show();
+        if (!notification) return;
+        notification.title = 'Tempo acabou!';
+        notification.body = 'Vai dar uma esticada nas pernas!';
+        notification.show();
     });
 
     ipcMain.on('notifiTimeShort', () => {
-        if (!notifica) return;
-        notifica.title = 'Intervalo acabou!';
-        notifica.body = 'Retome os estudos imediatamente!!!';
-        notifica.show();
+        if (!notification) return;
+        notification.title = 'Intervalo acabou!';
+        notification.body = 'Retome os estudos imediatamente!!!';
+        notification.show();
     });
 });
 
@@ -295,4 +316,8 @@ app.on('before-quit', () => {
     isQuiting = true;
     tray?.destroy();
     tray = null;
+});
+
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
 });

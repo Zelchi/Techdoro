@@ -9,9 +9,8 @@ const efeitosSonoros = {
 
 type som = keyof typeof efeitosSonoros;
 
-export const useSound = (src: som) => {
+export const useSound = (src: som, vol: number) => {
 
-    const vol = localStorage.getItem("volume") || "50"
     const volume = (Number(vol) / 100)
     const som = useRef<HTMLAudioElement>(null)
 

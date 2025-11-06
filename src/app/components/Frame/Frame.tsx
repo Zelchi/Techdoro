@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import Clock from '../Clock/Clock'
+import Clock from './Clock/Clock'
 import { useState, useEffect } from 'react'
 import { useSound } from '../../hooks/useSound'
-import { Volume } from '../Clock/Clock-Volume'
+import { Volume } from './Clock/Clock-Volume'
 
 const Container = styled.div`
     display: flex;
@@ -40,7 +40,7 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
 
-export default () => {
+export default (props: any) => {
 
     const timeMaxLong = 3;
     const timeMaxShort = 3;
@@ -64,8 +64,8 @@ export default () => {
         }
     }, []);
 
-    const [playClick] = useSound('click');
-    const [playAlarm] = useSound("alarm");
+    const [playClick] = useSound('click', props.volumeState);
+    const [playAlarm] = useSound("alarm", props.volumeState);
 
     const swap = () => {
         setClock(!clock);

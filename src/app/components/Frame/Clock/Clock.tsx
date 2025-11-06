@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useSound } from '../../hooks/useSound'
+import { useSound } from '../../../hooks/useSound'
 import { SlReload } from 'react-icons/sl'
 import { BarraProgresso } from './Clock-Progress'
 import styled from "styled-components"
@@ -69,11 +69,11 @@ const Branco = styled.button`
     border: none;
 `
 
-export default ({ swap, alarm, clock, type }: any) => {
+export default ({ swap, alarm, clock, type, volumeState }: any) => {
     const { time: { timeMax, timeNow }, setTime } = clock;
 
     const [isRunning, setIsRunning] = useState(false)
-    const [playClick] = useSound("click");
+    const [playClick] = useSound("click", volumeState);
     const [newNow, setNewNow] = useState(timeNow);
 
     const startTimeRef = useRef<number | null>(null)

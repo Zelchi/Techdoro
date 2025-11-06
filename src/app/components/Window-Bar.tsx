@@ -1,6 +1,6 @@
 import { useState, MouseEvent } from 'react'
 import styled from 'styled-components'
-import icon from '../../assets/icon.png'
+import icon from '../assets/icon.png'
 
 const Barra = styled.div`
     width: 100%;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useSound } from '../../hooks/useSound'
+import { useSound } from '../../../hooks/useSound'
 
 const Caixa = styled.div`
     display: flex;
@@ -36,11 +36,11 @@ const Button = styled.button`
     border-radius: 50%;
 `
 
-export const Volume = () => {
+export const Volume = (props: any) => {
     const [modal, setModalOpen] = useState(false);
     const [range, setRange] = useState(30);
     const [cursor, setCursor] = useState(false);
-    const [playClick] = useSound('click');
+    const [playClick] = useSound('click', props.volumeState);
 
     useEffect(() => {
         localStorage.setItem('volume', JSON.stringify(range));
