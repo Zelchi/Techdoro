@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import Clock from './Clock/Clock'
 import { useState, useEffect } from 'react'
 import { useSound } from '../../hooks/useSound'
-import { Volume } from './Clock/Clock-Volume'
+import Volume from './Clock/Clock-Volume'
 
 const Container = styled.div`
     display: flex;
@@ -40,7 +40,11 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
     border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
 
-export default (props: any) => {
+type FrameProps = {
+    volumeState?: number;
+}
+
+export default ({ volumeState }: FrameProps) => {
 
     const timeMaxLong = 3;
     const timeMaxShort = 3;
@@ -55,17 +59,8 @@ export default (props: any) => {
         timeMax: timeMaxShort,
     });
 
-    const [repeat, setRepeat] = useState(0);
-
-    useEffect(() => {
-        const rep = localStorage.getItem('repeat');
-        if (rep) {
-            setRepeat(parseInt(rep));
-        }
-    }, []);
-
-    const [playClick] = useSound('click', props.volumeState);
-    const [playAlarm] = useSound("alarm", props.volumeState);
+    const [playClick] = useSound('click', volumeState);
+    const [playAlarm] = useSound("alarm", volumeState);
 
     const swap = () => {
         setClock(!clock);
@@ -74,11 +69,6 @@ export default (props: any) => {
     useEffect(() => {
         if (clock && longClock.timeNow === 0) {
             playAlarm();
-            setRepeat((prev) => {
-                const newRepeat = prev + 1;
-                localStorage.setItem('repeat', newRepeat.toString());
-                return newRepeat;
-            })
             setLongClock({ timeMax: timeMaxLong, timeNow: timeMaxLong });
         } else if (!clock && shortClock.timeNow === 0) {
             playAlarm();

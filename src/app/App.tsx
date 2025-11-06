@@ -1,6 +1,7 @@
 import WindowBar from './components/Window-Bar'
 import Frame from './components/Frame/Frame'
 import Taskbar from './components/Taskbar/Taskbar'
+import Config from './components/Config-Menu'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -12,12 +13,17 @@ const Container = styled.div`
     width: 100%;
 `
 
-export default () => {
+type Props = {
+    windowState?: string;
+}
+
+export default ({ windowState }: Props) => {
     return (
         <Container>
             <WindowBar />
-            <Frame />
-            <Taskbar />
+            {windowState === 'home' && <Frame />}
+            {windowState === 'home' && <Taskbar />}
+            {windowState === 'config' && <Config />}
         </Container>
     )
 }

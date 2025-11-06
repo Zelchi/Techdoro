@@ -69,7 +69,21 @@ const Branco = styled.button`
     border: none;
 `
 
-export default ({ swap, alarm, clock, type, volumeState }: any) => {
+type ClockProps = {
+    swap: () => void;
+    alarm: () => void;
+    clock: {
+        time: {
+            timeNow: number;
+            timeMax: number;
+        };
+        setTime: (time: { timeNow: number; timeMax: number }) => void;
+    };
+    type: boolean;
+    volumeState?: number;
+}
+
+export default ({ swap, alarm, clock, type, volumeState }: ClockProps) => {
     const { time: { timeMax, timeNow }, setTime } = clock;
 
     const [isRunning, setIsRunning] = useState(false)

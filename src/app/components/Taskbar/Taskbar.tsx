@@ -165,14 +165,18 @@ export type Tarefa = {
     completed: boolean,
 }
 
-export default (props: any) => {
+type Props = {
+    volumeState?: number;
+}
+
+export default ({ volumeState }: Props) => {
     const [tarefas, setTarefas] = useState<Tarefa[]>([]);
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);
     const [tarefaEditada, setTarefaEditada] = useState('');
     const [containerWidth, setContainerWidth] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [playClick] = useSound("click", props.volumeState);
+    const [playClick] = useSound("click", volumeState);
 
     useEffect(() => {
         const tarefasSalvas = localStorage.getItem('tarefas');
