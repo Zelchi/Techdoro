@@ -3,6 +3,7 @@ import { Pomodoro } from './components/Pomodoro'
 import { BarraJanela } from './components/BarraJanela'
 import { Tarefas } from './components/tarefa'
 import styled from 'styled-components'
+import './index.css'
 
 const Container = styled.div`
     display: flex;

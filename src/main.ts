@@ -22,14 +22,15 @@ const getIconPath = (): string | undefined => {
     if (app.isPackaged) {
         return path.join(
             process.resourcesPath,
-            isWin ? 'dice_icon.ico' : 'dice_icon.png'
+            isWin ? 'icon.ico' : 'icon.png'
         );
     }
     return path.join(
         process.cwd(),
         'src',
+        'app',
         'assets',
-        isWin ? 'dice_icon.ico' : 'dice_icon.png'
+        isWin ? 'icon.ico' : 'icon.png'
     );
 };
 
@@ -38,11 +39,11 @@ const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string
     const iconMap = {
         abrir: 'abrir.png',
         sair: 'sair.png',
-        default: 'dice_icon.png'
+        default: 'icon.png'
     };
 
     const iconName = iconMap[iconType];
-    const basePath = app.isPackaged ? process.resourcesPath : path.join(process.cwd(), 'src', 'assets');
+    const basePath = app.isPackaged ? process.resourcesPath : path.join(process.cwd(), 'src', 'app', 'assets');
 
     return path.join(basePath, iconName);
 };
@@ -51,8 +52,8 @@ const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string
 const getNotificationIcon = (): string | undefined => {
     const basePath = app.isPackaged
         ? process.resourcesPath
-        : path.join(process.cwd(), 'src', 'assets');
-    return path.join(basePath, 'dice_icon.png');
+        : path.join(process.cwd(), 'src', 'app', 'assets');
+    return path.join(basePath, 'icon.png');
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -145,8 +146,8 @@ const createWindow = () => {
 const createTray = () => {
     if (tray) return;
     tray = new Tray(getIconPath());
-    tray.setToolTip('DnD Manager');
-    tray.setTitle('DnD Manager');
+    tray.setToolTip('Techdoro');
+    tray.setTitle('Techdoro');
     tray.on('click', () => {
         if (!mainWindow) return;
         if (mainWindow.isVisible()) {
@@ -196,6 +197,10 @@ ipcMain.handle('window-minimize', () => {
     mainWindow?.minimize();
 });
 
+ipcMain.on('window-minimize', () => {
+    mainWindow?.minimize();
+});
+
 ipcMain.handle('window-maximize', () => {
     if (mainWindow && !mainWindow.isMaximized()) {
         mainWindow.maximize();
@@ -209,6 +214,10 @@ ipcMain.handle('window-unmaximize', () => {
 });
 
 ipcMain.handle('window-close', () => {
+    mainWindow?.close();
+});
+
+ipcMain.on('window-close', () => {
     mainWindow?.close();
 });
 

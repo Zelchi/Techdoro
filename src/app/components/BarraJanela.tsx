@@ -1,6 +1,6 @@
 import { useState, MouseEvent } from 'react'
 import styled from 'styled-components'
-import icon from '../assets/iconTechDoro.png'
+import icon from '../assets/icon.png'
 
 const Barra = styled.div`
     width: 100vw;
@@ -81,12 +81,12 @@ export const BarraJanela = () => {
 
             <Caixa2>
                 <Minimizar
-                    onMouseMove={() => { setMiniColor(true) }}
-                    onMouseOut={() => { setMiniColor(false) }}
-                    onClick={() => { window.api('minimizar'); setMiniColor(false) }}
+                    onMouseEnter={() => { setMiniColor(true) }}
+                    onMouseLeave={() => { setMiniColor(false) }}
+                    onClick={() => { window.api('window-minimize'); setMiniColor(false) }}
                     $minicolor={miniColor}
                 />
-                <Fechar onClick={() => { window.api('fechar'); }} />
+                <Fechar onClick={() => { window.api('window-close'); }} />
             </Caixa2>
         </Barra>
     )

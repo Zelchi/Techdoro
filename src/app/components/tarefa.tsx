@@ -265,7 +265,7 @@ export const Tarefas = () => {
             </Form>
             <Caixa ref={containerRef}>
                 {tarefas.map((tarefa, index) => (
-                    <TaskContainer key={index}>
+                    <TaskContainer key={tarefa.id}>
                         {editando === index ? (<>
                             <Input
                                 type="text"
@@ -292,7 +292,7 @@ export const Tarefas = () => {
                                     tarefa={tarefa}
                                     marcarTarefa={marcarTarefa}
                                 />
-                                <DeleteButton onClick={() => { apagarTarefa(index); playClick() }}></DeleteButton>
+                                <DeleteButton onClick={() => { apagarTarefa(index); }}></DeleteButton>
                             </Botoes>
                         )}
                     </TaskContainer>

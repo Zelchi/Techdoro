@@ -13,8 +13,8 @@ export const useSound = (src: som) => {
 
     const vol = localStorage.getItem("volume") || "50"
     const volume = (Number(vol) / 100)
-
     const som = useRef<HTMLAudioElement>(null)
+
     useEffect(() => {
         const audio = document.createElement("audio")
         document.body.appendChild(audio);
@@ -24,9 +24,7 @@ export const useSound = (src: som) => {
         audio.appendChild(source);
         som.current = audio;
         audio.volume = volume;
-        return () => {
-            document.body.removeChild(audio);
-        }
+        return () => { document.body.removeChild(audio) }
     }, [src, volume])
 
     const play = () => {

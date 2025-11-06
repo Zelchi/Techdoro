@@ -9,7 +9,6 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    
     margin-top: 15px;
     width: calc(100% - 30px);
 `
@@ -22,7 +21,6 @@ const Barra = styled.div`
     border: 2px inset white;
     width: 100%;
     height: 30px;
-    /* border-radius: 15px 15px 0px 0px; */
 `
 
 const Caixa = styled.div`
@@ -44,8 +42,8 @@ const ButtonSwitch = styled.div<{ $clicked: boolean }>`
 
 export const Pomodoro = () => {
 
-    const timeMaxLong = 25 * 60;
-    const timeMaxShort = 5 * 60;
+    const timeMaxLong = 3;
+    const timeMaxShort = 3;
 
     const [clock, setClock] = useState(true);
     const [longClock, setLongClock] = useState({
@@ -64,7 +62,7 @@ export const Pomodoro = () => {
         if (rep) {
             setRepeat(parseInt(rep));
         }
-    });
+    }, []);
 
     const [playClick] = useSound('click');
     const [playAlarm] = useSound("alarm");

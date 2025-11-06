@@ -5,6 +5,7 @@
     box-sizing: border-box;
     user-select: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 :root {
