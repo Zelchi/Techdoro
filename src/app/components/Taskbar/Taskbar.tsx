@@ -1,7 +1,7 @@
 import styled, { keyframes, css } from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
-import { CheckBox } from './tarefas/CheckBox'
-import { useSound } from '../hooks/useSound';
+import { CheckBox } from './Taskbar-Checkbox'
+import { useSound } from '../../hooks/useSound';
 import seta from '../assets/Seta.png';
 
 const Container = styled.div`

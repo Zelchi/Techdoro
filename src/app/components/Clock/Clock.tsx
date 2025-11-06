@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSound } from '../../hooks/useSound'
 import { SlReload } from 'react-icons/sl'
-import { BarraProgresso } from './BarraProgresso'
+import { BarraProgresso } from './Clock-Progress'
 import styled from "styled-components"
 
 const Caixa = styled.div<{ $type: boolean }>`

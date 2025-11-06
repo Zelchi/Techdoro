@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Tarefa } from '../tarefa'
+import { Tarefa } from './Taskbar'
 
 type Props = {
     tarefa: Tarefa,

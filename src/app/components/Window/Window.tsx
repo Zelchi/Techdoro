@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { Clock } from './relogios/Clock'
+import { Clock } from '../Clock/Clock'
 import { useState, useEffect } from 'react'
-import { useSound } from '../hooks/useSound'
-import { Volume } from './relogios/Volume'
+import { useSound } from '../../hooks/useSound'
+import { Volume } from '../Clock/Clock-Volume'
 
 const Container = styled.div`
     display: flex;

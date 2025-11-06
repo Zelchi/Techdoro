@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
-import { Pomodoro } from './components/Pomodoro'
-import { BarraJanela } from './components/BarraJanela'
-import { Tarefas } from './components/tarefa'
+import { Pomodoro } from './components/Window/Window'
+import { BarraJanela } from './components/Window/Window-Bar'
+import { Tarefas } from './components/Taskbar/Taskbar'
 import styled from 'styled-components'
 import './index.css'
 
