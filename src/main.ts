@@ -48,7 +48,6 @@ const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string
     return path.join(basePath, iconName);
 };
 
-// Ícone para notificação (PNG é mais compatível)
 const getNotificationIcon = (): string | undefined => {
     const basePath = app.isPackaged
         ? process.resourcesPath
@@ -71,7 +70,6 @@ if (!gotTheLock) {
 }
 
 const createWindow = () => {
-    // Corrige variável sombreada: usa a global
     mainWindow = new BrowserWindow({
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
