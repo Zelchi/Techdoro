@@ -20,7 +20,7 @@ const Barra = styled.div<{ $progresso: number }>`
     border-radius: 15px;
 `;
 
-export function BarraProgresso({ time: { timeNow, timeMax }, type }: ProgressBar): ReactElement {
+export function BarraProgresso({ time: { timeNow, timeMax }, type }: any): ReactElement {
 
     const progresso = (timeNow / timeMax) * 100;
     const progressoInvertido = Math.abs(progresso - 100);

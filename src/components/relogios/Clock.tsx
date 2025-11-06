@@ -99,7 +99,7 @@ export const Clock = ({ swap, alarm, clock, type }: any) => {
             const newTime = newNow - elapsed;
 
             if (newTime <= 0) {
-                (window as any).api(type ? 'notifiTimeLong' : 'notifiTimeShort');
+                window.api(type ? 'notifiTimeLong' : 'notifiTimeShort');
                 setTime({ timeNow: timeMax, timeMax });
                 alarm();
                 swap();

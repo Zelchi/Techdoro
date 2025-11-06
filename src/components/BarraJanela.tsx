@@ -83,10 +83,10 @@ export const BarraJanela = () => {
                 <Minimizar
                     onMouseMove={() => { setMiniColor(true) }}
                     onMouseOut={() => { setMiniColor(false) }}
-                    onClick={() => { (window as any).api('minimizar'); setMiniColor(false) }}
+                    onClick={() => { window.api('minimizar'); setMiniColor(false) }}
                     $minicolor={miniColor}
                 />
-                <Fechar onClick={() => { (window as any).api('fechar'); }} />
+                <Fechar onClick={() => { window.api('fechar'); }} />
             </Caixa2>
         </Barra>
     )
