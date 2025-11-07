@@ -89,8 +89,10 @@ const createWindow = () => {
         resizable: false,
         frame: false,
         icon: getIconPath(),
-        backgroundColor: '#1c1c1c',
         titleBarStyle: 'hidden',
+        vibrancy: 'fullscreen-ui',
+        backgroundMaterial: 'acrylic',
+        backgroundColor: '#00000000',
     });
 
     const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged;

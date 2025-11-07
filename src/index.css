@@ -43,8 +43,7 @@ body {
     min-width: 100dvw;
     max-width: 100dvw;
 
-    background-color: #1c1c1c;
-    color: #ffffff;
+    color: white;
 }
 
 ::-webkit-slider-thumb {
