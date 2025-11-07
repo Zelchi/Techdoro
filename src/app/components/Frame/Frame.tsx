@@ -1,7 +1,4 @@
 import styled from 'styled-components'
-import Clock from './Clock/Clock'
-import { useState, useEffect } from 'react'
-import { useSound } from '../../hooks/useSound'
 import Volume from './Clock/Clock-Volume'
 
 const Container = styled.div`
@@ -31,65 +28,25 @@ const Caixa = styled.div`
     width: 30%;
 `
 
-const ButtonSwitch = styled.div<{ $clicked: boolean }>`
+const ButtonSwitch = styled.div`
     border-radius: 50%;
     height: 20px;
     width: 20px;
     margin-left: 10%;
-    background-color: ${({ $clicked }) => ($clicked ? '#3C3C3C' : '#3C3C3C')};
-    border: 2px ${({ $clicked }) => ($clicked ? 'inset' : 'outset')} gray;
 `
 
-type FrameProps = {
-    volumeState?: number;
-}
-
-export default ({ volumeState }: FrameProps) => {
-
-    const timeMaxLong = 3;
-    const timeMaxShort = 3;
-
-    const [clock, setClock] = useState(true);
-    const [longClock, setLongClock] = useState({
-        timeMax: timeMaxLong,
-        timeNow: timeMaxLong,
-    });
-    const [shortClock, setShortClock] = useState({
-        timeNow: timeMaxShort,
-        timeMax: timeMaxShort,
-    });
-
-    const [playClick] = useSound('click', volumeState);
-    const [playAlarm] = useSound("alarm", volumeState);
-
-    const swap = () => {
-        setClock(!clock);
-    };
-
-    useEffect(() => {
-        if (clock && longClock.timeNow === 0) {
-            playAlarm();
-            setLongClock({ timeMax: timeMaxLong, timeNow: timeMaxLong });
-        } else if (!clock && shortClock.timeNow === 0) {
-            playAlarm();
-            setShortClock({ timeMax: timeMaxShort, timeNow: timeMaxShort });
-        }
-    }, [longClock.timeNow, shortClock.timeNow]);
+export default () => {
 
     return (
         <Container>
             <Barra>
                 <Caixa>
-                    <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
+                    <ButtonSwitch onClick={() => { console.log('click') }} />
                 </Caixa>
-                <p>Relógio</p>
-                <Volume volumeState={volumeState} />
+                <p>Clock</p>
+                <Volume />
             </Barra>
-            {clock ? (
-                <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
-            ) : (
-                <Clock swap={swap} alarm={playAlarm} clock={{ time: shortClock, setTime: setShortClock }} type={clock} />
-            )}
         </Container>
     );
+
 };
