@@ -1,19 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type Vol = {
+type Volume = {
     volume: number
 }
 
-const volumeState: Vol = {
-    volume: 30
+const getLocalStorage = (): Volume => {
+    const volume = localStorage.getItem('volume');
+
+    return {
+        volume: volume ? parseInt(volume) : 30
+    }
 }
+
+const volumeState = getLocalStorage();
 
 const volumeSlice = createSlice({
     name: 'volumeSlice',
     initialState: volumeState,
     reducers: {
         setVolume: (state, action) => {
-            state.volume = action.payload;
+            const payload = action.payload;
+            state.volume = payload;
+            localStorage.setItem('volume', payload);
         }
     }
 });
