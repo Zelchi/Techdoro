@@ -94,9 +94,10 @@ export default ({ reset, clock, running, type }: ClockProps) => {
     const { isRunning, setIsRunning } = running;
 
     const formatTime = (time: number) => {
-        const minutes = Math.floor(time / 60)
-        const seconds = time % 60
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        const total = Math.max(0, Math.floor(time));
+        const minutes = Math.floor(total / 60);
+        const seconds = total - minutes * 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
     return (<>
