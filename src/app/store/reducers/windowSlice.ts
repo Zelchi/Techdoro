@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Window = {
-    win: number
+    value: number
 }
 
 const windowState: Window = {
-    win: 1
+    value: 1
 }
 
 const windowSlice = createSlice({
@@ -13,7 +13,7 @@ const windowSlice = createSlice({
     initialState: windowState,
     reducers: {
         setWindow: (state, action) => {
-            state.win = action.payload;
+            state.value = action.payload;
         }
     }
 });

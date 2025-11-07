@@ -12,7 +12,7 @@ const getLocalStorage = (): Volume => {
     }
 }
 
-const volumeState = getLocalStorage();
+const volumeState: Volume = getLocalStorage();
 
 const volumeSlice = createSlice({
     name: 'volumeSlice',

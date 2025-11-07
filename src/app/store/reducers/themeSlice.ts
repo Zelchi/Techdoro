@@ -4,7 +4,7 @@ type Theme = {
     theme: number
 }
 
-const getLocalStorage = () => {
+const getLocalStorage = (): Theme => {
     const theme = localStorage.getItemItem('theme');
 
     return {
