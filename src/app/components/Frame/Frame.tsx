@@ -9,70 +9,73 @@ import { useSound } from '../../hooks/useSound'
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: start;
-    margin-top: 15px;
-    width: calc(100% - 30px);
+    margin-top: 12px;
+    width: calc(100% - 28px);
+    gap: 12px;
 `
 
 const Barra = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3c3c3c;
-    border: 1px solid white;
     width: 100%;
-    height: 30px;
-    padding: 0 10px;
+    height: 42px;
+    padding: 12px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
+    backdrop-filter: blur(8px) saturate(160%);
 `
 
 const Caixa = styled.div`
     width: 100%;
     height: 100%;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 
-    &:nth-child(1) {
-        justify-content: start;
-    }
-    &:nth-child(2) {
-        justify-content: center;
-    }
-    &:nth-child(3) {
-        justify-content: end;
-    }
+    &:nth-child(1) { justify-content: flex-start; }
+    &:nth-child(2) { justify-content: center; }
+    &:nth-child(3) { justify-content: flex-end; }
 `
 
 const Button = styled.button`
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
-    color: white;
-    border: 1px solid white;
-    margin: 5px;
+    background: var(--bg-2);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    margin: 0;
+    border-radius: var(--radius-xs);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
 
-    &:hover {
-        cursor: pointer;
-        background-color: transparent;
-    }
+    &:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    &:active { filter: brightness(.85); }
+    &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 `
 
 const Box = styled.div<{ $active?: boolean }>`
     width: 10px;
     height: 10px;
-    border: 1px solid white;
-    background-color: ${({ $active }) => ($active ? 'white' : 'transparent')};  
+    border: 1px solid var(--border-strong);
+    background-color: ${({ $active }) => ($active ? 'var(--accent-strong)' : 'transparent')};
+    border-radius: 4px;
+    transition: background .25s, box-shadow .25s;
+    box-shadow: ${({ $active }) => ($active ? '0 0 0 3px rgba(110,231,255,0.25)' : 'none')};
 `
 
 type ClockT = {
-    timeNow: number; // seconds remaining
-    timeMax: number; // total seconds
+    timeNow: number;
+    timeMax: number;
 }
 
 export default () => {
@@ -209,9 +212,17 @@ export default () => {
     return (
         <Container>
             <Barra>
-                <Caixa><Button onClick={() => { handleNext(); click(); }}><GoIssueReopened /></Button></Caixa>
-                <Caixa><Box $active={clock === 1} /><Box $active={clock === 2} /><Box $active={clock === 3} /></Caixa>
-                <Caixa><Button onClick={() => { click(); }}><GoTools /></Button></Caixa>
+                <Caixa>
+                    <Button aria-label="Próximo ciclo" onClick={() => { handleNext(); click(); }}><GoIssueReopened /></Button>
+                </Caixa>
+                <Caixa>
+                    <Box $active={clock === 1} />
+                    <Box $active={clock === 2} />
+                    <Box $active={clock === 3} />
+                </Caixa>
+                <Caixa>
+                    <Button aria-label="Configurações" onClick={() => { click(); }}><GoTools /></Button>
+                </Caixa>
             </Barra>
             {clock === 1 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
             {clock === 2 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}

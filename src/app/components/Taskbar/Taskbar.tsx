@@ -2,37 +2,45 @@ import styled, { keyframes, css } from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
 import { CheckBox } from './Taskbar-Checkbox'
 import { useSound } from '../../hooks/useSound';
-import seta from '../../assets/Seta.png';
+import { GoPlus, GoTrash } from 'react-icons/go';
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: start;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    width: calc(100% - 30px);
+    margin-top: 12px;
+    margin-bottom: 12px;
+    width: calc(100% - 28px);
     flex: 1;
     overflow: hidden;
+    gap: 12px;
 `;
 
 const Barra = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #3c3c3c;
+    background: var(--bg-1);
     width: 100%;
-    border: 1px solid white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    height: 42px;
+    backdrop-filter: blur(8px) saturate(160%);
 `;
 
 const Caixa = styled.div`
     width: 100%;
     height: 100%;
-    background-color: #6c6c6c;
-    border: 1px solid white;
-    padding: 10px;
-    overflow-y: scroll;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    overflow-y: auto;
     overflow-x: hidden;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 `;
 
 const Form = styled.form`
@@ -40,25 +48,28 @@ const Form = styled.form`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-
     width: 100%;
-    padding: 10px;
-
-    background-color: #6c6c6c;
-    
-    border: 1px solid white;
-    border-top: none;
-    border-bottom: none;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0;
+    overflow: hidden;
 `;
 
 const Input = styled.input`
     font-family: 'Press Start 2P';
-    padding: 10px;
-    border: 1px solid white;
-    background-color: #9c9c9c;
+    padding: 12px 14px;
+    border: none;
+    background: var(--bg-3);
+    color: var(--text-1);
     width: 100%;
-    height: 40px;
+    height: 44px;
     outline: none;
+    font-size: 14px;
+    letter-spacing: .5px;
+    border-right: 1px solid var(--border);
+    transition: background .15s;
+    &:focus { background: var(--bg-2); }
 `;
 
 const Button = styled.button`
@@ -66,21 +77,16 @@ const Button = styled.button`
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    height: 40px;
-    background-color: #3c3c3c;
-    background-image: url(${seta});
-    background-size: 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: white;
-    border: 1px solid white;
-    border-left: none;
-    padding-left: 40px;
-
-    &:hover {
-        cursor: pointer;
-        background-color: #555;
-    }
+    height: 44px;
+    width: 58px;
+    background: var(--bg-3);
+    color: var(--accent);
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background .15s, color .15s;
+    &:hover { background: var(--bg-2); color: var(--accent-strong); }
+    &:active { filter: brightness(.85); }
 `;
 
 const fade = keyframes`
@@ -99,7 +105,8 @@ const TaskContainer = styled.div`
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    animation: ${fade} 1s normal;
+    animation: ${fade} .6s ease;
+    gap: 10px;
 `;
 
 const TaskTextContainer = styled.div`
@@ -108,10 +115,9 @@ const TaskTextContainer = styled.div`
     align-items: center;
     justify-content: start;
     width: 100%;
-    height: 30px;
+    min-height: 32px;
     margin-right: 5px;
     overflow: hidden;
-    text-decoration: underline;
 `;
 
 const scrollText = keyframes`
@@ -125,11 +131,11 @@ const scrollText = keyframes`
 
 const TaskText = styled.p<{ $completed: boolean; $shouldScroll: boolean }>`
     font-family: 'Press Start 2P';
-    font-size: 16px;
+    font-size: 14px;
     display: inline-block;
     text-overflow: ellipsis;
     width: 100%;
-    text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
+    color: ${({ $completed }) => ($completed ? 'var(--text-2)' : 'var(--text-1)')};
     cursor: pointer;
     white-space: nowrap;
     ${({ $shouldScroll }) => $shouldScroll && css`
@@ -142,19 +148,24 @@ const Botoes = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: end;
-    gap: 5px;
+    gap: 6px;
 `;
 
 const DeleteButton = styled.button`
-    padding: 10px;
-    background-color: #3c3c3c;
-    border: 2px outset gray;
-    
-    &:hover {
-        cursor: pointer;
-        background-color: #6C1C1C;
-        border: 2px outset gray;
-    }
+    height: 30px;
+    width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-3);
+    color: #ff6b6b;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background .15s, color .15s, border-color .15s;
+    &:hover { background: #ff3535; color: #fff; border-color: #ff3535; }
+    &:active { filter: brightness(.85); }
 `;
 
 export type Tarefa = {
@@ -252,14 +263,13 @@ export default () => {
 
     return (
         <Container>
-            <Barra><p>Tarefas</p></Barra>
             <Form onSubmit={adicionarTarefa}>
                 <Input
                     type="text"
                     value={novaTarefa}
                     onChange={(e) => setNovaTarefa(e.target.value)}
                 />
-                <Button type="submit" onClick={() => novaTarefa && playClick()} />
+                <Button aria-label="Adicionar tarefa" type="submit" onClick={() => novaTarefa && playClick()}><GoPlus /></Button>
             </Form>
             <Caixa ref={containerRef}>
                 {tarefas.map((tarefa, index) => (
@@ -290,7 +300,7 @@ export default () => {
                                     tarefa={tarefa}
                                     marcarTarefa={marcarTarefa}
                                 />
-                                <DeleteButton onClick={() => { apagarTarefa(index); }}></DeleteButton>
+                                <DeleteButton aria-label="Apagar tarefa" onClick={() => { apagarTarefa(index); }}><GoTrash /></DeleteButton>
                             </Botoes>
                         )}
                     </TaskContainer>

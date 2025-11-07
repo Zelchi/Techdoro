@@ -8,9 +8,16 @@ type Props = {
 
 const Caixa = styled.div<{ $marcado: boolean }>`
     cursor: pointer;
-    padding: 10px;
-    background-color: ${({ $marcado }) => ($marcado ? '#1C3C1C' : '#6C6C6C')};
-    border: 2px ${({ $marcado }) => ($marcado ? 'outset' : 'outset')} gray;
+    height: 30px;
+    width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${({ $marcado }) => ($marcado ? 'rgba(34, 211, 238, 0.1)' : 'var(--bg-3)')};
+    color: ${({ $marcado }) => ($marcado ? 'var(--accent-strong)' : 'var(--text-2)')};
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    transition: background .15s, color .15s, border-color .15s;
 `
 
 export const CheckBox = ({ tarefa, marcarTarefa }: Props) => {

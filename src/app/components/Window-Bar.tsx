@@ -5,14 +5,17 @@ import { GoX } from "react-icons/go";
 
 const Barra = styled.div`
     width: 100%;
-    height: 30px;
-    padding: 0 10px;
+    height: 38px;
+    padding: 0 14px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #3c3c3c;
-    color: white;
+    background: var(--bg-1);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    backdrop-filter: blur(8px) saturate(160%);
     -webkit-app-region: drag;
 `
 
@@ -44,13 +47,23 @@ const Titulo = styled.div`
     font-size: 14px;
 `
 
-const Button = styled.div`
+const Button = styled.button`
     -webkit-app-region: no-drag;
-    border: 1px solid black;
+    height: 26px;
+    width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-2);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
     cursor: pointer;
+    font-size: 14px;
+    transition: background .15s, border-color .15s, color .15s;
 
-    &:hover {
-        background-color: #1c1c1c;
+    &:active {
+        filter: brightness(.85);
     }
 `
 
@@ -64,7 +77,7 @@ export default () => {
     return (
         <Barra onDoubleClick={handleDoubleClick}>
             <Caixa>
-                <Icon src={icon} />
+                <Button> <Icon draggable="false" src={icon} /> </Button>
             </Caixa>
             <Caixa>
                 <Titulo>Techdoro</Titulo>

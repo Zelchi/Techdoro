@@ -9,6 +9,10 @@ const Caixa = styled.div<{ $clock: boolean }>`
     height: 10px;
     border: 1px solid gray;
     border-radius: 15px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
 `
 
 const Barra = styled.div<{ $progresso: number }>`
@@ -17,6 +21,10 @@ const Barra = styled.div<{ $progresso: number }>`
     border: 2px outset gray;
     height: 100%;
     border-radius: 15px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
 `
 
 type ProgressBarProps = {

@@ -13,9 +13,6 @@ const Caixa = styled.div`
     width: 100%;
     height: 100%;
     gap: 10px;
-
-    border: 1px solid white;
-    border-top: none;
 `
 
 const Hora = styled.div`
@@ -47,6 +44,10 @@ const Button = styled.button`
     color: white;
     padding: 10px;
     border: 1px solid white;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
     
     &:hover {
         cursor: pointer;
@@ -60,6 +61,10 @@ const Reset = styled(SlReload)`
     background-color: #3c3c3c;
     border: 1px solid white;
     padding: 5px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
 
     &:hover {
         cursor: pointer;
