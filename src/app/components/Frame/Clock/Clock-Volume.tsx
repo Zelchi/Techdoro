@@ -15,7 +15,7 @@ const BarraVolume = styled.input`
     width: 100%;
     margin-right: 3px;
     background-color: #313136;
-    border: 2px inset white;
+    border: 1px solid white;
     outline: none;
     &::-webkit-slider-thumb {
         height: 20px;
@@ -31,7 +31,7 @@ const Button = styled.button`
     height: 20px;
     width: 20px;
     background-color: #3C3C3C;
-    border: 2px inset gray;
+    border: 1px solid gray;
     margin-right: 10%;
     border-radius: 50%;
 `

@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
-import { useSound } from '../../../hooks/useSound'
 import { SlReload } from 'react-icons/sl'
-import { BarraProgresso } from './Clock-Progress'
+import BarraProgresso from './Clock-Progress'
 import styled from "styled-components"
+import { useSound } from '../../../hooks/useSound'
 
 const Caixa = styled.div`
     display: flex;
@@ -15,12 +14,11 @@ const Caixa = styled.div`
     height: 100%;
     gap: 10px;
 
-    border: 2px inset white;
+    border: 1px solid white;
     border-top: none;
 `
 
 const Hora = styled.div`
-
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -48,7 +46,7 @@ const Button = styled.button`
     background-color: #3c3c3c;
     color: white;
     padding: 10px;
-    border: 2px inset white;
+    border: 1px solid white;
     
     &:hover {
         cursor: pointer;
@@ -60,7 +58,7 @@ const Reset = styled(SlReload)`
     width: 30px;
     height: 30px;
     background-color: #3c3c3c;
-    border: 2px inset white;
+    border: 1px solid white;
     padding: 5px;
 
     &:hover {
@@ -77,21 +75,23 @@ const Branco = styled.button`
 `
 
 type ClockProps = {
-    swap: () => void;
-    alarm: () => void;
     reset: () => void;
     clock: {
         timeNow: number;
         timeMax: number;
     }
+    running: {
+        isRunning: boolean;
+        setIsRunning: (value: boolean) => void;
+    }
     type: number;
 }
 
-export default ({ swap, alarm, reset, clock, type }: ClockProps) => {
-    const { timeNow, timeMax } = clock;
+export default ({ reset, clock, running, type }: ClockProps) => {
 
-    const [isRunning, setIsRunning] = useState(false)
-    const [playClick] = useSound("click");
+    const [click] = useSound('click');
+    const { timeNow, timeMax } = clock;
+    const { isRunning, setIsRunning } = running;
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -103,9 +103,9 @@ export default ({ swap, alarm, reset, clock, type }: ClockProps) => {
         <Caixa>
             <Hora>
                 <h1>{formatTime(timeNow)}</h1>
-                <BarraProgresso {...{ time: { timeNow, timeMax }, type }} />
+                <BarraProgresso timeNow={timeNow} timeMax={timeMax} type={type} />
             </Hora>
-            <Buttons onClick={playClick}>
+            <Buttons onClick={click}>
                 {!isRunning && !(timeNow === (timeMax)) && <Branco />}
                 <Button onClick={() => { setIsRunning(!isRunning) }} >
                     {isRunning ? 'Pause' : 'Start'}

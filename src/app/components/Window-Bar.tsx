@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
-import { GoX, GoHorizontalRule } from "react-icons/go";
+import { GoX } from "react-icons/go";
 
 const Barra = styled.div`
     width: 100%;
@@ -46,7 +46,7 @@ const Titulo = styled.div`
 
 const Button = styled.div`
     -webkit-app-region: no-drag;
-    border: 2px inset black;
+    border: 1px solid black;
     cursor: pointer;
 
     &:hover {

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
-import Volume from './Clock/Clock-Volume'
-import { useCallback, useState } from 'react'
 import Clock from './Clock/Clock'
-import { GoChevronRight } from "react-icons/go";
+import { useCallback, useState } from 'react'
+import { GoChevronRight, GoChevronLeft } from "react-icons/go";
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/app/store/store';
 import { useSound } from '../../hooks/useSound'
@@ -21,7 +20,7 @@ const Barra = styled.div`
     justify-content: space-between;
     align-items: center;
     background-color: #3c3c3c;
-    border: 2px inset white;
+    border: 1px solid white;
     width: 100%;
     height: 30px;
     padding: 0 10px;
@@ -53,13 +52,14 @@ const Button = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3c3c3c;
+    background-color: black;
     color: white;
-    border: 2px inset black;
+    border: 1px solid white;
+    margin: 5px;
 
     &:hover {
         cursor: pointer;
-        background-color: #4c4c4c;
+        background-color: transparent;
     }
 `
 
@@ -70,14 +70,15 @@ type Clock = {
 
 export default () => {
     const [clock, setClock] = useState<number>(1);
+    const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
     const [longClock, setLongClock] = useState<Clock>({ timeNow: 0, timeMax: LongMax });
     const [shortClock, setShortClock] = useState<Clock>({ timeNow: 0, timeMax: ShortMax });
     const [finalClock, setFinalClock] = useState<Clock>({ timeNow: 0, timeMax: FinalMax });
 
-    const [playClick] = useSound('click');
-    const [playAlarm] = useSound("alarm");
+    const [click] = useSound('click');
+    const [alarm] = useSound('alarm');
 
     const handleReset = useCallback(() => {
         if (clock === 1) {
@@ -103,13 +104,13 @@ export default () => {
     return (
         <Container>
             <Barra>
-                <Caixa><Button onClick={handleClick}><GoChevronRight /></Button></Caixa>
+                <Caixa><Button onClick={() => { handleClick(); click(); }}><GoChevronRight /></Button></Caixa>
                 <Caixa>{clock}</Caixa>
-                <Caixa>B3</Caixa>
+                <Caixa><Button onClick={() => { handleClick(); click(); }}><GoChevronLeft /></Button></Caixa>
             </Barra>
-            {clock === 1 && <Clock swap={handleClick} alarm={playAlarm} clock={longClock} type={clock} reset={handleReset} />}
-            {clock === 2 && <Clock swap={handleClick} alarm={playAlarm} clock={shortClock} type={clock} reset={handleReset} />}
-            {clock === 3 && <Clock swap={handleClick} alarm={playAlarm} clock={finalClock} type={clock} reset={handleReset} />}
+            {clock === 1 && <Clock clock={longClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
+            {clock === 2 && <Clock clock={shortClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
+            {clock === 3 && <Clock clock={finalClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
         </Container>
     );
 

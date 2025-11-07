@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import styled from 'styled-components'
 
 const Caixa = styled.div<{ $clock: boolean }>`
@@ -8,9 +7,9 @@ const Caixa = styled.div<{ $clock: boolean }>`
     width: 100%;
     background-color: #9C9C9C;
     height: 10px;
-    border: 2px inset gray;
+    border: 1px solid gray;
     border-radius: 15px;
-`;
+`
 
 const Barra = styled.div<{ $progresso: number }>`
     background-color: #3C3C3C;
@@ -18,15 +17,21 @@ const Barra = styled.div<{ $progresso: number }>`
     border: 2px outset gray;
     height: 100%;
     border-radius: 15px;
-`;
+`
 
-export function BarraProgresso({ time: { timeNow, timeMax }, type }: any): ReactElement {
+type ProgressBarProps = {
+    timeNow: number;
+    timeMax: number;
+    type: number;
+}
+
+export default ({ timeNow, timeMax, type }: ProgressBarProps) => {
 
     const progresso = (timeNow / timeMax) * 100;
     const progressoInvertido = Math.abs(progresso - 100);
 
     return (
-        <Caixa $clock={type}>
+        <Caixa $clock={(type == 1 || type == 2)}>
             <Barra $progresso={progressoInvertido} />
         </Caixa>
     );

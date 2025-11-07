@@ -22,14 +22,14 @@ const Barra = styled.div`
     align-items: center;
     background-color: #3c3c3c;
     width: 100%;
-    border: 2px inset white;
+    border: 1px solid white;
 `;
 
 const Caixa = styled.div`
     width: 100%;
     height: 100%;
     background-color: #6c6c6c;
-    border: 2px inset white;
+    border: 1px solid white;
     padding: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -46,7 +46,7 @@ const Form = styled.form`
 
     background-color: #6c6c6c;
     
-    border: 2px inset white;
+    border: 1px solid white;
     border-top: none;
     border-bottom: none;
 `;
@@ -54,7 +54,7 @@ const Form = styled.form`
 const Input = styled.input`
     font-family: 'Press Start 2P';
     padding: 10px;
-    border: 2px inset white;
+    border: 1px solid white;
     background-color: #9c9c9c;
     width: 100%;
     height: 40px;
@@ -73,7 +73,7 @@ const Button = styled.button`
     background-repeat: no-repeat;
     background-position: center;
     color: white;
-    border: 2px inset white;
+    border: 1px solid white;
     border-left: none;
     padding-left: 40px;
 
