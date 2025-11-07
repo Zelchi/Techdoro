@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Clock from './Clock/Clock'
 import { useCallback, useEffect, useState } from 'react'
-import { GoChevronRight, GoChevronLeft } from "react-icons/go";
+import { GoTools, GoIssueReopened } from "react-icons/go";
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/app/store/store';
 import { useSound } from '../../hooks/useSound'
@@ -88,6 +88,16 @@ export default () => {
     const [click] = useSound('click');
     const [alarm] = useSound('alarm');
 
+    const handleReset = useCallback(() => {
+        if (clock === 1) setLongClock({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
+        if (clock === 2) setShortClock({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
+        if (clock === 3) setFinalClock({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
+    }, [clock, LongMax, ShortMax, FinalMax]);
+
+    const handleNext = useCallback(() => {
+        setClock(prev => (prev >= 3 ? 1 : prev + 1));
+    }, []);
+
     useEffect(() => {
         setLongClock(prev => {
             const nextMax = LongMax * 60;
@@ -112,22 +122,9 @@ export default () => {
         });
     }, [FinalMax]);
 
-    const handleReset = useCallback(() => {
-        if (clock === 1) setLongClock({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
-        if (clock === 2) setShortClock({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
-        if (clock === 3) setFinalClock({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
-    }, [clock, LongMax, ShortMax, FinalMax]);
-
-    const handleNext = useCallback(() => {
-        setClock(prev => (prev >= 3 ? 1 : prev + 1));
-    }, []);
-
-    const handlePrev = useCallback(() => {
-        setClock(prev => (prev <= 1 ? 3 : prev - 1));
-    }, []);
-
     useEffect(() => {
         if (!isRunning) return;
+
         const interval = setInterval(() => {
             if (clock === 1) {
                 setLongClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - 1, 0) }));
@@ -137,6 +134,7 @@ export default () => {
                 setFinalClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - 1, 0) }));
             }
         }, 1000);
+
         return () => clearInterval(interval);
     }, [isRunning, clock]);
 
@@ -156,9 +154,9 @@ export default () => {
     return (
         <Container>
             <Barra>
-                <Caixa><Button onClick={() => { handlePrev(); click(); }}><GoChevronLeft /></Button></Caixa>
+                <Caixa><Button onClick={() => { handleNext(); click(); }}><GoIssueReopened /></Button></Caixa>
                 <Caixa><Box $active={clock === 1} /><Box $active={clock === 2} /><Box $active={clock === 3} /></Caixa>
-                <Caixa><Button onClick={() => { handleNext(); click(); }}><GoChevronRight /></Button></Caixa>
+                <Caixa><Button onClick={() => { click(); }}><GoTools /></Button></Caixa>
             </Barra>
             {clock === 1 && <Clock clock={longClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
             {clock === 2 && <Clock clock={shortClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
