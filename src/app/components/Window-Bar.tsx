@@ -1,6 +1,7 @@
 import { MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
+import { GoX, GoHorizontalRule } from "react-icons/go";
 
 const Barra = styled.div`
     width: 100%;
@@ -45,10 +46,12 @@ const Titulo = styled.div`
 
 const Button = styled.div`
     -webkit-app-region: no-drag;
-    width: 20px;
-    height: 20px;
     border: 2px inset black;
     cursor: pointer;
+
+    &:hover {
+        background-color: #1c1c1c;
+    }
 `
 
 export default () => {
@@ -67,8 +70,7 @@ export default () => {
                 <Titulo>Techdoro</Titulo>
             </Caixa>
             <Caixa>
-                <Button onClick={() => { window.api('window-minimize') }} />
-                <Button onClick={() => { window.api('window-close'); }} />
+                <Button onClick={() => { window.api('window-close'); }} > <GoX /></Button>
             </Caixa>
         </Barra>
     )

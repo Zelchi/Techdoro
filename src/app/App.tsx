@@ -1,4 +1,5 @@
 import WindowBar from './components/Window-Bar'
+import Menu from './components/Menu'
 import Frame from './components/Frame/Frame'
 import Taskbar from './components/Taskbar/Taskbar'
 import styled from 'styled-components'
@@ -21,7 +22,7 @@ export default () => {
     return (
         <Container>
             <WindowBar />
-            <Frame />
+            {win ? <Frame /> : <Menu />}
             <Taskbar />
         </Container>
     )
