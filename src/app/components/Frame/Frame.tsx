@@ -223,9 +223,12 @@ export default () => {
                     <Button onClick={() => { click(); }}><GoTools /></Button>
                 </Caixa>
             </Barra>
-            {clock === 1 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
-            {clock === 2 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
-            {clock === 3 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
+            <Clock
+                clock={activeClockProp}
+                running={{ isRunning, setIsRunning }}
+                type={clock}
+                reset={handleReset}
+            />
         </Container>
     );
 };
