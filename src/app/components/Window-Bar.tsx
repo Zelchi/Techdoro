@@ -61,10 +61,9 @@ const Button = styled.button`
     cursor: pointer;
     font-size: 14px;
     transition: background .15s, border-color .15s, color .15s;
-
-    &:active {
-        filter: brightness(.85);
-    }
+    
+    &:active { filter: brightness(.85); }
+    &:hover { background: var(--bg-3); border-color: var(--border-strong); }
 `
 
 export default () => {

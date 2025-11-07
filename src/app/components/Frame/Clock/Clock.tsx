@@ -48,11 +48,10 @@ const Button = styled.button`
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-1);
+    cursor: pointer;
     
-    &:hover {
-        cursor: pointer;
-        background-color: #4c4c4c;
-    }
+    &:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    &:active { filter: brightness(.85); }
 `
 
 const Reset = styled(SlReload)`
@@ -65,11 +64,10 @@ const Reset = styled(SlReload)`
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-1);
+    cursor: pointer;
 
-    &:hover {
-        cursor: pointer;
-        background-color: #4c4c4c;
-    }
+    &:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    &:active { filter: brightness(.85); }
 `
 
 const Branco = styled.button`

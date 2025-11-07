@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { Tarefa } from './Taskbar'
+import { Tarefa } from './Task'
+import { FiCheck } from 'react-icons/fi'
 
 type Props = {
     tarefa: Tarefa,
@@ -13,15 +14,24 @@ const Caixa = styled.div<{ $marcado: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: ${({ $marcado }) => ($marcado ? 'rgba(34, 211, 238, 0.1)' : 'var(--bg-3)')};
+    background: var(--bg-3);
     color: ${({ $marcado }) => ($marcado ? 'var(--accent-strong)' : 'var(--text-2)')};
     border: 1px solid var(--border);
     border-radius: var(--radius-xs);
     transition: background .15s, color .15s, border-color .15s;
+    font-size: 18px;
 `
 
 export const CheckBox = ({ tarefa, marcarTarefa }: Props) => {
     return (
-        <Caixa $marcado={tarefa.completed} onClick={() => marcarTarefa(tarefa)} />
+        <Caixa
+            $marcado={tarefa.completed}
+            onClick={() => marcarTarefa(tarefa)}
+            role="button"
+            aria-pressed={tarefa.completed}
+            aria-label={tarefa.completed ? 'Tarefa concluída' : 'Marcar tarefa como concluída'}
+        >
+            {tarefa.completed && <FiCheck />}
+        </Caixa>
     )
 }

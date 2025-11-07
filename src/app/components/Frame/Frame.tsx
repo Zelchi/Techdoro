@@ -60,7 +60,6 @@ const Button = styled.button`
 
     &:hover { background: var(--bg-3); border-color: var(--border-strong); }
     &:active { filter: brightness(.85); }
-    &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 `
 
 const Box = styled.div<{ $active?: boolean }>`
@@ -213,7 +212,7 @@ export default () => {
         <Container>
             <Barra>
                 <Caixa>
-                    <Button aria-label="Próximo ciclo" onClick={() => { handleNext(); click(); }}><GoIssueReopened /></Button>
+                    <Button onClick={() => { handleNext(); click(); }}><GoIssueReopened /></Button>
                 </Caixa>
                 <Caixa>
                     <Box $active={clock === 1} />
@@ -221,7 +220,7 @@ export default () => {
                     <Box $active={clock === 3} />
                 </Caixa>
                 <Caixa>
-                    <Button aria-label="Configurações" onClick={() => { click(); }}><GoTools /></Button>
+                    <Button onClick={() => { click(); }}><GoTools /></Button>
                 </Caixa>
             </Barra>
             {clock === 1 && <Clock clock={activeClockProp} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}

@@ -1,6 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
-import { CheckBox } from './Taskbar-Checkbox'
+import { CheckBox } from './Task-Checkbox'
 import { useSound } from '../../hooks/useSound';
 import { GoPlus, GoTrash } from 'react-icons/go';
 
@@ -15,18 +15,6 @@ const Container = styled.div`
     flex: 1;
     overflow: hidden;
     gap: 12px;
-`;
-
-const Barra = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg-1);
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    height: 42px;
-    backdrop-filter: blur(8px) saturate(160%);
 `;
 
 const Caixa = styled.div`
@@ -136,6 +124,7 @@ const TaskText = styled.p<{ $completed: boolean; $shouldScroll: boolean }>`
     text-overflow: ellipsis;
     width: 100%;
     color: ${({ $completed }) => ($completed ? 'var(--text-2)' : 'var(--text-1)')};
+    text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
     cursor: pointer;
     white-space: nowrap;
     ${({ $shouldScroll }) => $shouldScroll && css`
