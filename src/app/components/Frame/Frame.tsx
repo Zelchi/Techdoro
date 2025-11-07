@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Clock from './Clock/Clock'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { GoChevronRight, GoChevronLeft } from "react-icons/go";
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/app/store/store';
@@ -63,9 +63,16 @@ const Button = styled.button`
     }
 `
 
+const Box = styled.div<{ $active?: boolean }>`
+    width: 10px;
+    height: 10px;
+    border: 1px solid white;
+    background-color: ${({ $active }) => ($active ? 'white' : 'transparent')};  
+`
+
 type Clock = {
-    timeNow: number;
-    timeMax: number;
+    timeNow: number; // seconds remaining
+    timeMax: number; // total seconds
 }
 
 export default () => {
@@ -73,45 +80,89 @@ export default () => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
-    const [longClock, setLongClock] = useState<Clock>({ timeNow: 0, timeMax: LongMax });
-    const [shortClock, setShortClock] = useState<Clock>({ timeNow: 0, timeMax: ShortMax });
-    const [finalClock, setFinalClock] = useState<Clock>({ timeNow: 0, timeMax: FinalMax });
+
+    const [longClock, setLongClock] = useState<Clock>({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
+    const [shortClock, setShortClock] = useState<Clock>({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
+    const [finalClock, setFinalClock] = useState<Clock>({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
 
     const [click] = useSound('click');
     const [alarm] = useSound('alarm');
 
-    const handleReset = useCallback(() => {
-        if (clock === 1) {
-            setLongClock({ timeNow: 0, timeMax: LongMax });
-        }
-        if (clock === 2) {
-            setShortClock({ timeNow: 0, timeMax: ShortMax });
-        }
-        if (clock === 3) {
-            setFinalClock({ timeNow: 0, timeMax: FinalMax });
-        }
-    }, [clock]);
+    useEffect(() => {
+        setLongClock(prev => {
+            const nextMax = LongMax * 60;
+            const clampedNow = Math.min(prev.timeNow, nextMax);
+            return { timeNow: clampedNow, timeMax: nextMax };
+        });
+    }, [LongMax]);
 
-    const handleClick = useCallback(() => {
-        const next = clock + 1;
-        if (next > 3) {
-            setClock(1);
-        } else {
-            setClock(next);
+    useEffect(() => {
+        setShortClock(prev => {
+            const nextMax = ShortMax * 60;
+            const clampedNow = Math.min(prev.timeNow, nextMax);
+            return { timeNow: clampedNow, timeMax: nextMax };
+        });
+    }, [ShortMax]);
+
+    useEffect(() => {
+        setFinalClock(prev => {
+            const nextMax = FinalMax * 60;
+            const clampedNow = Math.min(prev.timeNow, nextMax);
+            return { timeNow: clampedNow, timeMax: nextMax };
+        });
+    }, [FinalMax]);
+
+    const handleReset = useCallback(() => {
+        if (clock === 1) setLongClock({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
+        if (clock === 2) setShortClock({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
+        if (clock === 3) setFinalClock({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
+    }, [clock, LongMax, ShortMax, FinalMax]);
+
+    const handleNext = useCallback(() => {
+        setClock(prev => (prev >= 3 ? 1 : prev + 1));
+    }, []);
+
+    const handlePrev = useCallback(() => {
+        setClock(prev => (prev <= 1 ? 3 : prev - 1));
+    }, []);
+
+    useEffect(() => {
+        if (!isRunning) return;
+        const interval = setInterval(() => {
+            if (clock === 1) {
+                setLongClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - 1, 0) }));
+            } else if (clock === 2) {
+                setShortClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - 1, 0) }));
+            } else {
+                setFinalClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - 1, 0) }));
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [isRunning, clock]);
+
+    useEffect(() => {
+        const current = clock === 1 ? longClock : clock === 2 ? shortClock : finalClock;
+
+        if (isRunning && current.timeNow <= 0) {
+            setIsRunning(false);
+            alarm();
         }
+    }, [isRunning, clock, longClock.timeNow, shortClock.timeNow, finalClock.timeNow, alarm]);
+
+    useEffect(() => {
+        setIsRunning(false);
     }, [clock]);
 
     return (
         <Container>
             <Barra>
-                <Caixa><Button onClick={() => { handleClick(); click(); }}><GoChevronRight /></Button></Caixa>
-                <Caixa>{clock}</Caixa>
-                <Caixa><Button onClick={() => { handleClick(); click(); }}><GoChevronLeft /></Button></Caixa>
+                <Caixa><Button onClick={() => { handlePrev(); click(); }}><GoChevronLeft /></Button></Caixa>
+                <Caixa><Box $active={clock === 1} /><Box $active={clock === 2} /><Box $active={clock === 3} /></Caixa>
+                <Caixa><Button onClick={() => { handleNext(); click(); }}><GoChevronRight /></Button></Caixa>
             </Barra>
             {clock === 1 && <Clock clock={longClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
             {clock === 2 && <Clock clock={shortClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
             {clock === 3 && <Clock clock={finalClock} running={{ isRunning, setIsRunning }} type={clock} reset={handleReset} />}
         </Container>
     );
-
 };
