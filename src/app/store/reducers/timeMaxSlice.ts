@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Time = {
-    timeLongMax: number,
-    timeShortMax: number,
-    timeFinalMax: number,
+    LongMax: number,
+    ShortMax: number,
+    FinalMax: number,
 }
 
 const getLocalStorage = (): Time => {
@@ -12,9 +12,9 @@ const getLocalStorage = (): Time => {
     const timeFinal = localStorage.getItem('timeFinalMax');
 
     return {
-        timeLongMax: timeLong ? parseInt(timeLong) : 25,
-        timeShortMax: timeShort ? parseInt(timeShort) : 5,
-        timeFinalMax: timeFinal ? parseInt(timeFinal) : 10
+        LongMax: timeLong ? parseInt(timeLong) : 25,
+        ShortMax: timeShort ? parseInt(timeShort) : 5,
+        FinalMax: timeFinal ? parseInt(timeFinal) : 10
     }
 }
 
@@ -25,9 +25,9 @@ const timeMaxSlice = createSlice({
     initialState: timeState,
     reducers: {
         setTimeMax: (state, action) => {
-            state.timeLongMax = action.payload.timeLongMax;
-            state.timeShortMax = action.payload.timeShortMax;
-            state.timeFinalMax = action.payload.timeFinalMax;
+            state.LongMax = action.payload.timeLongMax;
+            state.ShortMax = action.payload.timeShortMax;
+            state.FinalMax = action.payload.timeFinalMax;
             localStorage.setItem('timeLongMax', action.payload.timeLongMax.toString());
             localStorage.setItem('timeShortMax', action.payload.timeShortMax.toString());
             localStorage.setItem('timeFinalMax', action.payload.timeFinalMax.toString());

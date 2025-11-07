@@ -5,6 +5,7 @@ import icon from '../assets/icon.png'
 const Barra = styled.div`
     width: 100%;
     height: 30px;
+    padding: 0 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -14,58 +15,40 @@ const Barra = styled.div`
     -webkit-app-region: drag;
 `
 
-const Icon = styled.img`
-    height: 20px;
-    width: 20px;
-    margin-left: 5px;
-`
+const Caixa = styled.div`
+    width: 100%;
+    height: 100%;
 
-const Titulo = styled.h1`
-    font-size: 16px;
-`
-
-const Caixa1 = styled.div`
     display: flex;
-    justify-content: start;
+    flex-direction: row;
     align-items: center;
-    width: 100px;
-`
-
-const Caixa2 = styled.div`
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    width: 100px;
     gap: 5px;
+
+    &:nth-child(1) {
+        justify-content: start;
+    }
+    &:nth-child(2) {
+        justify-content: center;
+    }
+    &:nth-child(3) {
+        justify-content: end;
+    }
 `
 
-const Minimizar = styled.div`
+const Icon = styled.img`
+    height: 80%;
+`
+
+const Titulo = styled.div`
+    font-size: 14px;
+`
+
+const Button = styled.div`
     -webkit-app-region: no-drag;
     width: 20px;
     height: 20px;
-    border-radius: 50%;
     border: 2px inset black;
     cursor: pointer;
-
-    &:hover {
-        cursor: pointer;
-        background-color: #ff5454;
-    }
-`
-
-const Fechar = styled.div`
-    -webkit-app-region: no-drag;
-    width: 20px;
-    height: 20px;
-    margin-right: 3px;
-    border-radius: 50%;
-    border: 2px inset black;
-    background-color: #682323;
-
-    &:hover {
-        cursor: pointer;
-        background-color: #ff5454;
-    }
 `
 
 export default () => {
@@ -77,16 +60,16 @@ export default () => {
 
     return (
         <Barra onDoubleClick={handleDoubleClick}>
-            <Caixa1>
+            <Caixa>
                 <Icon src={icon} />
-            </Caixa1>
-
-            <Titulo>Techdoro</Titulo>
-
-            <Caixa2>
-                <Minimizar onClick={() => { window.api('window-minimize') }} />
-                <Fechar onClick={() => { window.api('window-close'); }} />
-            </Caixa2>
+            </Caixa>
+            <Caixa>
+                <Titulo>Techdoro</Titulo>
+            </Caixa>
+            <Caixa>
+                <Button onClick={() => { window.api('window-minimize') }} />
+                <Button onClick={() => { window.api('window-close'); }} />
+            </Caixa>
         </Barra>
     )
 }

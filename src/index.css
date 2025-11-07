@@ -1,3 +1,19 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('./app/assets/PressStart2P-Regular.ttf') format('truetype');
+}
+
+:root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --foreground-strong: #ffffff;
+    --foreground-em: #ffffff;
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: rgba(237, 237, 237, 0.18);
+    --scrollbar-thumb-hover: rgba(237, 237, 237, 0.28);
+    --scrollbar-thumb-active: rgba(237, 237, 237, 0.38);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,22 +24,10 @@
     appearance: none;
 }
 
-@font-face {
-    font-family: 'Press Start 2P';
-    src: url('./app/assets/PressStart2P-Regular.ttf') format('truetype');
-}
-
-:root {
-    font-family: 'Press Start 2P', sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
 
 body {
+    font-family: 'Press Start 2P', sans-serif;
+
     display: flex;
     flex-direction: column;
     align-items: center;

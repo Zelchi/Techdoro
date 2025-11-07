@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import volume from "./reducers/volumeSlice";
-import timeMax from "./reducers/timeMaxSlice";
+import time from "./reducers/timeMaxSlice";
 import theme from "./reducers/themeSlice";
 import window from "./reducers/windowSlice";
 
 const store = configureStore({
     reducer: {
-        timeMax,
+        time,
         theme,
         volume,
         window

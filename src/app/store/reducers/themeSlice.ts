@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Theme = {
-    theme: number
+    value: number
 }
 
 const getLocalStorage = (): Theme => {
-    const theme = localStorage.getItemItem('theme');
-
+    const theme = localStorage.getItem('theme');
     return {
-        theme: theme ? parseInt(theme) : 1
+        value: theme ? parseInt(theme) : 1
     }
 }
 
@@ -20,7 +19,7 @@ const themeSlice = createSlice({
     reducers: {
         setTheme: (state, action) => {
             const payload = action.payload;
-            state.theme = payload;
+            state.value = payload;
             localStorage.setItem('theme', payload);
         }
     }
