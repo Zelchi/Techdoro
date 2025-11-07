@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 import Volume from './Clock/Clock-Volume'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Clock from './Clock/Clock'
 import { GoChevronRight } from "react-icons/go";
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/app/store/store';
+import { useSound } from '../../hooks/useSound'
 
 const Container = styled.div`
     display: flex;
@@ -60,19 +63,53 @@ const Button = styled.button`
     }
 `
 
+type Clock = {
+    timeNow: number;
+    timeMax: number;
+}
+
 export default () => {
     const [clock, setClock] = useState<number>(1);
+
+    const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
+    const [longClock, setLongClock] = useState<Clock>({ timeNow: 0, timeMax: LongMax });
+    const [shortClock, setShortClock] = useState<Clock>({ timeNow: 0, timeMax: ShortMax });
+    const [finalClock, setFinalClock] = useState<Clock>({ timeNow: 0, timeMax: FinalMax });
+
+    const [playClick] = useSound('click');
+    const [playAlarm] = useSound("alarm");
+
+    const handleReset = useCallback(() => {
+        if (clock === 1) {
+            setLongClock({ timeNow: 0, timeMax: LongMax });
+        }
+        if (clock === 2) {
+            setShortClock({ timeNow: 0, timeMax: ShortMax });
+        }
+        if (clock === 3) {
+            setFinalClock({ timeNow: 0, timeMax: FinalMax });
+        }
+    }, [clock]);
+
+    const handleClick = useCallback(() => {
+        const next = clock + 1;
+        if (next > 3) {
+            setClock(1);
+        } else {
+            setClock(next);
+        }
+    }, [clock]);
 
     return (
         <Container>
             <Barra>
-                <Caixa><Button><GoChevronRight /></Button></Caixa>
-                <Caixa>B2</Caixa>
+                <Caixa><Button onClick={handleClick}><GoChevronRight /></Button></Caixa>
+                <Caixa>{clock}</Caixa>
                 <Caixa>B3</Caixa>
             </Barra>
-            {/* {clock === 1 && <Clock />}
-            {clock === 2 && <Clock />}
-            {clock === 3 && <Clock />} */}
+            {clock === 1 && <Clock swap={handleClick} alarm={playAlarm} clock={longClock} type={clock} reset={handleReset} />}
+            {clock === 2 && <Clock swap={handleClick} alarm={playAlarm} clock={shortClock} type={clock} reset={handleReset} />}
+            {clock === 3 && <Clock swap={handleClick} alarm={playAlarm} clock={finalClock} type={clock} reset={handleReset} />}
         </Container>
     );
 

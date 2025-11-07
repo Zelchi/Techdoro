@@ -24,9 +24,11 @@
     appearance: none;
 }
 
-
 body {
-    font-family: 'Press Start 2P', sans-serif;
+    font-family: 'Press Start 2P';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
     display: flex;
     flex-direction: column;
