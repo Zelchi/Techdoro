@@ -3,6 +3,7 @@ import Frame from './components/Frame/Frame'
 import Taskbar from './components/Taskbar/Taskbar'
 import Config from './components/Config-Menu'
 import styled from 'styled-components'
+import Context from './Context';
 
 const Container = styled.div`
     display: flex;
@@ -18,9 +19,13 @@ type Props = {
 }
 
 export default ({ windowState }: Props) => {
+    console.log(windowState);
+
     return (
         <Container>
-            <WindowBar />
+            <Context>
+                <WindowBar />
+            </Context>
             {windowState === 'home' && <Frame />}
             {windowState === 'home' && <Taskbar />}
             {windowState === 'config' && <Config />}

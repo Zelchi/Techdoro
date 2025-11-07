@@ -83,11 +83,11 @@ type ClockProps = {
     volumeState?: number;
 }
 
-export default ({ swap, alarm, clock, type, volumeState }: ClockProps) => {
+export default ({ swap, alarm, clock, type }: ClockProps) => {
     const { time: { timeMax, timeNow }, setTime } = clock;
 
     const [isRunning, setIsRunning] = useState(false)
-    const [playClick] = useSound("click", volumeState);
+    const [playClick] = useSound("click");
     const [newNow, setNewNow] = useState(timeNow);
 
     const startTimeRef = useRef<number | null>(null)

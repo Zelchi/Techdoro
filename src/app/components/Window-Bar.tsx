@@ -1,4 +1,6 @@
-import { useState, MouseEvent } from 'react'
+'use client'
+
+import { MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
 
@@ -39,14 +41,33 @@ const Caixa2 = styled.div`
     gap: 5px;
 `
 
-const Minimizar = styled.div<{ $minicolor: boolean }>`
+const Config = styled.div`
     -webkit-app-region: no-drag;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 2px inset black;
     cursor: pointer;
-    background-color: ${({ $minicolor }) => ($minicolor ? '#bcff92' : '#3f5e2c')};
+    background-color: #5353ec;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #0000ff;
+    }
+`
+
+const Minimizar = styled.div`
+    -webkit-app-region: no-drag;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px inset black;
+    cursor: pointer;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #ff5454;
+    }
 `
 
 const Fechar = styled.div`
@@ -64,13 +85,25 @@ const Fechar = styled.div`
     }
 `
 
-export default () => {
-    const [miniColor, setMiniColor] = useState(false);
+type Props = {
+    setWindow?: (state: string) => void;
+    windowState?: string;
+}
+
+export default ({ windowState, setWindow }: Props) => {
 
     const handleDoubleClick = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
     };
+
+    const handleConfigClick = () => {
+        if (windowState !== 'config') {
+            setWindow('config');
+        } else {
+            setWindow('home');
+        }
+    }
 
     return (
         <Barra onDoubleClick={handleDoubleClick}>
@@ -81,12 +114,8 @@ export default () => {
             <Titulo>Techdoro</Titulo>
 
             <Caixa2>
-                <Minimizar
-                    onMouseOver={() => { setMiniColor(true) }}
-                    onMouseOut={() => { setMiniColor(false) }}
-                    onClick={() => { window.api('window-minimize'); setMiniColor(false) }}
-                    $minicolor={miniColor}
-                />
+                <Config onClick={() => { handleConfigClick() }} />
+                <Minimizar onClick={() => { window.api('window-minimize') }} />
                 <Fechar onClick={() => { window.api('window-close'); }} />
             </Caixa2>
         </Barra>

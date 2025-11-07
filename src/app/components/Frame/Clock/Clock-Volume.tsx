@@ -36,15 +36,11 @@ const Button = styled.button`
     border-radius: 50%;
 `
 
-type Props = {
-    volumeState?: number;
-}
-
-export default ({ volumeState }: Props) => {
+export default () => {
     const [modal, setModalOpen] = useState(false);
     const [range, setRange] = useState(30);
     const [cursor, setCursor] = useState(false);
-    const [playClick] = useSound('click', volumeState);
+    const [playClick] = useSound('click');
 
     useEffect(() => {
         localStorage.setItem('volume', JSON.stringify(range));

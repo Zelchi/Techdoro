@@ -83,7 +83,7 @@ export default ({ volumeState }: FrameProps) => {
                     <ButtonSwitch onClick={() => { swap(); playClick(); }} $clicked={clock} />
                 </Caixa>
                 <p>Relógio</p>
-                <Volume />
+                <Volume volumeState={volumeState} />
             </Barra>
             {clock ? (
                 <Clock swap={swap} alarm={playAlarm} clock={{ time: longClock, setTime: setLongClock }} type={clock} />
