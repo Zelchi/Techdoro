@@ -1,5 +1,3 @@
-'use client'
-
 import { MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
@@ -41,21 +39,6 @@ const Caixa2 = styled.div`
     gap: 5px;
 `
 
-const Config = styled.div`
-    -webkit-app-region: no-drag;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px inset black;
-    cursor: pointer;
-    background-color: #5353ec;
-
-    &:hover {
-        cursor: pointer;
-        background-color: #0000ff;
-    }
-`
-
 const Minimizar = styled.div`
     -webkit-app-region: no-drag;
     width: 20px;
@@ -85,25 +68,12 @@ const Fechar = styled.div`
     }
 `
 
-type Props = {
-    setWindow?: (state: string) => void;
-    windowState?: string;
-}
-
-export default ({ windowState, setWindow }: Props) => {
+export default () => {
 
     const handleDoubleClick = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
     };
-
-    const handleConfigClick = () => {
-        if (windowState !== 'config') {
-            setWindow('config');
-        } else {
-            setWindow('home');
-        }
-    }
 
     return (
         <Barra onDoubleClick={handleDoubleClick}>
@@ -114,7 +84,6 @@ export default ({ windowState, setWindow }: Props) => {
             <Titulo>Techdoro</Titulo>
 
             <Caixa2>
-                <Config onClick={() => { handleConfigClick() }} />
                 <Minimizar onClick={() => { window.api('window-minimize') }} />
                 <Fechar onClick={() => { window.api('window-close'); }} />
             </Caixa2>
