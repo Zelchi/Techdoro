@@ -8,7 +8,6 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let isQuiting = false;
-let notification: Notification | null = null;
 
 if (started) {
     app.quit();
@@ -20,28 +19,27 @@ app.commandLine.appendSwitch('disable-gpu-rasterization');
 app.commandLine.appendSwitch('disable-accelerated-video-decode');
 app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
-const getIconPath = (): string | undefined => {
+const getIconPath = (): string => {
     const isWin = process.platform === 'win32';
-    const isLinux = process.platform === 'linux';
-    if (!(isWin || isLinux)) return undefined;
+    const iconName = isWin ? 'icon.ico' : 'icon.png';
 
     if (app.isPackaged) {
-        return path.join(
-            process.resourcesPath,
-            isWin ? 'icon.ico' : 'icon.png'
-        );
+        return path.join(process.resourcesPath, iconName);
     }
-    return path.join(
-        process.cwd(),
-        'src',
-        'app',
-        'assets',
-        isWin ? 'icon.ico' : 'icon.png'
-    );
+    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
+};
+
+const getTrayIconPath = (): string => {
+    // Usa um ícone menor para o tray no Linux
+    const iconName = process.platform === 'linux' ? 'tray-icon.png' : 'icon.png';
+
+    if (app.isPackaged) {
+        return path.join(process.resourcesPath, iconName);
+    }
+    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
 };
 
 const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string => {
-
     const iconMap = {
         abrir: 'abrir.png',
         sair: 'sair.png',
@@ -49,16 +47,18 @@ const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string
     };
 
     const iconName = iconMap[iconType];
-    const basePath = app.isPackaged ? process.resourcesPath : path.join(process.cwd(), 'src', 'app', 'assets');
-
-    return path.join(basePath, iconName);
+    
+    if (app.isPackaged) {
+        return path.join(process.resourcesPath, iconName);
+    }
+    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
 };
 
-const getNotificationIcon = (): string | undefined => {
-    const basePath = app.isPackaged
-        ? process.resourcesPath
-        : path.join(process.cwd(), 'src', 'app', 'assets');
-    return path.join(basePath, 'icon.png');
+const getNotificationIcon = (): string => {
+    if (app.isPackaged) {
+        return path.join(process.resourcesPath, 'icon.png');
+    }
+    return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -156,26 +156,34 @@ const createWindow = () => {
 
 const createTray = () => {
     if (tray) return;
-    tray = new Tray(getIconPath());
-    tray.setToolTip('Techdoro');
-    tray.setTitle('Techdoro');
-    tray.on('click', () => {
-        if (!mainWindow) return;
-        if (mainWindow.isVisible()) {
-            mainWindow.hide();
-            mainWindow.setSkipTaskbar(true);
-        } else {
-            mainWindow.setSkipTaskbar(false);
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.show();
-            mainWindow.focus();
+    
+    try {
+        const iconPath = getTrayIconPath();
+        console.log('Criando tray com ícone:', iconPath);
+        
+        tray = new Tray(iconPath);
+        tray.setToolTip('Techdoro');
+        
+        if (process.platform === 'darwin') {
+            tray.setTitle('Techdoro');
         }
-    });
-    tray.setContextMenu(Menu.buildFromTemplate(
-        [
+        
+        tray.on('click', () => {
+            if (!mainWindow) return;
+            if (mainWindow.isVisible()) {
+                mainWindow.hide();
+                mainWindow.setSkipTaskbar(true);
+            } else {
+                mainWindow.setSkipTaskbar(false);
+                if (mainWindow.isMinimized()) mainWindow.restore();
+                mainWindow.show();
+                mainWindow.focus();
+            }
+        });
+        
+        const contextMenu = Menu.buildFromTemplate([
             {
                 label: 'Mostrar Janela',
-                icon: getIconMenu('abrir'),
                 click: () => {
                     if (!mainWindow) return;
                     if (mainWindow.isVisible()) {
@@ -190,8 +198,10 @@ const createTray = () => {
                 },
             },
             {
+                type: 'separator'
+            },
+            {
                 label: 'Sair',
-                icon: getIconMenu('sair'),
                 click: () => {
                     isQuiting = true;
                     if (mainWindow) {
@@ -201,7 +211,13 @@ const createTray = () => {
                     app.quit();
                 },
             },
-        ]));
+        ]);
+        
+        tray.setContextMenu(contextMenu);
+        console.log('Tray criado com sucesso');
+    } catch (error) {
+        console.error('Erro ao criar tray:', error);
+    }
 }
 
 ipcMain.handle('window-minimize', () => {
@@ -264,42 +280,73 @@ app.whenReady().then(() => {
         }
     });
 
-    notification = new Notification({
-        silent: true,
-        icon: getNotificationIcon(),
-        timeoutType: 'default',
-    });
+    if (Notification.isSupported()) {
+        console.log('Notificações são suportadas');
+        
+        ipcMain.on('notifiTimeLong', () => {
+            try {
+                const notif = new Notification({
+                    title: 'Tempo acabou!',
+                    body: 'Vai dar uma esticada nas pernas!',
+                    icon: getNotificationIcon(),
+                    silent: false,
+                    timeoutType: 'default',
+                });
+                
+                notif.on('click', () => {
+                    if (!mainWindow) return;
+                    mainWindow.setSkipTaskbar(false);
+                    if (mainWindow.isMinimized()) mainWindow.restore();
+                    mainWindow.show();
+                    mainWindow.focus();
+                });
+                
+                notif.show();
+                console.log('Notificação de tempo longo exibida');
+            } catch (error) {
+                console.error('Erro ao exibir notificação:', error);
+            }
+        });
 
-    notification.on('click', () => {
-        if (!mainWindow) return;
-        if (mainWindow.isMinimized()) {
-            mainWindow.show();
-            mainWindow.restore();
-        } else {
-            mainWindow.show();
-            mainWindow.focus();
-        }
-    });
-
-    ipcMain.on('notifiTimeLong', () => {
-        if (!notification) return;
-        notification.title = 'Tempo acabou!';
-        notification.body = 'Vai dar uma esticada nas pernas!';
-        notification.show();
-    });
-
-    ipcMain.on('notifiTimeShort', () => {
-        if (!notification) return;
-        notification.title = 'Intervalo acabou!';
-        notification.body = 'Retome os estudos imediatamente!!!';
-        notification.show();
-    });
+        ipcMain.on('notifiTimeShort', () => {
+            try {
+                const notif = new Notification({
+                    title: 'Intervalo acabou!',
+                    body: 'Retome os estudos imediatamente!!!',
+                    icon: getNotificationIcon(),
+                    silent: false,
+                    timeoutType: 'default',
+                });
+                
+                notif.on('click', () => {
+                    if (!mainWindow) return;
+                    mainWindow.setSkipTaskbar(false);
+                    if (mainWindow.isMinimized()) mainWindow.restore();
+                    mainWindow.show();
+                    mainWindow.focus();
+                });
+                
+                notif.show();
+                console.log('Notificação de tempo curto exibida');
+            } catch (error) {
+                console.error('Erro ao exibir notificação:', error);
+            }
+        });
+    } else {
+        console.error('Notificações não são suportadas neste sistema');
+    }
 });
 
 app.on('window-all-closed', () => {
+    
+    if (tray && !isQuiting) {
+        return;
+    }
+    
     if (process.platform !== 'darwin') {
         app.quit();
     }
+
 });
 
 app.on('activate', () => {

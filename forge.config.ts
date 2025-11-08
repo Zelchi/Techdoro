@@ -7,21 +7,42 @@ const flatpakId = 'com.zelchi.Techdoro';
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
+        name: 'Techdoro',
+        
+        icon: 'src/app/assets/icon.png',
+        extraResource: [
+            'src/app/assets/icon.png',
+            'src/app/assets/icon.ico',
+            'src/app/assets/tray-icon.png',
+            'src/app/assets/abrir.png',
+            'src/app/assets/sair.png',
+        ],
     },
     rebuildConfig: {},
     makers: [
         new MakerFlatpak({
             options: {
                 id: flatpakId,
+                runtime: 'org.freedesktop.Platform',
                 runtimeVersion: '23.08',
+                sdk: 'org.freedesktop.Sdk',
+                base: 'org.electronjs.Electron2.BaseApp',
+                baseVersion: '23.08',
                 finishArgs: [
-                    '--share=network',
+                    '--share=ipc',
                     '--socket=wayland',
                     '--socket=fallback-x11',
+                    '--socket=pulseaudio',
                     '--device=dri',
-                    '--filesystem=home'
+                    '--filesystem=home',
+                    '--talk-name=org.freedesktop.Notifications',
+                    '--own-name=org.kde.StatusNotifierItem.*',
+                    '--talk-name=org.kde.StatusNotifierWatcher',
+                    '--talk-name=com.canonical.indicator.application',
+                    '--talk-name=org.ayatana.indicator.application',
                 ],
-                files: []
+                files: [],
+                modules: []
             },
         }, ['linux']),
     ],
