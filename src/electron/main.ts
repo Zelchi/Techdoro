@@ -21,7 +21,7 @@ app.commandLine.appendSwitch('disable-accelerated-video-decode');
 app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
 const getIconPath = (size?: number): string => {
-    // Para tray icon no Linux, usar ícone menor (16x16 ou 32x32)
+
     const iconSize = size || (process.platform === 'linux' ? 32 : 512);
     
     if (process.platform === 'win32') {
@@ -29,24 +29,19 @@ const getIconPath = (size?: number): string => {
             ? path.join(process.resourcesPath, 'icon.ico') 
             : path.join(process.cwd(), 'src', 'app', 'assets', 'icons', '512.png');
     } else {
-        // Linux e macOS
         if (app.isPackaged) {
-            // Quando empacotado, tentar usar o ícone do sistema primeiro (Flatpak)
             const systemIcon = path.join('/app/share/icons/hicolor', `${iconSize}x${iconSize}`, 'apps', 'com.zelchi.Techdoro.png');
             const resourceIcon = path.join(process.resourcesPath, 'icons', `${iconSize}.png`);
             const fallbackIcon = path.join(process.resourcesPath, 'icon.png');
             
-            // Verificar se existe o ícone do sistema (Flatpak)
             if (fs.existsSync(systemIcon)) {
                 return systemIcon;
             }
-            // Caso contrário, usar o ícone empacotado
             if (fs.existsSync(resourceIcon)) {
                 return resourceIcon;
             }
             return fallbackIcon;
         } else {
-            // Em desenvolvimento
             return path.join(process.cwd(), 'src', 'app', 'assets', 'icons', `${iconSize}.png`);
         }
     }
@@ -149,7 +144,6 @@ const createTray = () => {
     if (tray) return;
 
     try {
-        // Para tray icon no Linux, usar ícone menor (melhor visualização na bandeja)
         const iconPath = process.platform === 'linux' ? getIconPath(32) : getIconPath();
         console.log('Criando tray com ícone:', iconPath);
 
@@ -277,7 +271,6 @@ app.whenReady().then(() => {
 
         ipcMain.on('notifiTimeLong', () => {
             try {
-                // Para notificações no Linux, usar ícone de tamanho médio (48x48)
                 const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
                 
                 const notif = new Notification({
@@ -305,7 +298,6 @@ app.whenReady().then(() => {
 
         ipcMain.on('notifiTimeShort', () => {
             try {
-                // Para notificações no Linux, usar ícone de tamanho médio (48x48)
                 const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
                 
                 const notif = new Notification({
