@@ -8,9 +8,8 @@ const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
         name: 'Techdoro',
-        icon: 'src/app/assets/tray-icon.png',
+        icon: 'src/app/assets/Techdoro.png',
         extraResource: [
-            'src/app/assets/tray-icon.png',
             'src/app/assets/icon.png',
             'src/app/assets/icon.ico',
         ],
@@ -21,6 +20,10 @@ const config: ForgeConfig = {
             options: {
                 id: flatpakId,
                 runtime: 'org.freedesktop.Platform',
+                icon: 'src/app/assets/Techdoro.png',
+                productName: 'Techdoro',
+                description: 'A simple Pomodoro timer for your desktop',
+                branch: 'stable',
                 runtimeVersion: '23.08',
                 sdk: 'org.freedesktop.Sdk',
                 base: 'org.electronjs.Electron2.BaseApp',
