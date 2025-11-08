@@ -1,5 +1,4 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerMSIX } from '@electron-forge/maker-msix';
 import { MakerFlatpak } from '@electron-forge/maker-flatpak';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 
@@ -11,7 +10,6 @@ const config: ForgeConfig = {
     },
     rebuildConfig: {},
     makers: [
-        // Linux: Flatpak
         new MakerFlatpak({
             options: {
                 id: flatpakId,
@@ -26,17 +24,6 @@ const config: ForgeConfig = {
                 files: []
             },
         }, ['linux']),
-
-        // Windows: MSIX
-        new MakerMSIX({
-            // Minimal config: you can customize manifest variables below
-            manifestVariables: {
-                // Shown in Store / installer UI
-                publisher: 'Zelchi',
-            },
-            // For signing, set windowsSignOptions or sign later externally
-            // windowsSignOptions: { ... }
-        }, ['win32'])
     ],
     plugins: [
         new VitePlugin({
