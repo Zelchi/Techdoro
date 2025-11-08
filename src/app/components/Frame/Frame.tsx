@@ -13,6 +13,7 @@ const Container = styled.div`
     justify-content: start;
     margin-top: 12px;
     width: calc(100% - 28px);
+    height: 210px;
     gap: 12px;
 `
 
@@ -94,8 +95,6 @@ export default ({ click, alarm }: FrameProps) => {
     const [now, setNow] = useState<number>(() => Date.now());
     const rafRef = useRef<number | null>(null);
 
-    
-
     useEffect(() => {
         if (!isRunning) return;
         const tick = () => {
@@ -140,13 +139,7 @@ export default ({ click, alarm }: FrameProps) => {
     const handleReset = useCallback(() => {
         setIsRunning(false);
         setStartedAt(null);
-        setClocks(prev =>
-            prev.map((c, i) =>
-                i + 1 === clock
-                    ? { timeNow: maxima[i] * 60, timeMax: maxima[i] * 60 }
-                    : c
-            )
-        );
+        setClocks(prev => prev.map((c, i) => i + 1 === clock ? { timeNow: maxima[i] * 60, timeMax: maxima[i] * 60 } : c));
     }, [clock, maxima]);
 
     const handleNext = useCallback(() => {
@@ -165,8 +158,7 @@ export default ({ click, alarm }: FrameProps) => {
                 base = Math.max(c.timeNow - elapsed, 0);
             }
             return { timeNow: Math.min(base, newMax), timeMax: newMax };
-        })
-        );
+        }));
         if (isRunning) setStartedAt(Date.now());
     }, [LongMax, ShortMax, FinalMax]);
 

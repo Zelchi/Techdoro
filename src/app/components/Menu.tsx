@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { GoPlay, GoClock, GoListUnordered } from 'react-icons/go';
+import { GoPlay, GoClock, GoListUnordered, GoThumbsup } from 'react-icons/go';
+import { useCallback } from 'react';
+import { setWindow } from '../store/reducers/windowSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const Container = styled.div`
     display: flex;
@@ -7,6 +11,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     width: calc(100% - 28px);
+    height: 210px;
     margin-top: 12px;
     gap: 22px;
     padding: 34px 32px 42px;
@@ -62,13 +67,43 @@ const ActionButton = styled.button`
     &:active { transform: translateY(2px); }
 `;
 
+const Exit = styled.button`
+    height: 30px;
+    width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-2);
+    color: var(--text-1);
+    border: 1px solid var(--border);
+    margin: 0;
+    border-radius: var(--radius-xs);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+    position: absolute;
+    top: 5px;
+    right: 12px;
+
+    &:hover { background: var(--bg-3); border-color: var(--border-strong); }
+    &:active { filter: brightness(.85); }
+`
+
 type ClockProps = {
     click: () => void;
 }
 
 export default ({ click }: ClockProps) => {
+
+    const windowStatus = useSelector((state: RootState) => state.window.value);
+    const dispatch = useDispatch();
+    const handleClick = useCallback(() => {
+        dispatch(setWindow(!windowStatus));
+    }, [dispatch, windowStatus]);
+
     return (
         <Container>
+            <Exit onClick={() => { handleClick(); click(); }}><GoThumbsup /></Exit>
             <Title>Techdoro</Title>
             <Subtitle>Organize tarefas e ciclos de foco.<br />Modo escuro minimalista ativado.</Subtitle>
             <Actions>
