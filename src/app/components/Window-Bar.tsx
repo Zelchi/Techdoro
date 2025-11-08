@@ -85,7 +85,7 @@ export default () => {
                 <Titulo>Techdoro</Titulo>
             </Caixa>
             <Caixa>
-                <Button onClick={() => { window.api('window-close'); }} > <GoX /></Button>
+                <Button onClick={() => { window.api.send('window-close'); }} > <GoX /></Button>
             </Caixa>
         </Barra>
     )

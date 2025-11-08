@@ -186,9 +186,9 @@ export default ({ click, alarm }: FrameProps) => {
             alarm();
             try {
                 if (clock === 1) {
-                    window.api('notifiTimeLong');
+                    window.api.send('notifiTimeLong');
                 } else {
-                    window.api('notifiTimeShort');
+                    window.api.send('notifiTimeShort');
                 }
             } catch (error) {
                 console.error(error);
