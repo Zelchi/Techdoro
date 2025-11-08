@@ -3,7 +3,6 @@ import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerFlatpak } from '@electron-forge/maker-flatpak';
 import { VitePlugin } from '@electron-forge/plugin-vite';
-import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const flatpakId = 'com.zelchi.Techdoro';
 
@@ -34,12 +33,12 @@ const config: ForgeConfig = {
         new VitePlugin({
             build: [
                 {
-                    entry: 'src/main.ts',
+                    entry: 'src/electron/main.ts',
                     config: 'vite.main.config.ts',
                     target: 'main',
                 },
                 {
-                    entry: 'src/preload.ts',
+                    entry: 'src/electron/preload.ts',
                     config: 'vite.preload.config.ts',
                     target: 'preload',
                 },
