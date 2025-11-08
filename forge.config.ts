@@ -8,14 +8,11 @@ const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
         name: 'Techdoro',
-        
-        icon: 'src/app/assets/icon.png',
+        icon: 'src/app/assets/tray-icon.png',
         extraResource: [
+            'src/app/assets/tray-icon.png',
             'src/app/assets/icon.png',
             'src/app/assets/icon.ico',
-            'src/app/assets/tray-icon.png',
-            'src/app/assets/abrir.png',
-            'src/app/assets/sair.png',
         ],
     },
     rebuildConfig: {},

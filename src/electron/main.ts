@@ -20,45 +20,13 @@ app.commandLine.appendSwitch('disable-accelerated-video-decode');
 app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
 const getIconPath = (): string => {
-    const isWin = process.platform === 'win32';
-    const iconName = isWin ? 'icon.ico' : 'icon.png';
 
-    if (app.isPackaged) {
-        return path.join(process.resourcesPath, iconName);
+    if (process.platform === 'win32') {
+        return app.isPackaged ? path.join(process.resourcesPath, 'icon.ico') : path.join(process.cwd(), 'src', 'app', 'assets', 'icon.ico');
+    } else {
+        return app.isPackaged ? path.join(process.resourcesPath, 'icon.png') : path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
     }
-    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
-};
 
-const getTrayIconPath = (): string => {
-    // Usa um ícone menor para o tray no Linux
-    const iconName = process.platform === 'linux' ? 'tray-icon.png' : 'icon.png';
-
-    if (app.isPackaged) {
-        return path.join(process.resourcesPath, iconName);
-    }
-    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
-};
-
-const getIconMenu = (iconType: 'abrir' | 'sair' | 'default' = 'default'): string => {
-    const iconMap = {
-        abrir: 'abrir.png',
-        sair: 'sair.png',
-        default: 'icon.png'
-    };
-
-    const iconName = iconMap[iconType];
-    
-    if (app.isPackaged) {
-        return path.join(process.resourcesPath, iconName);
-    }
-    return path.join(process.cwd(), 'src', 'app', 'assets', iconName);
-};
-
-const getNotificationIcon = (): string => {
-    if (app.isPackaged) {
-        return path.join(process.resourcesPath, 'icon.png');
-    }
-    return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -156,18 +124,18 @@ const createWindow = () => {
 
 const createTray = () => {
     if (tray) return;
-    
+
     try {
         const iconPath = getTrayIconPath();
         console.log('Criando tray com ícone:', iconPath);
-        
+
         tray = new Tray(iconPath);
         tray.setToolTip('Techdoro');
-        
+
         if (process.platform === 'darwin') {
             tray.setTitle('Techdoro');
         }
-        
+
         tray.on('click', () => {
             if (!mainWindow) return;
             if (mainWindow.isVisible()) {
@@ -180,7 +148,7 @@ const createTray = () => {
                 mainWindow.focus();
             }
         });
-        
+
         const contextMenu = Menu.buildFromTemplate([
             {
                 label: 'Mostrar Janela',
@@ -212,7 +180,7 @@ const createTray = () => {
                 },
             },
         ]);
-        
+
         tray.setContextMenu(contextMenu);
         console.log('Tray criado com sucesso');
     } catch (error) {
@@ -282,7 +250,7 @@ app.whenReady().then(() => {
 
     if (Notification.isSupported()) {
         console.log('Notificações são suportadas');
-        
+
         ipcMain.on('notifiTimeLong', () => {
             try {
                 const notif = new Notification({
@@ -292,7 +260,7 @@ app.whenReady().then(() => {
                     silent: false,
                     timeoutType: 'default',
                 });
-                
+
                 notif.on('click', () => {
                     if (!mainWindow) return;
                     mainWindow.setSkipTaskbar(false);
@@ -300,7 +268,7 @@ app.whenReady().then(() => {
                     mainWindow.show();
                     mainWindow.focus();
                 });
-                
+
                 notif.show();
                 console.log('Notificação de tempo longo exibida');
             } catch (error) {
@@ -317,7 +285,7 @@ app.whenReady().then(() => {
                     silent: false,
                     timeoutType: 'default',
                 });
-                
+
                 notif.on('click', () => {
                     if (!mainWindow) return;
                     mainWindow.setSkipTaskbar(false);
@@ -325,7 +293,7 @@ app.whenReady().then(() => {
                     mainWindow.show();
                     mainWindow.focus();
                 });
-                
+
                 notif.show();
                 console.log('Notificação de tempo curto exibida');
             } catch (error) {
@@ -338,11 +306,11 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-    
+
     if (tray && !isQuiting) {
         return;
     }
-    
+
     if (process.platform !== 'darwin') {
         app.quit();
     }
