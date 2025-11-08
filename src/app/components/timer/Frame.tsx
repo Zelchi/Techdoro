@@ -113,7 +113,6 @@ export default ({ click, alarm }: FrameProps) => {
     const computeRemainingFor = useCallback((id: number) => {
         const state = clocks[id - 1];
         if (isRunning && startedAt != null && id === clock) {
-            // Se o "now" ainda não alcançou o startedAt (primeiro frame após resume), evita salto positivo.
             const rawElapsedMs = now - startedAt;
             const elapsed = rawElapsedMs > 0 ? rawElapsedMs / 1000 : 0;
             return Math.max(state.timeNow - elapsed, 0);
@@ -133,19 +132,19 @@ export default ({ click, alarm }: FrameProps) => {
 
     useLayoutEffect(() => {
         if (isRunning) {
-            // Resume: inicializa somente se não havia timestamp e sincroniza "now" para evitar elapsed negativo.
             if (startedAt == null) {
                 const t = Date.now();
                 setStartedAt(t);
-                setNow(t); // alinha primeiro frame
+                setNow(t);
             }
             return;
         }
-        // Pause: consolida o tempo uma única vez.
+
         if (startedAt != null) {
             commitElapsedForCurrent();
             setStartedAt(null);
         }
+
     }, [isRunning, commitElapsedForCurrent, startedAt]);
 
     const handleReset = useCallback(() => {
@@ -187,9 +186,9 @@ export default ({ click, alarm }: FrameProps) => {
             alarm();
             try {
                 if (clock === 1) {
-                    window.api('notifiTimeLong'); 
+                    window.api('notifiTimeLong');
                 } else {
-                    window.api('notifiTimeShort'); 
+                    window.api('notifiTimeShort');
                 }
             } catch (error) {
                 console.error(error);
@@ -199,8 +198,8 @@ export default ({ click, alarm }: FrameProps) => {
             if (clock === 1) {
                 const nextCount = focusCyclesDone + 1;
                 if (nextCount >= cyclesBeforeFinal) {
-                    nextClock = 3; 
-                    setFocusCyclesDone(0); 
+                    nextClock = 3;
+                    setFocusCyclesDone(0);
                 } else {
                     nextClock = 2;
                     setFocusCyclesDone(nextCount);

@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
-const Caixa = styled.div<{ $clock: boolean }>`
+const Caixa = styled.div`
     display: flex;
-    justify-content: ${({ $clock }) => $clock ? 'start' : 'end'};
+    justify-content: start;
     align-items: center;
     width: 100%;
     background-color: #9C9C9C;
@@ -39,7 +39,7 @@ export default ({ timeNow, timeMax, type }: ProgressBarProps) => {
     const progressoInvertido = Math.abs(progresso - 100);
 
     return (
-        <Caixa $clock={(type == 1 || type == 2)}>
+        <Caixa >
             <Barra $progresso={progressoInvertido} />
         </Caixa>
     );
