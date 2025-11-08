@@ -83,8 +83,10 @@ type FrameProps = {
 export default ({ click, alarm }: FrameProps) => {
     const [clock, setClock] = useState<number>(1);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+    const [focusCyclesDone, setFocusCyclesDone] = useState<number>(0);
 
     const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
+    const { cyclesBeforeFinal } = useSelector((state: RootState) => state.cycles);
     const maxima = [LongMax, ShortMax, FinalMax];
 
     const [clocks, setClocks] = useState<ClockT[]>(
@@ -166,14 +168,41 @@ export default ({ click, alarm }: FrameProps) => {
         if (!isRunning || startedAt == null) return;
         const remaining = computeRemainingFor(clock);
         if (remaining <= 0) {
-            setClocks(prev =>
-                prev.map((c, i) => (i + 1 === clock ? { ...c, timeNow: 0 } : c))
-            );
+
+            setClocks(prev => prev.map((c, i) => (i + 1 === clock ? { ...c, timeNow: 0 } : c)));
+
             setIsRunning(false);
             setStartedAt(null);
+
             alarm();
+            try {
+                if (clock === 1) {
+                    window.api('notifiTimeLong'); 
+                } else {
+                    window.api('notifiTimeShort'); 
+                }
+            } catch (error) {
+                console.error(error);
+            }
+
+            let nextClock = 1 as 1 | 2 | 3;
+            if (clock === 1) {
+                const nextCount = focusCyclesDone + 1;
+                if (nextCount >= cyclesBeforeFinal) {
+                    nextClock = 3; 
+                    setFocusCyclesDone(0); 
+                } else {
+                    nextClock = 2;
+                    setFocusCyclesDone(nextCount);
+                }
+            } else {
+                nextClock = 1;
+            }
+
+            setClocks(prev => prev.map((c, i) => (i + 1 === nextClock ? { ...c, timeNow: c.timeMax } : c)));
+            setClock(nextClock);
         }
-    }, [now, isRunning, startedAt, clock, computeRemainingFor, alarm]);
+    }, [now, isRunning, startedAt, clock, computeRemainingFor, alarm, focusCyclesDone, cyclesBeforeFinal]);
 
     const activeState = clocks[clock - 1];
     const activeRemaining = computeRemainingFor(clock);

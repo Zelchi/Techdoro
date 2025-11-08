@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Quantidade de ciclos de foco (LongMax + ShortMax) antes de ir para o clock final (pausa longa)
-// Persistido em localStorage para manter preferência do usuário.
-
 export type CyclesState = {
     cyclesBeforeFinal: number;
 };
@@ -10,7 +7,7 @@ export type CyclesState = {
 const getLocalStorage = (): CyclesState => {
     const cycles = localStorage.getItem('cyclesBeforeFinal');
     return {
-        cyclesBeforeFinal: cycles ? parseInt(cycles) : 4 // padrão pomodoro clássico
+        cyclesBeforeFinal: cycles ? parseInt(cycles) : 4 
     };
 };
 
