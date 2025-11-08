@@ -3,7 +3,7 @@ import Clock from './Clock/Clock'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GoTools, GoIssueReopened } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/app/store/store';
+import { RootState } from '../../store/store';
 import { setWindow } from '../../store/reducers/windowSlice';
 
 const Container = styled.div`

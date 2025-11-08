@@ -1,5 +1,5 @@
 import WindowBar from './components/Window-Bar'
-import Menu from './components/Menu'
+import Menu from './components/Menu/Menu'
 import Frame from './components/Frame/Frame'
 import Taskbar from './components/Task/Task'
 import styled from 'styled-components'
