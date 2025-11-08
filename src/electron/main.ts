@@ -23,28 +23,21 @@ app.commandLine.appendSwitch('disable-accelerated-video-encode');
 const getIconPath = (size?: number): string => {
 
     const iconSize = size || (process.platform === 'linux' ? 32 : 512);
-    
-    if (process.platform === 'win32') {
-        return app.isPackaged 
-            ? path.join(process.resourcesPath, 'icon.ico') 
-            : path.join(process.cwd(), 'src', 'app', 'assets', 'icons', '512.png');
-    } else {
-        if (app.isPackaged) {
-            const systemIcon = path.join('/app/share/icons/hicolor', `${iconSize}x${iconSize}`, 'apps', 'com.zelchi.Techdoro.png');
-            const resourceIcon = path.join(process.resourcesPath, 'icons', `${iconSize}.png`);
-            const fallbackIcon = path.join(process.resourcesPath, 'icon.png');
-            
-            if (fs.existsSync(systemIcon)) {
-                return systemIcon;
-            }
-            if (fs.existsSync(resourceIcon)) {
-                return resourceIcon;
-            }
-            return fallbackIcon;
-        } else {
-            return path.join(process.cwd(), 'src', 'app', 'assets', 'icons', `${iconSize}.png`);
+
+    if (app.isPackaged) {
+
+        const resourceIcon = path.join(process.resourcesPath, 'icons', `${iconSize}.png`);
+        const fallbackIcon = path.join(process.resourcesPath, 'icon.png');
+
+        if (fs.existsSync(resourceIcon)) {
+            return resourceIcon;
         }
+
+        return fallbackIcon;
+    } else {
+        return path.join(process.cwd(), 'src', 'app', 'assets', 'icons', `${iconSize}.png`);
     }
+
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -144,15 +137,9 @@ const createTray = () => {
     if (tray) return;
 
     try {
-        const iconPath = process.platform === 'linux' ? getIconPath(32) : getIconPath();
-        console.log('Criando tray com ícone:', iconPath);
 
-        tray = new Tray(iconPath);
+        tray = new Tray(getIconPath());
         tray.setToolTip('Techdoro');
-
-        if (process.platform === 'darwin') {
-            tray.setTitle('Techdoro');
-        }
 
         tray.on('click', () => {
             if (!mainWindow) return;
@@ -249,6 +236,7 @@ ipcMain.handle('window-is-fullscreen', () => {
 });
 
 app.whenReady().then(() => {
+
     if (process.platform === 'win32') {
         app.setAppUserModelId('com.techdoro.app');
     }
@@ -267,16 +255,13 @@ app.whenReady().then(() => {
     });
 
     if (Notification.isSupported()) {
-        console.log('Notificações são suportadas');
 
         ipcMain.on('notifiTimeLong', () => {
             try {
-                const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
-                
                 const notif = new Notification({
                     title: 'Tempo acabou!',
                     body: 'Vai dar uma esticada nas pernas!',
-                    icon: notificationIcon,
+                    icon: getIconPath(),
                     silent: false,
                     timeoutType: 'default',
                 });
@@ -298,12 +283,10 @@ app.whenReady().then(() => {
 
         ipcMain.on('notifiTimeShort', () => {
             try {
-                const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
-                
                 const notif = new Notification({
                     title: 'Intervalo acabou!',
                     body: 'Retome os estudos imediatamente!!!',
-                    icon: notificationIcon,
+                    icon: getIconPath(),
                     silent: false,
                     timeoutType: 'default',
                 });
@@ -325,18 +308,6 @@ app.whenReady().then(() => {
     } else {
         console.error('Notificações não são suportadas neste sistema');
     }
-});
-
-app.on('window-all-closed', () => {
-
-    if (tray && !isQuiting) {
-        return;
-    }
-
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-
 });
 
 app.on('activate', () => {
