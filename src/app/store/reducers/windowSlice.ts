@@ -5,7 +5,7 @@ type Window = {
 }
 
 const windowState: Window = {
-    value: 1
+    value: 0
 }
 
 const windowSlice = createSlice({

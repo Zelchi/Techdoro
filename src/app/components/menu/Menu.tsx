@@ -7,22 +7,29 @@ import { setCyclesBeforeFinal } from '../../store/reducers/cyclesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import StepField from './StepField';
+import VolumeBar from './VolumeBar';
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     width: calc(100% - 28px);
     height: 210px;
     margin-top: 12px;
-    gap: 22px;
-    padding: 34px 32px 42px;
     background: var(--bg-1);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-1);
     backdrop-filter: blur(8px) saturate(160%);
+`;
+
+const ConfigBar = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 3px 12px;
 `;
 
 const Configs = styled.div`
@@ -56,6 +63,7 @@ const Exit = styled.button`
     &:active { filter: brightness(.85); }
 `
 
+
 type ClockProps = { click: () => void };
 
 const clamp1 = (n: number) => Math.max(1, n | 0);
@@ -82,7 +90,7 @@ export default ({ click }: ClockProps) => {
         { key: 'long', label: 'Focus' },
         { key: 'short', label: 'Short Break' },
         { key: 'final', label: 'Long Break' },
-        { key: 'cycles', label: 'Cycles until' }
+        { key: 'cycles', label: 'Cycles' }
     ];
 
     const toggleWindow = useCallback(() => {
@@ -112,7 +120,10 @@ export default ({ click }: ClockProps) => {
 
     return (
         <Container>
-            <Exit onClick={() => { toggleWindow(); click(); }}><GoThumbsup /></Exit>
+            <ConfigBar>
+                <VolumeBar />
+                <Exit onClick={() => { toggleWindow(); click(); }}><GoThumbsup /></Exit>
+            </ConfigBar>
             <Configs>
                 {fields.map(field => (
                     <StepField
