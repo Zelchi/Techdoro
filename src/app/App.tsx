@@ -5,6 +5,7 @@ import Taskbar from './components/Task/Task'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { RootState } from './store/store'
+import { useSound } from './hooks/useSound'
 
 const Container = styled.div`
     display: flex;
@@ -17,12 +18,19 @@ const Container = styled.div`
 
 export default () => {
 
+    const [click] = useSound('click');
+    const [alarm] = useSound('alarm');
+
     const win = useSelector((state: RootState) => state.window.value);
 
     return (
         <Container>
             <WindowBar />
-            {win ? <Frame /> : <Menu />}
+            {win ?
+                <Frame click={click} alarm={alarm} />
+                :
+                <Menu click={click} />
+            }
             <Taskbar />
         </Container>
     )

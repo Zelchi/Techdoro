@@ -2,9 +2,9 @@ import styled from 'styled-components'
 import Clock from './Clock/Clock'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GoTools, GoIssueReopened } from "react-icons/go";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/app/store/store';
-import { useSound } from '../../hooks/useSound'
+import { setWindow } from '../../store/reducers/windowSlice';
 
 const Container = styled.div`
     display: flex;
@@ -72,27 +72,29 @@ const Box = styled.div<{ $active?: boolean }>`
     box-shadow: ${({ $active }) => ($active ? '0 0 0 3px rgba(110,231,255,0.25)' : 'none')};
 `
 
-type ClockT = {
-    timeNow: number;
-    timeMax: number;
+type ClockT = { timeNow: number; timeMax: number };
+
+type FrameProps = {
+    click: () => void;
+    alarm: () => void;
 }
 
-export default () => {
+export default ({ click, alarm }: FrameProps) => {
     const [clock, setClock] = useState<number>(1);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
+    const maxima = [LongMax, ShortMax, FinalMax];
 
-    const [longClock, setLongClock] = useState<ClockT>({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
-    const [shortClock, setShortClock] = useState<ClockT>({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
-    const [finalClock, setFinalClock] = useState<ClockT>({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
+    const [clocks, setClocks] = useState<ClockT[]>(
+        () => maxima.map(m => ({ timeNow: m * 60, timeMax: m * 60 }))
+    );
 
     const [startedAt, setStartedAt] = useState<number | null>(null);
     const [now, setNow] = useState<number>(() => Date.now());
     const rafRef = useRef<number | null>(null);
 
-    const [click] = useSound('click');
-    const [alarm] = useSound('alarm');
+    
 
     useEffect(() => {
         if (!isRunning) return;
@@ -108,24 +110,22 @@ export default () => {
     }, [isRunning]);
 
     const computeRemainingFor = useCallback((id: number) => {
-        const state = id === 1 ? longClock : id === 2 ? shortClock : finalClock;
+        const state = clocks[id - 1];
         if (isRunning && startedAt != null && id === clock) {
             const elapsed = (now - startedAt) / 1000;
             return Math.max(state.timeNow - elapsed, 0);
         }
         return state.timeNow;
-    }, [longClock.timeNow, shortClock.timeNow, finalClock.timeNow, isRunning, startedAt, now, clock]);
+    }, [clocks, isRunning, startedAt, now, clock]);
 
     const commitElapsedForCurrent = useCallback((ts = Date.now()) => {
         if (startedAt == null) return;
         const elapsed = (ts - startedAt) / 1000;
-        if (clock === 1) {
-            setLongClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - elapsed, 0) }));
-        } else if (clock === 2) {
-            setShortClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - elapsed, 0) }));
-        } else {
-            setFinalClock(prev => ({ ...prev, timeNow: Math.max(prev.timeNow - elapsed, 0) }));
-        }
+        setClocks(prev =>
+            prev.map((c, i) =>
+                i + 1 === clock ? { ...c, timeNow: Math.max(c.timeNow - elapsed, 0) } : c
+            )
+        );
     }, [clock, startedAt]);
 
     useEffect(() => {
@@ -135,15 +135,19 @@ export default () => {
             if (startedAt != null) commitElapsedForCurrent();
             setStartedAt(null);
         }
-    }, [isRunning]);
+    }, [isRunning, commitElapsedForCurrent, startedAt]);
 
     const handleReset = useCallback(() => {
         setIsRunning(false);
         setStartedAt(null);
-        if (clock === 1) setLongClock({ timeNow: LongMax * 60, timeMax: LongMax * 60 });
-        if (clock === 2) setShortClock({ timeNow: ShortMax * 60, timeMax: ShortMax * 60 });
-        if (clock === 3) setFinalClock({ timeNow: FinalMax * 60, timeMax: FinalMax * 60 });
-    }, [clock, LongMax, ShortMax, FinalMax]);
+        setClocks(prev =>
+            prev.map((c, i) =>
+                i + 1 === clock
+                    ? { timeNow: maxima[i] * 60, timeMax: maxima[i] * 60 }
+                    : c
+            )
+        );
+    }, [clock, maxima]);
 
     const handleNext = useCallback(() => {
         if (startedAt != null) commitElapsedForCurrent();
@@ -153,60 +157,42 @@ export default () => {
     }, [commitElapsedForCurrent, startedAt]);
 
     useEffect(() => {
-        const nextMax = LongMax * 60;
-        setLongClock(prev => {
-            let base = prev.timeNow;
-            if (isRunning && clock === 1 && startedAt != null) {
+        setClocks(prev => prev.map((c, i) => {
+            const newMax = maxima[i] * 60;
+            let base = c.timeNow;
+            if (isRunning && clock === i + 1 && startedAt != null) {
                 const elapsed = (Date.now() - startedAt) / 1000;
-                base = Math.max(prev.timeNow - elapsed, 0);
+                base = Math.max(c.timeNow - elapsed, 0);
             }
-            return { timeNow: Math.min(base, nextMax), timeMax: nextMax };
-        });
-        if (isRunning && clock === 1) setStartedAt(Date.now());
-    }, [LongMax]);
-
-    useEffect(() => {
-        const nextMax = ShortMax * 60;
-        setShortClock(prev => {
-            let base = prev.timeNow;
-            if (isRunning && clock === 2 && startedAt != null) {
-                const elapsed = (Date.now() - startedAt) / 1000;
-                base = Math.max(prev.timeNow - elapsed, 0);
-            }
-            return { timeNow: Math.min(base, nextMax), timeMax: nextMax };
-        });
-        if (isRunning && clock === 2) setStartedAt(Date.now());
-    }, [ShortMax]);
-
-    useEffect(() => {
-        const nextMax = FinalMax * 60;
-        setFinalClock(prev => {
-            let base = prev.timeNow;
-            if (isRunning && clock === 3 && startedAt != null) {
-                const elapsed = (Date.now() - startedAt) / 1000;
-                base = Math.max(prev.timeNow - elapsed, 0);
-            }
-            return { timeNow: Math.min(base, nextMax), timeMax: nextMax };
-        });
-        if (isRunning && clock === 3) setStartedAt(Date.now());
-    }, [FinalMax]);
+            return { timeNow: Math.min(base, newMax), timeMax: newMax };
+        })
+        );
+        if (isRunning) setStartedAt(Date.now());
+    }, [LongMax, ShortMax, FinalMax]);
 
     useEffect(() => {
         if (!isRunning || startedAt == null) return;
         const remaining = computeRemainingFor(clock);
         if (remaining <= 0) {
-            if (clock === 1) setLongClock(prev => ({ ...prev, timeNow: 0 }));
-            else if (clock === 2) setShortClock(prev => ({ ...prev, timeNow: 0 }));
-            else setFinalClock(prev => ({ ...prev, timeNow: 0 }));
+            setClocks(prev =>
+                prev.map((c, i) => (i + 1 === clock ? { ...c, timeNow: 0 } : c))
+            );
             setIsRunning(false);
             setStartedAt(null);
             alarm();
         }
     }, [now, isRunning, startedAt, clock, computeRemainingFor, alarm]);
 
-    const activeState = clock === 1 ? longClock : clock === 2 ? shortClock : finalClock;
+    const activeState = clocks[clock - 1];
     const activeRemaining = computeRemainingFor(clock);
     const activeClockProp: ClockT = { timeNow: activeRemaining, timeMax: activeState.timeMax };
+
+    const dispatch = useDispatch();
+    const windowStatus = useSelector((state: RootState) => state.window.value);
+
+    const handleClick = useCallback(() => {
+        dispatch(setWindow(!windowStatus));
+    }, [dispatch, windowStatus]);
 
     return (
         <Container>
@@ -220,7 +206,7 @@ export default () => {
                     <Box $active={clock === 3} />
                 </Caixa>
                 <Caixa>
-                    <Button onClick={() => { click(); }}><GoTools /></Button>
+                    <Button onClick={() => { handleClick(); click(); }}><GoTools /></Button>
                 </Caixa>
             </Barra>
             <Clock

@@ -7,7 +7,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     width: calc(100% - 28px);
-    margin-top: 32px;
+    margin-top: 12px;
     gap: 22px;
     padding: 34px 32px 42px;
     background: var(--bg-1);
@@ -62,7 +62,11 @@ const ActionButton = styled.button`
     &:active { transform: translateY(2px); }
 `;
 
-export default () => {
+type ClockProps = {
+    click: () => void;
+}
+
+export default ({ click }: ClockProps) => {
     return (
         <Container>
             <Title>Techdoro</Title>

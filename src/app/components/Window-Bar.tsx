@@ -1,7 +1,10 @@
-import { MouseEvent } from 'react'
+import { MouseEvent, use, useCallback } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
 import { GoX } from "react-icons/go";
+import { RootState } from '../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setWindow } from '../store/reducers/windowSlice';
 
 const Barra = styled.div`
     width: 100%;
@@ -61,7 +64,7 @@ const Button = styled.button`
     cursor: pointer;
     font-size: 14px;
     transition: background .15s, border-color .15s, color .15s;
-    
+
     &:active { filter: brightness(.85); }
     &:hover { background: var(--bg-3); border-color: var(--border-strong); }
 `
@@ -76,7 +79,7 @@ export default () => {
     return (
         <Barra onDoubleClick={handleDoubleClick}>
             <Caixa>
-                <Button> <Icon draggable="false" src={icon} /> </Button>
+                <Button><Icon draggable="false" src={icon} /> </Button>
             </Caixa>
             <Caixa>
                 <Titulo>Techdoro</Titulo>
