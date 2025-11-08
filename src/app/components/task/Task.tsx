@@ -1,6 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { useState, useEffect, useRef } from 'react';
-import { CheckBox } from './Task-Checkbox'
+import CheckBox from './Task-Checkbox'
 import { useSound } from '../../hooks/useSound';
 import { GoPlus, GoTrash } from 'react-icons/go';
 

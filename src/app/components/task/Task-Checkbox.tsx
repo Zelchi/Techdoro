@@ -22,7 +22,7 @@ const Caixa = styled.div<{ $marcado: boolean }>`
     font-size: 18px;
 `
 
-export const CheckBox = ({ tarefa, marcarTarefa }: Props) => {
+export default ({ tarefa, marcarTarefa }: Props) => {
     return (
         <Caixa
             $marcado={tarefa.completed}

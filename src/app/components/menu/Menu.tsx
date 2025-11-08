@@ -24,21 +24,21 @@ const Container = styled.div`
     backdrop-filter: blur(8px) saturate(160%);
 `;
 
-const ConfigBar = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 3px 12px;
-`;
-
 const Configs = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     width: 90%;
     justify-content: center;
-    margin-top: 6px;
+    margin-top: 10px;
+`;
+
+const ConfigBar = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 5px 12px;
 `;
 
 const Exit = styled.button`

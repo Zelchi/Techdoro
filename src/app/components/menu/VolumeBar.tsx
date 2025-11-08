@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { setVolume } from '../../store/reducers/volumeSlice';
 import { RootState } from '../../store/store';
 import { FaVolumeMute, FaVolumeDown, FaVolumeUp } from 'react-icons/fa';
@@ -12,7 +12,7 @@ const TopBar = styled.div`
     width: 80%;
 `;
 
-const VolumeGroup = styled.div<{ dragging: boolean }>`
+const VolumeGroup = styled.div<{ $dragging: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,6 +24,7 @@ const VolumeGroup = styled.div<{ dragging: boolean }>`
     padding: 6px 10px;
     border-radius: var(--radius-xs);
     transition: box-shadow .2s ease, border-color .2s ease;
+    height: 30px;
 
     span {
         width: 60px;
@@ -56,37 +57,37 @@ const VolumeSlider = styled.input.attrs({ type: 'range' })`
     -webkit-appearance: none;
     appearance: none;
     width: 160px;
-    height: 8px;
+    height: 20px;
+    padding: 0 5px;
+    background: var(--bg-1);
     border-radius: 999px;
-    background: var(--bg-3);
-    transition: background-size .2s ease;
     cursor: pointer;
+    display: block;
 
     &::-webkit-slider-runnable-track {
-        height: 8px;
+        height: 6px;
+        margin: 7px 0;
         background: transparent;
         border-radius: 999px;
     }
-
     &::-webkit-slider-thumb {
         -webkit-appearance: none;
-        appearance: none;
         width: 16px;
         height: 16px;
+        margin-top: -5px;
         border-radius: 50%;
         background: var(--text-1);
         border: 2px solid var(--bg-1);
-        box-shadow: 0 0 0 0 rgba(0,0,0,0.25);
         transition: transform .15s ease, box-shadow .2s ease;
     }
 
     &::-moz-range-track {
-        height: 8px;
+        height: 6px;
         background: transparent;
         border-radius: 999px;
     }
     &::-moz-range-progress {
-        height: 8px;
+        height: 6px;
         background: var(--text-1);
         border-radius: 999px 0 0 999px;
     }
@@ -96,17 +97,42 @@ const VolumeSlider = styled.input.attrs({ type: 'range' })`
         border-radius: 50%;
         background: var(--text-1);
         border: 2px solid var(--bg-1);
+        margin-top: 0;
         transition: transform .15s ease, box-shadow .2s ease;
     }
 `;
 
 export default function VolumeBar() {
     const dispatch = useDispatch();
-    const volume = useSelector((state: RootState) => state.volume.volume);
-    const [dragging, setDragging] = useState(false);
-    const prevNonZero = useRef<number>(Math.max(volume, 30));
+    const storeVolume = useSelector((state: RootState) => state.volume.volume);
 
-    const percent = useMemo(() => Math.max(0, Math.min(100, volume)), [volume]);
+    const [sliderValue, setSliderValue] = useState(storeVolume);
+    const [dragging, setDragging] = useState(false);
+
+    const valueRef = useRef(sliderValue);
+    useEffect(() => { valueRef.current = sliderValue; }, [sliderValue]);
+
+    useEffect(() => {
+        if (!dragging) setSliderValue(storeVolume);
+    }, [storeVolume, dragging]);
+
+    useEffect(() => {
+        if (!dragging) return;
+        const endDrag = () => {
+            setDragging(false);
+            dispatch(setVolume(Math.max(0, Math.min(100, valueRef.current))));
+        };
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+        window.addEventListener('pointerup', endDrag);
+        return () => {
+            window.removeEventListener('mouseup', endDrag);
+            window.removeEventListener('touchend', endDrag);
+            window.removeEventListener('pointerup', endDrag);
+        };
+    }, [dragging, dispatch]);
+
+    const percent = useMemo(() => Math.max(0, Math.min(100, sliderValue)), [sliderValue]);
 
     const Icon = useMemo(() => {
         if (percent === 0) return FaVolumeMute;
@@ -114,23 +140,20 @@ export default function VolumeBar() {
         return FaVolumeUp;
     }, [percent]);
 
-    const onChange = useCallback((v: number) => {
-        dispatch(setVolume(v));
-        if (v > 0) prevNonZero.current = v;
-    }, [dispatch]);
+    const onChange = useCallback((volume: number) => {
+        setSliderValue(volume);
+    }, []);
 
     const toggleMute = useCallback(() => {
-        if (percent === 0) {
-            onChange(prevNonZero.current || 30);
-        } else {
-            onChange(0);
-        }
-    }, [percent, onChange]);
+        const newVal = percent === 0 ? 50 : 0;
+        setSliderValue(newVal);
+        dispatch(setVolume(newVal));
+    }, [percent, dispatch]);
 
     return (
         <TopBar>
-            <VolumeGroup dragging={dragging}>
-                <IconButton onClick={toggleMute} aria-label={percent === 0 ? 'Unmute' : 'Mute'}>
+            <VolumeGroup $dragging={dragging}>
+                <IconButton onClick={toggleMute} >
                     <Icon />
                 </IconButton>
                 <VolumeSlider
@@ -139,11 +162,17 @@ export default function VolumeBar() {
                     step={1}
                     value={percent}
                     onMouseDown={() => setDragging(true)}
-                    onMouseUp={() => setDragging(false)}
-                    onMouseLeave={() => setDragging(false)}
                     onTouchStart={() => setDragging(true)}
-                    onTouchEnd={() => setDragging(false)}
                     onChange={(e) => onChange(parseInt(e.target.value, 10) || 0)}
+                    onKeyUp={(e) => {
+                        const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'];
+                        if (keys.includes(e.key)) {
+                            dispatch(setVolume(Math.max(0, Math.min(100, valueRef.current))));
+                        }
+                    }}
+                    onBlur={() => {
+                        dispatch(setVolume(Math.max(0, Math.min(100, valueRef.current))));
+                    }}
                     aria-label="Volume"
                 />
                 <span style={{ fontSize: 12, opacity: .8, minWidth: 32, textAlign: 'right' }}>{percent}%</span>

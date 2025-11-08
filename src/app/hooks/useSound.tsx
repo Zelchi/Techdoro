@@ -1,6 +1,8 @@
 import { useRef, useEffect } from 'react'
 import click from "../assets/click.mp3"
 import alarm from "../assets/alarme.mp3"
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const efeitosSonoros = {
     click,
@@ -11,7 +13,7 @@ type som = keyof typeof efeitosSonoros;
 
 export const useSound = (src: som) => {
 
-    const volume = 0.1;
+    const volume = useSelector((state: RootState) => state.volume.volume) / 100;
     const som = useRef<HTMLAudioElement>(null)
 
     useEffect(() => {
