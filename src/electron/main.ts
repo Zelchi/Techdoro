@@ -126,7 +126,7 @@ const createTray = () => {
     if (tray) return;
 
     try {
-        const iconPath = getTrayIconPath();
+        const iconPath = getIconPath();
         console.log('Criando tray com ícone:', iconPath);
 
         tray = new Tray(iconPath);
@@ -256,7 +256,7 @@ app.whenReady().then(() => {
                 const notif = new Notification({
                     title: 'Tempo acabou!',
                     body: 'Vai dar uma esticada nas pernas!',
-                    icon: getNotificationIcon(),
+                    icon: getIconPath(),
                     silent: false,
                     timeoutType: 'default',
                 });
@@ -281,7 +281,7 @@ app.whenReady().then(() => {
                 const notif = new Notification({
                     title: 'Intervalo acabou!',
                     body: 'Retome os estudos imediatamente!!!',
-                    icon: getNotificationIcon(),
+                    icon: getIconPath(),
                     silent: false,
                     timeoutType: 'default',
                 });
