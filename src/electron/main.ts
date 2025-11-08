@@ -24,7 +24,7 @@ const getIconPath = (): string => {
     if (process.platform === 'win32') {
         return app.isPackaged ? path.join(process.resourcesPath, 'icon.ico') : path.join(process.cwd(), 'src', 'app', 'assets', 'icon.ico');
     } else {
-        return app.isPackaged ? path.join(process.resourcesPath, 'icon.png') : path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
+        return app.isPackaged ? path.join(process.resourcesPath, 'Techdoro.png') : path.join(process.cwd(), 'src', 'app', 'assets', 'Techdoro.png');
     }
 
 };

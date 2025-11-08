@@ -9,10 +9,13 @@ const config: ForgeConfig = {
         asar: true,
         name: 'techdoro',
         executableName: 'techdoro',
-        icon: 'src/app/assets/Techdoro.png',
+        icon: 'src/app/assets/Techdoro',
         extraResource: [
             'src/app/assets/icon.png',
             'src/app/assets/icon.ico',
+            'src/app/assets/Techdoro.png',
+            'src/app/assets/alarme.mp3',
+            'src/app/assets/click.mp3',
         ],
     },
     rebuildConfig: {},
@@ -42,7 +45,12 @@ const config: ForgeConfig = {
                     '--talk-name=com.canonical.indicator.application',
                     '--talk-name=org.ayatana.indicator.application',
                 ],
-                files: [],
+                files: [
+                    [
+                        'src/app/assets/Techdoro.png',
+                        '/share/icons/hicolor/256x256/apps/com.zelchi.Techdoro.png'
+                    ]
+                ],
                 modules: []
             },
         }, ['linux']),
