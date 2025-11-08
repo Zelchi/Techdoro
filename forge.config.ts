@@ -1,60 +1,57 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
-import { MakerDeb } from '@electron-forge/maker-deb';
-import { MakerRpm } from '@electron-forge/maker-rpm';
+import { MakerFlatpak } from '@electron-forge/maker-flatpak';
 import { VitePlugin } from '@electron-forge/plugin-vite';
-import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
-const isDevStart = process.env.npm_lifecycle_event === 'start' || process.argv.includes('start');
+const flatpakId = 'com.zelchi.Techdoro';
 
 const config: ForgeConfig = {
-  packagerConfig: {
-    asar: true,
-  },
-  rebuildConfig: {},
-  makers: [
-    new MakerSquirrel({}),
-    new MakerZIP({}, ['darwin']),
-    new MakerRpm({}),
-    new MakerDeb({}),
-  ],
-  plugins: [
-    new VitePlugin({
-      build: [
-        {
-          entry: 'src/main.ts',
-          config: 'vite.main.config.ts',
-          target: 'main',
-        },
-        {
-          entry: 'src/preload.ts',
-          config: 'vite.preload.config.ts',
-          target: 'preload',
-        },
-      ],
-      renderer: [
-        {
-          name: 'main_window',
-          config: 'vite.renderer.config.ts',
-        },
-      ],
-    }),
-    ...(!isDevStart
-      ? [
-          new FusesPlugin({
-            version: FuseVersion.V1,
-            [FuseV1Options.RunAsNode]: false,
-            [FuseV1Options.EnableCookieEncryption]: true,
-            [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-            [FuseV1Options.EnableNodeCliInspectArguments]: false,
-            [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
-            [FuseV1Options.OnlyLoadAppFromAsar]: true,
-          }),
-        ]
-      : []),
-  ],
+    packagerConfig: {
+        asar: true,
+    },
+    rebuildConfig: {},
+    makers: [
+        new MakerSquirrel({}),
+        new MakerZIP({}, ['win32']),
+        new MakerFlatpak({
+            options: {
+                id: flatpakId,
+                runtimeVersion: '23.08',
+                finishArgs: [
+                    '--share=network',
+                    '--socket=wayland',
+                    '--socket=fallback-x11',
+                    '--device=dri',
+                    '--filesystem=home'
+                ],
+                files: []
+            },
+        }),
+    ],
+    plugins: [
+        new VitePlugin({
+            build: [
+                {
+                    entry: 'src/main.ts',
+                    config: 'vite.main.config.ts',
+                    target: 'main',
+                },
+                {
+                    entry: 'src/preload.ts',
+                    config: 'vite.preload.config.ts',
+                    target: 'preload',
+                },
+            ],
+            renderer: [
+                {
+                    name: 'main_window',
+                    config: 'vite.renderer.config.ts',
+                },
+            ],
+        }),
+    ],
 };
 
 export default config;

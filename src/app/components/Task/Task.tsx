@@ -164,20 +164,20 @@ export type Tarefa = {
 }
 
 export default () => {
-    const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+    const [tarefas, setTarefas] = useState<Tarefa[]>(() => {
+        try {
+            const saved = localStorage.getItem('tarefas');
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
+    });
     const [novaTarefa, setNovaTarefa] = useState('');
     const [editando, setEditando] = useState<number | null>(null);
     const [tarefaEditada, setTarefaEditada] = useState('');
     const [containerWidth, setContainerWidth] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const [playClick] = useSound("click");
-
-    useEffect(() => {
-        const tarefasSalvas = localStorage.getItem('tarefas');
-        if (tarefasSalvas) {
-            setTarefas(JSON.parse(tarefasSalvas));
-        }
-    }, []);
 
     useEffect(() => {
         localStorage.setItem('tarefas', JSON.stringify(tarefas));

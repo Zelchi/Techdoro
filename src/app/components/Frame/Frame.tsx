@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Clock from './Clock/Clock'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { GoTools, GoIssueReopened } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -113,7 +113,9 @@ export default ({ click, alarm }: FrameProps) => {
     const computeRemainingFor = useCallback((id: number) => {
         const state = clocks[id - 1];
         if (isRunning && startedAt != null && id === clock) {
-            const elapsed = (now - startedAt) / 1000;
+            // Se o "now" ainda não alcançou o startedAt (primeiro frame após resume), evita salto positivo.
+            const rawElapsedMs = now - startedAt;
+            const elapsed = rawElapsedMs > 0 ? rawElapsedMs / 1000 : 0;
             return Math.max(state.timeNow - elapsed, 0);
         }
         return state.timeNow;
@@ -129,11 +131,19 @@ export default ({ click, alarm }: FrameProps) => {
         );
     }, [clock, startedAt]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isRunning) {
-            setStartedAt(Date.now());
-        } else {
-            if (startedAt != null) commitElapsedForCurrent();
+            // Resume: inicializa somente se não havia timestamp e sincroniza "now" para evitar elapsed negativo.
+            if (startedAt == null) {
+                const t = Date.now();
+                setStartedAt(t);
+                setNow(t); // alinha primeiro frame
+            }
+            return;
+        }
+        // Pause: consolida o tempo uma única vez.
+        if (startedAt != null) {
+            commitElapsedForCurrent();
             setStartedAt(null);
         }
     }, [isRunning, commitElapsedForCurrent, startedAt]);

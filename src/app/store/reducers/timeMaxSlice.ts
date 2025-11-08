@@ -14,7 +14,7 @@ const getLocalStorage = (): Time => {
     return {
         LongMax: timeLong ? parseInt(timeLong) : 25,
         ShortMax: timeShort ? parseInt(timeShort) : 5,
-        FinalMax: timeFinal ? parseInt(timeFinal) : 10
+        FinalMax: timeFinal ? parseInt(timeFinal) : 15
     }
 }
 
