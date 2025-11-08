@@ -7,7 +7,8 @@ const flatpakId = 'com.zelchi.Techdoro';
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
-        name: 'Techdoro',
+        name: 'techdoro',
+        executableName: 'techdoro',
         icon: 'src/app/assets/Techdoro.png',
         extraResource: [
             'src/app/assets/icon.png',
