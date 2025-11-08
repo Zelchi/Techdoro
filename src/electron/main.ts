@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell, globalShortcut } from 'electron';
 import path from 'node:path';
+import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -19,14 +20,36 @@ app.commandLine.appendSwitch('disable-gpu-rasterization');
 app.commandLine.appendSwitch('disable-accelerated-video-decode');
 app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
-const getIconPath = (): string => {
-
+const getIconPath = (size?: number): string => {
+    // Para tray icon no Linux, usar ícone menor (16x16 ou 32x32)
+    const iconSize = size || (process.platform === 'linux' ? 32 : 512);
+    
     if (process.platform === 'win32') {
-        return app.isPackaged ? path.join(process.resourcesPath, 'icon.ico') : path.join(process.cwd(), 'src', 'app', 'assets', 'icon.ico');
+        return app.isPackaged 
+            ? path.join(process.resourcesPath, 'icon.ico') 
+            : path.join(process.cwd(), 'src', 'app', 'assets', 'icons', '512.png');
     } else {
-        return app.isPackaged ? path.join(process.resourcesPath, 'Techdoro.png') : path.join(process.cwd(), 'src', 'app', 'assets', 'Techdoro.png');
+        // Linux e macOS
+        if (app.isPackaged) {
+            // Quando empacotado, tentar usar o ícone do sistema primeiro (Flatpak)
+            const systemIcon = path.join('/app/share/icons/hicolor', `${iconSize}x${iconSize}`, 'apps', 'com.zelchi.Techdoro.png');
+            const resourceIcon = path.join(process.resourcesPath, 'icons', `${iconSize}.png`);
+            const fallbackIcon = path.join(process.resourcesPath, 'icon.png');
+            
+            // Verificar se existe o ícone do sistema (Flatpak)
+            if (fs.existsSync(systemIcon)) {
+                return systemIcon;
+            }
+            // Caso contrário, usar o ícone empacotado
+            if (fs.existsSync(resourceIcon)) {
+                return resourceIcon;
+            }
+            return fallbackIcon;
+        } else {
+            // Em desenvolvimento
+            return path.join(process.cwd(), 'src', 'app', 'assets', 'icons', `${iconSize}.png`);
+        }
     }
-
 };
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -126,7 +149,8 @@ const createTray = () => {
     if (tray) return;
 
     try {
-        const iconPath = getIconPath();
+        // Para tray icon no Linux, usar ícone menor (melhor visualização na bandeja)
+        const iconPath = process.platform === 'linux' ? getIconPath(32) : getIconPath();
         console.log('Criando tray com ícone:', iconPath);
 
         tray = new Tray(iconPath);
@@ -253,10 +277,13 @@ app.whenReady().then(() => {
 
         ipcMain.on('notifiTimeLong', () => {
             try {
+                // Para notificações no Linux, usar ícone de tamanho médio (48x48)
+                const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
+                
                 const notif = new Notification({
                     title: 'Tempo acabou!',
                     body: 'Vai dar uma esticada nas pernas!',
-                    icon: getIconPath(),
+                    icon: notificationIcon,
                     silent: false,
                     timeoutType: 'default',
                 });
@@ -278,10 +305,13 @@ app.whenReady().then(() => {
 
         ipcMain.on('notifiTimeShort', () => {
             try {
+                // Para notificações no Linux, usar ícone de tamanho médio (48x48)
+                const notificationIcon = process.platform === 'linux' ? getIconPath(48) : getIconPath();
+                
                 const notif = new Notification({
                     title: 'Intervalo acabou!',
                     body: 'Retome os estudos imediatamente!!!',
-                    icon: getIconPath(),
+                    icon: notificationIcon,
                     silent: false,
                     timeoutType: 'default',
                 });
