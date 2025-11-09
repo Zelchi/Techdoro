@@ -40,7 +40,7 @@ const config: ForgeConfig = {
                     '--share=ipc',
                     '--socket=wayland',
                     '--socket=fallback-x11',
-                    '--socket=pipewire',
+                    '--socket=pulseaudio',
                     '--socket=session-bus',
                     '--talk-name=org.freedesktop.Notifications',
                 ],

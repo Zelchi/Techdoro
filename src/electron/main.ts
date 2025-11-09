@@ -96,65 +96,61 @@ const createWindow = () => {
 const createTray = () => {
     if (tray) return;
 
-    try {
-        const trayIconPath = getIconPath();
-        const trayImage = nativeImage.createFromPath(trayIconPath);
+    const trayIconPath = getIconPath();
+    const trayImage = nativeImage.createFromPath(trayIconPath);
 
-        const resized = trayImage.resize({ width: 32, height: 32 });
+    const resized = trayImage.resize({ width: 32, height: 32 });
 
-        tray = new Tray(resized);
-        tray.setToolTip('Techdoro');
+    tray = new Tray(resized);
+    tray.setToolTip('Techdoro');
 
-        tray.on('click', () => {
-            if (!mainWindow) return;
-            if (mainWindow.isVisible()) {
-                mainWindow.hide();
-                mainWindow.setSkipTaskbar(true);
-            } else {
-                mainWindow.setSkipTaskbar(false);
-                if (mainWindow.isMinimized()) mainWindow.restore();
-                mainWindow.show();
-                mainWindow.focus();
-            }
-        });
+    tray.on('click', () => {
+        if (!mainWindow) return;
+        if (mainWindow.isVisible()) {
+            mainWindow.hide();
+            mainWindow.setSkipTaskbar(true);
+        } else {
+            mainWindow.setSkipTaskbar(false);
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.show();
+            mainWindow.focus();
+        }
+    });
 
-        const contextMenu = Menu.buildFromTemplate([
-            {
-                label: 'Mostrar Janela',
-                click: () => {
-                    if (!mainWindow) return;
-                    if (mainWindow.isVisible()) {
-                        mainWindow.hide();
-                        mainWindow.setSkipTaskbar(true);
-                    } else {
-                        mainWindow.setSkipTaskbar(false);
-                        if (mainWindow.isMinimized()) mainWindow.restore();
-                        mainWindow.show();
-                        mainWindow.focus();
-                    }
-                },
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Mostrar Janela',
+            click: () => {
+                if (!mainWindow) return;
+                if (mainWindow.isVisible()) {
+                    mainWindow.hide();
+                    mainWindow.setSkipTaskbar(true);
+                } else {
+                    mainWindow.setSkipTaskbar(false);
+                    if (mainWindow.isMinimized()) mainWindow.restore();
+                    mainWindow.show();
+                    mainWindow.focus();
+                }
             },
-            {
-                type: 'separator'
+        },
+        {
+            type: 'separator'
+        },
+        {
+            label: 'Sair',
+            click: () => {
+                if (mainWindow) {
+                    mainWindow.setSkipTaskbar(false);
+                    mainWindow.destroy();
+                }
+                app.quit();
+                process.exit(0);
             },
-            {
-                label: 'Sair',
-                click: () => {
-                    if (mainWindow) {
-                        mainWindow.setSkipTaskbar(false);
-                        mainWindow.destroy();
-                    }
-                    app.quit();
-                    process.exit(0);
-                },
-            },
-        ]);
+        },
+    ]);
 
-        tray.setContextMenu(contextMenu);
-        console.log('Tray criado com sucesso');
-    } catch (error) {
-        console.error('Erro ao criar tray:', error);
-    }
+    tray.setContextMenu(contextMenu);
+
 }
 
 const createNotification = () => {
