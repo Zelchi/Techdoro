@@ -12,7 +12,7 @@ const config: ForgeConfig = {
         icon: 'src/app/assets/icon',
         extraResource: [
             'src/app/assets/icon.png',
-            'src/app/assets/icon.svg',
+            'src/app/assets/icon.ico',
             'src/app/assets/alarme.mp3',
             'src/app/assets/click.mp3',
         ],
@@ -33,7 +33,6 @@ const config: ForgeConfig = {
                 description: 'A simple Pomodoro timer for your desktop',
                 categories: ['Utility', 'Office'],
                 files: [
-                    ['src/app/assets/icon.svg', '/share/icons/hicolor/scalable/apps/com.zelchi.Techdoro.svg'],
                     ['src/app/assets/icon.png', '/share/icons/hicolor/512x512/apps/com.zelchi.Techdoro.png'],
                 ],
                 modules: [],
