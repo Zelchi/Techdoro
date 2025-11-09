@@ -7,7 +7,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
-let isQuiting = false;
+let notification: Notification | null = null;
 
 if (started) {
     app.quit();
@@ -91,37 +91,6 @@ const createWindow = () => {
         }
     });
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow?.show();
-    });
-
-    mainWindow.on('maximize', () => {
-        mainWindow?.webContents.send('window-maximized');
-    });
-
-    mainWindow.on('unmaximize', () => {
-        mainWindow?.webContents.send('window-unmaximized');
-    });
-
-    mainWindow.on('enter-full-screen', () => {
-        mainWindow?.webContents.send('window-fullscreen', true);
-    });
-
-    mainWindow.on('leave-full-screen', () => {
-        mainWindow?.webContents.send('window-fullscreen', false);
-    });
-
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-
-    mainWindow.on('close', (event) => {
-        if (!isQuiting) {
-            event.preventDefault();
-            mainWindow?.hide();
-            mainWindow?.setSkipTaskbar(true);
-        }
-    });
 }
 
 const createTray = () => {
@@ -167,12 +136,12 @@ const createTray = () => {
             {
                 label: 'Sair',
                 click: () => {
-                    isQuiting = true;
                     if (mainWindow) {
                         mainWindow.setSkipTaskbar(false);
                         mainWindow.destroy();
                     }
                     app.quit();
+                    process.exit(0);
                 },
             },
         ]);
@@ -184,121 +153,52 @@ const createTray = () => {
     }
 }
 
-ipcMain.handle('window-minimize', () => {
-    mainWindow?.minimize();
-});
+const createNotification = () => {
 
-ipcMain.on('window-minimize', () => {
-    mainWindow?.minimize();
-});
+    if (!Notification.isSupported()) return;
 
-ipcMain.handle('window-maximize', () => {
-    if (mainWindow && !mainWindow.isMaximized()) {
-        mainWindow.maximize();
-    }
-});
+    ipcMain.on('notifiTimeLong', () => {
+        notification = new Notification({
+            title: 'Tempo acabou!',
+            body: 'Vai dar uma esticada nas pernas!',
+            icon: getIconPath(),
+            silent: false,
+            timeoutType: 'default',
+        });
 
-ipcMain.handle('window-unmaximize', () => {
-    if (mainWindow && mainWindow.isMaximized()) {
-        mainWindow.unmaximize();
-    }
-});
-
-ipcMain.handle('window-close', () => {
-    mainWindow?.close();
-});
-
-ipcMain.on('window-close', () => {
-    mainWindow?.close();
-});
-
-ipcMain.handle('window-is-maximized', () => {
-    return mainWindow?.isMaximized() ?? false;
-});
-
-ipcMain.handle('window-toggle-fullscreen', () => {
-    if (mainWindow) {
-        mainWindow.setFullScreen(!mainWindow.isFullScreen());
-    }
-});
-
-ipcMain.handle('window-is-fullscreen', () => {
-    return mainWindow?.isFullScreen() ?? false;
-});
-
-app.whenReady().then(() => {
-
-    if (process.platform === 'win32') {
-        app.setAppUserModelId('com.techdoro.app');
-    }
-
-    createWindow();
-    createTray();
-
-    globalShortcut.register('CommandOrControl+Shift+I', () => {
-        if (mainWindow && !mainWindow.isDestroyed()) {
-            if (mainWindow.webContents.isDevToolsOpened()) {
-                mainWindow.webContents.closeDevTools();
-            } else {
-                mainWindow.webContents.openDevTools({ mode: 'detach' });
-            }
-        }
+        notification.on('click', () => {
+            if (!mainWindow) return;
+            mainWindow.setSkipTaskbar(false);
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.show();
+            mainWindow.focus();
+        });
+        notification.show();
     });
 
-    if (Notification.isSupported()) {
-
-        ipcMain.on('notifiTimeLong', () => {
-            try {
-                const notif = new Notification({
-                    title: 'Tempo acabou!',
-                    body: 'Vai dar uma esticada nas pernas!',
-                    icon: getIconPath(),
-                    silent: false,
-                    timeoutType: 'default',
-                });
-
-                notif.on('click', () => {
-                    if (!mainWindow) return;
-                    mainWindow.setSkipTaskbar(false);
-                    if (mainWindow.isMinimized()) mainWindow.restore();
-                    mainWindow.show();
-                    mainWindow.focus();
-                });
-
-                notif.show();
-                console.log('Notificação de tempo longo exibida');
-            } catch (error) {
-                console.error('Erro ao exibir notificação:', error);
-            }
+    ipcMain.on('notifiTimeShort', () => {
+        const notif = new Notification({
+            title: 'Intervalo acabou!',
+            body: 'Retome os estudos imediatamente!!!',
+            icon: getIconPath(),
+            silent: false,
+            timeoutType: 'default',
         });
 
-        ipcMain.on('notifiTimeShort', () => {
-            try {
-                const notif = new Notification({
-                    title: 'Intervalo acabou!',
-                    body: 'Retome os estudos imediatamente!!!',
-                    icon: getIconPath(),
-                    silent: false,
-                    timeoutType: 'default',
-                });
-
-                notif.on('click', () => {
-                    if (!mainWindow) return;
-                    mainWindow.setSkipTaskbar(false);
-                    if (mainWindow.isMinimized()) mainWindow.restore();
-                    mainWindow.show();
-                    mainWindow.focus();
-                });
-
-                notif.show();
-                console.log('Notificação de tempo curto exibida');
-            } catch (error) {
-                console.error('Erro ao exibir notificação:', error);
-            }
+        notif.on('click', () => {
+            if (!mainWindow) return;
+            mainWindow.setSkipTaskbar(false);
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.show();
+            mainWindow.focus();
         });
-    } else {
-        console.error('Notificações não são suportadas neste sistema');
-    }
+
+        notif.show();
+    });
+};
+
+ipcMain.on('window-minimize', () => {
+    mainWindow?.hide();
 });
 
 app.on('activate', () => {
@@ -313,12 +213,12 @@ app.on('activate', () => {
     }
 });
 
-app.on('before-quit', () => {
-    isQuiting = true;
-    tray?.destroy();
-    tray = null;
-});
+app.whenReady().then(() => {
 
-app.on('will-quit', () => {
-    globalShortcut.unregisterAll();
+    if (process.platform === 'win32') app.setAppUserModelId('com.techdoro.app');
+
+    createWindow();
+    createTray();
+    createNotification();
+
 });
