@@ -97,8 +97,12 @@ const createTray = () => {
     if (tray) return;
 
     try {
+        const trayIconPath = getIconPath();
+        const trayImage = nativeImage.createFromPath(trayIconPath);
 
-        tray = new Tray(getIconPath());
+        const resized = trayImage.resize({ width: 32, height: 32 });
+
+        tray = new Tray(resized);
         tray.setToolTip('Techdoro');
 
         tray.on('click', () => {
