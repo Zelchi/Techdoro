@@ -70,7 +70,6 @@ const Box = styled.div<{ $active?: boolean }>`
     background-color: ${({ $active }) => ($active ? 'var(--accent-strong)' : 'transparent')};
     border-radius: 4px;
     transition: background .25s, box-shadow .25s;
-    box-shadow: ${({ $active }) => ($active ? '0 0 0 3px rgba(110,231,255,0.25)' : 'none')};
 `
 
 type ClockT = { timeNow: number; timeMax: number };

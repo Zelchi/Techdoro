@@ -10,7 +10,7 @@ type Props = {
 const Caixa = styled.div<{ $marcado: boolean }>`
     cursor: pointer;
     height: 30px;
-    width: 34px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;

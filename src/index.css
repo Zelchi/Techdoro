@@ -12,8 +12,8 @@
     --text-1: #e6e6e6;
     --text-2: #b3b3b3;
 
-    --accent: #6ee7ff;
-    --accent-strong: #22d3ee;
+    --accent: orange;
+    --accent-strong: darkorange;
 
     --border: rgba(255, 255, 255, 0.12);
     --border-strong: rgba(255, 255, 255, 0.2);
