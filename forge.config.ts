@@ -32,7 +32,9 @@ const config: ForgeConfig = {
                 genericName: 'Pomodoro Timer',
                 description: 'A simple Pomodoro timer for your desktop',
                 categories: ['Utility', 'Office'],
-                files: [],
+                files: [
+                    ['src/app/assets/icon.png', '/share/icons/hicolor/512x512/apps/com.zelchi.Techdoro.png'],
+                ],
                 modules: [],
                 finishArgs: [
                     '--share=ipc',
