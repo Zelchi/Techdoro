@@ -1,6 +1,5 @@
-import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell, globalShortcut } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell, globalShortcut, nativeImage } from 'electron';
 import path from 'node:path';
-import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -20,22 +19,14 @@ app.commandLine.appendSwitch('disable-gpu-rasterization');
 app.commandLine.appendSwitch('disable-accelerated-video-decode');
 app.commandLine.appendSwitch('disable-accelerated-video-encode');
 
-const getIconPath = (size?: number): string => {
-
-    const iconSize = size || (process.platform === 'linux' ? 32 : 512);
+const getIconPath = (): string => {
 
     if (app.isPackaged) {
-
-        const resourceIcon = path.join(process.resourcesPath, 'icons', `${iconSize}.png`);
-        const fallbackIcon = path.join(process.resourcesPath, 'icon.png');
-
-        if (fs.existsSync(resourceIcon)) {
-            return resourceIcon;
-        }
-
-        return fallbackIcon;
+        if (process.platform === 'win32') return path.join(process.resourcesPath, 'icon.ico');
+        if (process.platform === 'linux') return path.join(process.resourcesPath, 'icon.png');
     } else {
-        return path.join(process.cwd(), 'src', 'app', 'assets', 'icons', `${iconSize}.png`);
+        if (process.platform === 'win32') return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.ico');
+        if (process.platform === 'linux') return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
     }
 
 };
