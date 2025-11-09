@@ -9,7 +9,7 @@ const config: ForgeConfig = {
         asar: true,
         name: 'techdoro',
         executableName: 'techdoro',
-        icon: 'src/app/assets/icon.png',
+        icon: 'src/app/assets/icon',
         extraResource: [
             'src/app/assets/icon.png',
             'src/app/assets/icons',
