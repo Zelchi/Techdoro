@@ -38,5 +38,6 @@ sudo apt-get install fakeroot dpkg
 ---
 
 Você só pode compilar o alvo Squirrel.Windows em uma máquina Windows ou em uma máquina Linux com `mono` o pacote squirrel `wine` instalado.
+
 ---
 
