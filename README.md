@@ -41,3 +41,4 @@ Você só pode compilar o alvo Squirrel.Windows em uma máquina Windows ou em um
 
 ---
 
+[Download](https://github.com/Zelchi/Techdoro/releases/tag/v2.0.0)
