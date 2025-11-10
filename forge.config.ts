@@ -6,11 +6,14 @@ import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 
 const flatpakId = 'com.zelchi.Techdoro';
+const version = '2.0.0';
 
 const config: ForgeConfig = {
     packagerConfig: {
         asar: true,
         name: 'techdoro',
+        appVersion: version,
+        buildVersion: version,
         executableName: 'techdoro',
         icon: 'src/app/assets/icon',
         extraResource: [
@@ -24,6 +27,9 @@ const config: ForgeConfig = {
         new MakerSquirrel({
             name: 'techdoro',
             authors: 'Zelchi',
+            exe: 'techdoro.exe',
+            setupExe: `Techdoro-Setup-${version}.exe`,
+            setupIcon: 'src/app/assets/icon.ico',
             description: 'A simple Pomodoro timer for your desktop',
         }, ['win32']),
         new MakerRpm({
