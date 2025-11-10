@@ -1,11 +1,9 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerFlatpak } from '@electron-forge/maker-flatpak';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 
-const flatpakId = 'com.zelchi.Techdoro';
 const version = '2.0.0';
 
 const config: ForgeConfig = {
@@ -55,34 +53,6 @@ const config: ForgeConfig = {
                 homepage: 'https://github.com/Zelchi/Techdoro',
                 section: 'utils',
                 priority: 'optional',
-            },
-        }, ['linux']),
-        new MakerFlatpak({
-            options: {
-                id: flatpakId,
-                runtime: 'org.freedesktop.Platform',
-                sdk: 'org.freedesktop.Sdk',
-                runtimeVersion: '25.08',
-                baseVersion: '25.08',
-                base: 'org.electronjs.Electron2.BaseApp',
-                branch: 'stable',
-                icon: 'src/app/assets/icon.png',
-                productName: 'Techdoro',
-                genericName: 'Pomodoro Timer',
-                description: 'A simple Pomodoro timer for your desktop',
-                categories: ['Utility', 'Office'],
-                files: [
-                    ['src/app/assets/icon.png', '/share/icons/hicolor/512x512/apps/com.zelchi.Techdoro.png'],
-                ],
-                modules: [],
-                finishArgs: [
-                    '--share=ipc',
-                    '--socket=wayland',
-                    '--socket=fallback-x11',
-                    '--socket=pulseaudio',
-                    '--socket=session-bus',
-                    '--talk-name=org.freedesktop.Notifications',
-                ],
             },
         }, ['linux']),
     ],

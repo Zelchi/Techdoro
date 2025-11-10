@@ -1,15 +1,15 @@
 {
     "name": "techdoro",
     "productName": "techdoro",
-    "version": "1.0.0",
-    "description": "My Electron application description",
+    "version": "2.0.0",
+    "description": "Techdoro is a pomodoro timer application built with Electron and React.",
     "main": ".vite/build/main.js",
     "scripts": {
         "start": "electron-forge start",
         "package": "electron-forge package",
-        "make:linux": "electron-forge make --platform=linux",
-        "make:win": "electron-forge make --platform=win32",
-        "make:all": "npm run make:linux && npm run make:win",
+        "docker:build": "docker compose build",
+        "docker:make": "docker compose run --rm techdoro-builder",
+        "make": "npm run docker:build && npm run docker:make",
         "publish": "electron-forge publish",
         "lint": "eslint --ext .ts,.tsx ."
     },
@@ -22,7 +22,6 @@
     "devDependencies": {
         "@electron-forge/cli": "^7.8.3",
         "@electron-forge/maker-deb": "^7.10.2",
-        "@electron-forge/maker-flatpak": "^7.10.2",
         "@electron-forge/maker-rpm": "^7.10.2",
         "@electron-forge/maker-squirrel": "^7.10.2",
         "@electron-forge/plugin-vite": "^7.10.2",

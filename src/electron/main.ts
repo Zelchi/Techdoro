@@ -31,9 +31,7 @@ const getIconPath = (): string => {
 
 };
 
-const gotTheLock = app.requestSingleInstanceLock();
-
-if (!gotTheLock) {
+if (!app.requestSingleInstanceLock()) {
     app.quit();
     process.exit(0);
 } else {
@@ -94,6 +92,7 @@ const createWindow = () => {
 }
 
 const createTray = () => {
+
     if (tray) return;
 
     const trayIconPath = getIconPath();
