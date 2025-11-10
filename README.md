@@ -1,5 +1,9 @@
 # Techdoro
 
+<p align="center">
+  <img src="./techdoro_preview.png" alt="Preview do Techdoro" />
+</p>
+
 Como buildar o projeto
 
 ```bash
@@ -10,8 +14,6 @@ Dessa forma você irá gerar os instaladores com base no sistema operacional que
 Porem dependendo do sistema operacional, pode ser que você precise de algumas dependências adicionais.
 
 ---
-
-</br>
 
 *Você só pode compilar o alvo RPM em máquinas Linux com os `rpm` pacotes `rpm-build` instalados.*
 
@@ -36,3 +38,5 @@ sudo apt-get install fakeroot dpkg
 ---
 
 Você só pode compilar o alvo Squirrel.Windows em uma máquina Windows ou em uma máquina Linux com `mono` o pacote squirrel `wine` instalado.
+---
+
