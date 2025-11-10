@@ -1,0 +1,36 @@
+# Ignorar node_modules (será instalado no container)
+node_modules
+
+# Ignorar builds anteriores
+out
+.vite
+
+# Ignorar arquivos de configuração local
+.env
+.env.local
+
+# Ignorar arquivos Git
+.git
+.gitignore
+
+# Ignorar arquivos do editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Ignorar logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
