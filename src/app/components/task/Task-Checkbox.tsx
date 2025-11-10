@@ -29,7 +29,6 @@ export default ({ tarefa, marcarTarefa }: Props) => {
             onClick={() => marcarTarefa(tarefa)}
             role="button"
             aria-pressed={tarefa.completed}
-            aria-label={tarefa.completed ? 'Tarefa concluída' : 'Marcar tarefa como concluída'}
         >
             {tarefa.completed && <FiCheck />}
         </Caixa>

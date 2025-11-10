@@ -5,7 +5,7 @@
     "description": "Techdoro is a pomodoro timer application built with Electron and React.",
     "main": ".vite/build/main.js",
     "scripts": {
-        "start": "electron-forge start",
+        "dev": "electron-forge start",
         "package": "electron-forge package",
         "make": "electron-forge make",
         "make:win": "electron-forge make --platform=win32",

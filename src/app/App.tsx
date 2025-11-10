@@ -26,11 +26,7 @@ export default () => {
     return (
         <Container>
             <WindowBar />
-            {win ?
-                <Frame click={click} alarm={alarm} />
-                :
-                <Menu click={click} />
-            }
+            <Frame click={click} alarm={alarm} >{win && <Menu click={click} />}</Frame> 
             <Taskbar />
         </Container>
     )

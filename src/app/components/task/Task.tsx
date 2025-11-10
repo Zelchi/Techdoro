@@ -124,7 +124,7 @@ const TaskText = styled.p<{ $completed: boolean; $shouldScroll: boolean }>`
     text-overflow: ellipsis;
     width: 100%;
     color: ${({ $completed }) => ($completed ? 'var(--text-2)' : 'var(--text-1)')};
-    text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'none')};
+    text-decoration: ${({ $completed }) => ($completed ? 'line-through' : 'underline')};
     cursor: pointer;
     white-space: nowrap;
     ${({ $shouldScroll }) => $shouldScroll && css`

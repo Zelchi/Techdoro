@@ -12,6 +12,8 @@ import VolumeBar from './VolumeBar';
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    top: 38px;
+    position: fixed;
     align-items: center;
     justify-content: start;
     width: calc(100% - 28px);
@@ -62,7 +64,6 @@ const Exit = styled.button`
     &:hover { background: var(--bg-3); border-color: var(--border-strong); }
     &:active { filter: brightness(.85); }
 `
-
 
 type ClockProps = { click: () => void };
 

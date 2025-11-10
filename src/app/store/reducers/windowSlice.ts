@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Window = {
-    value: number
+    value: boolean
 }
 
 const windowState: Window = {
-    value: 1
+    value: false
 }
 
 const windowSlice = createSlice({

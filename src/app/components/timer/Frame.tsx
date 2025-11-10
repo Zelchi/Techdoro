@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Clock from './Clock/Clock'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, ReactNode } from 'react'
 import { GoTools, GoIssueReopened } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -46,7 +46,7 @@ const Caixa = styled.div`
 
 const Button = styled.button`
     height: 30px;
-    width: 34px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -77,9 +77,10 @@ type ClockT = { timeNow: number; timeMax: number };
 type FrameProps = {
     click: () => void;
     alarm: () => void;
+    children: ReactNode;
 }
 
-export default ({ click, alarm }: FrameProps) => {
+export default ({ click, alarm, children }: FrameProps) => {
     const [clock, setClock] = useState<number>(1);
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [focusCyclesDone, setFocusCyclesDone] = useState<number>(0);
@@ -208,6 +209,7 @@ export default ({ click, alarm }: FrameProps) => {
             }
 
             setClocks(prev => prev.map((c, i) => (i + 1 === nextClock ? { ...c, timeNow: c.timeMax } : c)));
+            handleReset();
             setClock(nextClock);
         }
     }, [now, isRunning, startedAt, clock, computeRemainingFor, alarm, focusCyclesDone, cyclesBeforeFinal]);
@@ -244,6 +246,7 @@ export default ({ click, alarm }: FrameProps) => {
                 type={clock}
                 reset={handleReset}
             />
+            {children}
         </Container>
     );
 };
