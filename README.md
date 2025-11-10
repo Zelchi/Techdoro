@@ -2,8 +2,6 @@
 
 Como buildar o projeto
 
-### 1. Primeiro método
-
 ```bash
 npm run make
 ```
@@ -12,7 +10,6 @@ Dessa forma você irá gerar os instaladores com base no sistema operacional que
 Porem dependendo do sistema operacional, pode ser que você precise de algumas dependências adicionais.
 
 ---
-### 2. Segundo método (RPM e DEB)
 
 </br>
 
@@ -37,7 +34,5 @@ sudo apt-get install fakeroot dpkg
 ```
 
 ---
-
-### 2. Terceiro método (Windows)
 
 Você só pode compilar o alvo Squirrel.Windows em uma máquina Windows ou em uma máquina Linux com `mono` o pacote squirrel `wine` instalado.
