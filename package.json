@@ -1,59 +1,50 @@
 {
-  "name": "techdoro",
-  "private": true,
-  "version": "1.1.5",
-  "main": "dist/electron/main.js",
-  "author": {
-    "name": "Zelchi",
-    "email": "tininhakawaii@gmail.com"
-  },
-  "description": "Techdoro",
-  "homepage": "./",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "electron:dev": "cross-env NODE_ENV=DEV electron public/electron/main.js",
-    "electron:win": "npm run build && electron-builder --w",
-    "electron:mac": "npm run build && electron-builder --m",
-    "electron:linux": "npm run build && electron-builder --l"
-  },
-  "build": {
-    "appId": "com.techdoro",
-    "productName": "Techdoro",
-    "win": {
-      "icon": "dist/iconTechDoro.png"
+    "name": "techdoro",
+    "productName": "techdoro",
+    "version": "2.0.0",
+    "description": "Techdoro is a pomodoro timer application built with Electron and React.",
+    "main": ".vite/build/main.js",
+    "scripts": {
+        "dev": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "make:win": "electron-forge make --platform=win32",
+        "make:linux": "electron-forge make --platform=linux",
+        "make:darwin": "electron-forge make --platform=darwin",
+        "make:all": "npm run make:win && npm run make:linux && npm run make:darwin",
+        "publish": "electron-forge publish"
     },
-    "files": [
-      "dist/**/*"
-    ],
-    "directories": {
-      "buildResources": "public"
+    "keywords": [],
+    "author": {
+        "name": "Zelchi",
+        "email": "tininhakawaii@gmail.com"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@electron-forge/cli": "^7.8.3",
+        "@electron-forge/maker-deb": "^7.10.2",
+        "@electron-forge/maker-rpm": "^7.10.2",
+        "@electron-forge/maker-squirrel": "^7.10.2",
+        "@electron-forge/maker-zip": "^7.10.2",
+        "@electron-forge/plugin-vite": "^7.10.2",
+        "@types/electron-squirrel-startup": "^1.0.2",
+        "@types/react": "^19.2.2",
+        "@types/react-dom": "^19.2.2",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "electron": "39.1.0",
+        "eslint": "^8.57.1",
+        "eslint-plugin-import": "^2.32.0",
+        "typescript": "~4.5.4",
+        "vite": "^7.2.1"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^2.10.1",
+        "electron-squirrel-startup": "^1.0.1",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "react-icons": "^5.5.0",
+        "react-redux": "^9.2.0",
+        "styled-components": "^6.1.19"
     }
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.5.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-icons": "^5.4.0",
-    "react-redux": "^9.2.0",
-    "styled-components": "^6.1.15"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.19.0",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react": "^4.3.4",
-    "cross-env": "^7.0.3",
-    "electron": "^34.1.1",
-    "electron-builder": "^25.1.8",
-    "eslint": "^9.19.0",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.18",
-    "globals": "^15.14.0",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "^8.22.0",
-    "vite": "^6.1.0",
-    "vite-plugin-singlefile": "^2.1.0"
-  }
 }
