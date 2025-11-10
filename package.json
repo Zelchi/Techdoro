@@ -7,11 +7,8 @@
     "scripts": {
         "start": "electron-forge start",
         "package": "electron-forge package",
-        "docker:build": "docker compose build",
-        "docker:make": "docker compose run --rm techdoro-builder",
-        "make": "npm run docker:build && npm run docker:make",
-        "publish": "electron-forge publish",
-        "lint": "eslint --ext .ts,.tsx ."
+        "make": "electron-forge make",
+        "publish": "electron-forge publish"
     },
     "keywords": [],
     "author": {
