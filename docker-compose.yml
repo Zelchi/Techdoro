@@ -1,11 +1,9 @@
-version: "3.8"
-
 services:
   techdoro-builder:
+    container_name: techdoro-builder
     build:
       context: .
       dockerfile: Dockerfile
-    image: techdoro-builder:latest
     volumes:
       - ./out:/app/out:Z
       - techdoro:/app/node_modules:Z
