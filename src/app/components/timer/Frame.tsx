@@ -90,7 +90,7 @@ export default ({ click, alarm, children }: FrameProps) => {
     const maxima = [LongMax, ShortMax, FinalMax];
 
     const [clocks, setClocks] = useState<ClockT[]>(
-        () => maxima.map(m => ({ timeNow: m * 60, timeMax: m * 60 }))
+        () => maxima.map(m => ({ timeNow: 3, timeMax: m * 60 }))
     );
 
     const [startedAt, setStartedAt] = useState<number | null>(null);

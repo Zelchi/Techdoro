@@ -13,12 +13,6 @@ if (started) {
     app.quit();
 }
 
-app.commandLine.appendSwitch('disable-gpu');
-app.commandLine.appendSwitch('disable-gpu-compositing');
-app.commandLine.appendSwitch('disable-gpu-rasterization');
-app.commandLine.appendSwitch('disable-accelerated-video-decode');
-app.commandLine.appendSwitch('disable-accelerated-video-encode');
-
 const getIconPath = (): string => {
 
     if (app.isPackaged) {
