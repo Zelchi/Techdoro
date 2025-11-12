@@ -1,6 +1,10 @@
-import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, shell, globalShortcut, nativeImage } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, nativeImage } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+
+if (started) {
+    app.quit();
+}
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -8,10 +12,6 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let notification: Notification | null = null;
-
-if (started) {
-    app.quit();
-}
 
 const getIconPath = (): string => {
 
@@ -24,18 +24,6 @@ const getIconPath = (): string => {
     }
 
 };
-
-if (!app.requestSingleInstanceLock()) {
-    app.quit();
-    process.exit(0);
-} else {
-    app.on('second-instance', () => {
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.focus();
-        }
-    });
-}
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
@@ -57,10 +45,10 @@ const createWindow = () => {
         backgroundColor: '#00000000',
     });
 
-    const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged;
-    if (isDev) {
-        mainWindow.webContents.openDevTools({ mode: 'detach' });
-    }
+    // const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged;
+    // if (isDev) {
+    //     mainWindow.webContents.openDevTools({ mode: 'detach' });
+    // }
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
@@ -70,31 +58,15 @@ const createWindow = () => {
         );
     }
 
-    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        shell.openExternal(url);
-        return { action: 'deny' };
-    });
-
-    mainWindow.webContents.on('will-navigate', (event, url) => {
-        const currentURL = mainWindow?.webContents.getURL();
-        if (url && currentURL && !url.startsWith(currentURL)) {
-            event.preventDefault();
-            shell.openExternal(url);
-        }
-    });
-
 }
 
 const createTray = () => {
-
     if (tray) return;
 
-    const trayIconPath = getIconPath();
-    const trayImage = nativeImage.createFromPath(trayIconPath);
+    const trayImage = nativeImage.createFromPath(getIconPath());
+    const image = trayImage.resize({ width: 32, height: 32 });
 
-    const resized = trayImage.resize({ width: 32, height: 32 });
-
-    tray = new Tray(resized);
+    tray = new Tray(image);
     tray.setToolTip('Techdoro');
 
     tray.on('click', () => {
