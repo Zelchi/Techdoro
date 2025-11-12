@@ -9,28 +9,25 @@ if (started) {
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
-let mainWindow: BrowserWindow | null = null;
-let tray: Tray | null = null;
-let notification: Notification | null = null;
-
 const getIconPath = (): string => {
 
     if (app.isPackaged) {
         if (process.platform === 'win32') return path.join(process.resourcesPath, 'icon.ico');
         if (process.platform === 'linux') return path.join(process.resourcesPath, 'icon.png');
     } else {
-        if (process.platform === 'win32') return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.ico');
-        if (process.platform === 'linux') return path.join(process.cwd(), 'src', 'app', 'assets', 'icon.png');
+        if (process.platform === 'win32') return path.join(process.cwd(), 'src', 'renderer', 'app', 'assets', 'icon.ico');
+        if (process.platform === 'linux') return path.join(process.cwd(), 'src', 'renderer', 'app', 'assets', 'icon.png');
     }
 
 };
 
 const createWindow = () => {
-    mainWindow = new BrowserWindow({
+    const win = new BrowserWindow({
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            nodeIntegration: false,
+            nodeIntegration: true,
+            sandbox: false
         },
         width: 500,
         height: 600,
@@ -51,139 +48,99 @@ const createWindow = () => {
     // }
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-        mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+        win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
     } else {
-        mainWindow.loadFile(
+        win.loadFile(
             path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
         );
     }
 
-}
+    ipcMain.on('window-minimize', () => {
+        win.hide();
+    })
 
-const createTray = () => {
-    if (tray) return;
-
-    const trayImage = nativeImage.createFromPath(getIconPath());
-    const image = trayImage.resize({ width: 32, height: 32 });
-
-    tray = new Tray(image);
-    tray.setToolTip('Techdoro');
-
-    tray.on('click', () => {
-        if (!mainWindow) return;
-        if (mainWindow.isVisible()) {
-            mainWindow.hide();
-            mainWindow.setSkipTaskbar(true);
-        } else {
-            mainWindow.setSkipTaskbar(false);
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.show();
-            mainWindow.focus();
-        }
-    });
-
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Mostrar Janela',
-            click: () => {
-                if (!mainWindow) return;
-                if (mainWindow.isVisible()) {
-                    mainWindow.hide();
-                    mainWindow.setSkipTaskbar(true);
-                } else {
-                    mainWindow.setSkipTaskbar(false);
-                    if (mainWindow.isMinimized()) mainWindow.restore();
-                    mainWindow.show();
-                    mainWindow.focus();
-                }
-            },
-        },
-        {
-            type: 'separator'
-        },
-        {
-            label: 'Sair',
-            click: () => {
-                if (mainWindow) {
-                    mainWindow.setSkipTaskbar(false);
-                    mainWindow.destroy();
-                }
-                app.quit();
-                process.exit(0);
-            },
-        },
-    ]);
-
-    tray.setContextMenu(contextMenu);
-
-}
-
-const createNotification = () => {
-
-    if (!Notification.isSupported()) return;
+    const notify = new Notification({
+        silent: true,
+        icon: getIconPath(),
+        timeoutType: 'default',
+    })
 
     ipcMain.on('notifiTimeLong', () => {
-        notification = new Notification({
-            title: 'Tempo acabou!',
-            body: 'Vai dar uma esticada nas pernas!',
-            icon: getIconPath(),
-            silent: false,
-            timeoutType: 'default',
-        });
-
-        notification.on('click', () => {
-            if (!mainWindow) return;
-            mainWindow.setSkipTaskbar(false);
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.show();
-            mainWindow.focus();
-        });
-        notification.show();
+        notify.title = 'Tempo acabou!';
+        notify.body = 'Vai dar uma esticada nas pernas!';
+        notify.show();
     });
 
     ipcMain.on('notifiTimeShort', () => {
-        const notif = new Notification({
-            title: 'Intervalo acabou!',
-            body: 'Retome os estudos imediatamente!!!',
-            icon: getIconPath(),
-            silent: false,
-            timeoutType: 'default',
-        });
+        notify.title = 'Intervalo acabou!';
+        notify.body = 'Retome os estudos imediatamente!!!';
+        notify.show();
+    });
 
-        notif.on('click', () => {
-            if (!mainWindow) return;
-            mainWindow.setSkipTaskbar(false);
-            if (mainWindow.isMinimized()) mainWindow.restore();
-            mainWindow.show();
-            mainWindow.focus();
-        });
+    notify.on('click', () => {
+        if (win.isMinimized()) {
+            win.show();
+        } else {
+            win.focus();
+        }
+    })
 
-        notif.show();
+    const tray = new Tray(nativeImage.createFromPath(getIconPath()));
+
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Show',
+            role: 'window',
+            type: 'normal',
+            click: () => {
+                win.show();
+            }
+        },
+        {
+            label: 'Exit',
+            role: 'quit',
+            type: 'normal',
+            click: () => {
+                app.quit();
+            }
+        }
+    ]);
+
+    tray.setToolTip('Techdoro');
+    tray.setContextMenu(contextMenu);
+    tray.on('click', () => {
+        if (win.isVisible()) {
+            win.focus();
+        } else {
+            win.show();
+        }
     });
 };
 
-ipcMain.on('window-minimize', () => {
-    mainWindow?.hide();
-});
-
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    } else if (mainWindow) {
-        if (!mainWindow.isVisible()) {
-            mainWindow.setSkipTaskbar(false);
-            mainWindow.show();
+if (!app.requestSingleInstanceLock()) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        const win = BrowserWindow.getAllWindows()[0];
+        if (win) {
+            if (win.isMinimized()) {
+                win.show(); win.restore();
+            } else {
+                win.show(); win.focus();
+            }
         }
-        mainWindow.focus();
-    }
-});
+    });
 
-app.whenReady().then(() => {
+    app.whenReady().then(() => {
+        app.setName(app.name)
+        app.setAppUserModelId(app.name)
+        createWindow();
+        app.on("activate", () => {
+            if (BrowserWindow.getAllWindows().length === 0) createWindow();
+        });
+    });
 
-    if (process.platform === 'win32') app.setAppUserModelId('com.techdoro.app');
-
-    createWindow();
-    createTray();
-    createNotification();
-
-});
+    app.on("window-all-closed", () => {
+        if (process.platform !== 'darwin') app.quit();
+    });
+}

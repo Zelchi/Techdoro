@@ -85,7 +85,7 @@ export default () => {
                 <Titulo>Techdoro</Titulo>
             </Caixa>
             <Caixa>
-                <Button onClick={() => { window.api.send('window-minimize'); }} > <GoX /></Button>
+                <Button onClick={() => { window.api('window-minimize'); }} > <GoX /></Button>
             </Caixa>
         </Barra>
     )
