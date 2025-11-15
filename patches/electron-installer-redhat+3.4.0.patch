@@ -1,0 +1,147 @@
+diff --git a/node_modules/electron-installer-redhat/resources/spec.ejs b/node_modules/electron-installer-redhat/resources/spec.ejsdiff --git a/node_modules/electron-installer-redhat/resources/spec.ejs b/node_modules/electron-installer-redhat/resources/spec.ejsdiff --git a/node_modules/electron-installer-redhat/resources/spec.ejs b/node_modules/electron-installer-redhat/resources/spec.ejs
+
+index e07a8a3..997b03c 100644
+
+--- a/node_modules/electron-installer-redhat/resources/spec.ejsindex e07a8a3..997b03c 100644index e07a8a3..997b03c 100644
+
++++ b/node_modules/electron-installer-redhat/resources/spec.ejs
+
+@@ -22,7 +22,7 @@ AutoReqProv: no--- a/node_modules/electron-installer-redhat/resources/spec.ejs--- a/node_modules/electron-installer-redhat/resources/spec.ejs
+
+ print('\n\n\n') }
+
+ +++ b/node_modules/electron-installer-redhat/resources/spec.ejs+++ b/node_modules/electron-installer-redhat/resources/spec.ejs
+
+ 
+
+-%>%install@@ -22,7 +22,7 @@ AutoReqProv: no@@ -22,9 +22,9 @@ AutoReqProv: no
+
++%>%install
+
+ mkdir -p %{buildroot}/usr/ print('\n\n\n') } print('\n\n\n') }
+
+-cp <%= process.platform === 'darwin' ? '-R' : '-r' %> usr/* %{buildroot}/usr/
+
++cp <%= process.platform === 'darwin' ? '-R' : '-r' %> %{_topdir}/BUILD/usr/* %{buildroot}/usr/  
+
+ 
+
+   
+
+ %files
+
+-%>%install-%>%install
+
++<%>%install+<%>%install
+
+ mkdir -p %{buildroot}/usr/ mkdir -p %{buildroot}/usr/
+
+-cp <%= process.platform === 'darwin' ? '-R' : '-r' %> usr/* %{buildroot}/usr/-cp <%= process.platform === 'darwin' ? '-R' : '-r' %> usr/* %{buildroot}/usr/
+
++cp <%= process.platform === 'darwin' ? '-R' : '-r' %> %{_topdir}/BUILD/usr/* %{buildroot}/usr/+cp <%= process.platform === 'darwin' ? '-R' : '-r' %> %{_topdir}/BUILD/usr/* %{buildroot}/usr/
+
+  
+
+  
+
+ %files %files
+
+diff --git a/node_modules/electron-installer-redhat/src/installer.js b/node_modules/electron-installer-redhat/src/installer.js
+index c7a3dbb..a83ba05 100644
+--- a/node_modules/electron-installer-redhat/src/installer.js
++++ b/node_modules/electron-installer-redhat/src/installer.js
+@@ -18,11 +18,11 @@ const defaultRename = function (dest, src) {
+ }
+ 
+ class RedhatInstaller extends common.ElectronInstaller {
+-  get baseAppDir () {
++  get baseAppDir() {
+     return path.join('BUILD', 'usr')
+   }
+ 
+-  get contentFunctions () {
++  get contentFunctions() {
+     return [
+       'copyApplication',
+       'copyLinuxIcons',
+@@ -33,22 +33,22 @@ class RedhatInstaller extends common.ElectronInstaller {
+     ]
+   }
+ 
+-  get defaultDesktopTemplatePath () {
++  get defaultDesktopTemplatePath() {
+     return path.resolve(__dirname, '../resources/desktop.ejs')
+   }
+ 
+-  get packagePattern () {
++  get packagePattern() {
+     return path.join(this.stagingDir, 'RPMS', this.options.arch, '*.rpm')
+   }
+ 
+-  get specPath () {
++  get specPath() {
+     return path.join(this.stagingDir, 'SPECS', `${this.options.name}.spec`)
+   }
+ 
+   /**
+    * Copy the application into the package.
+    */
+-  async copyApplication () {
++  async copyApplication() {
+     await super.copyApplication()
+     return this.updateSandboxHelperPermissions()
+   }
+@@ -56,7 +56,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+   /**
+    * Package everything using `rpmbuild`.
+    */
+-  async createPackage () {
++  async createPackage() {
+     this.options.logger(`Creating package at ${this.stagingDir}`)
+ 
+     const output = await spawn('rpmbuild', ['-bb', this.specPath, '--target', `${this.options.arch}-${this.options.vendor}-${this.options.platform}`, '--define', `_topdir ${this.stagingDir}`], this.options.logger)
+@@ -68,7 +68,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+    *
+    * See: https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+    */
+-  async createSpec () {
++  async createSpec() {
+     const src = path.resolve(__dirname, '../resources/spec.ejs')
+     this.options.logger(`Creating spec file at ${this.specPath}`)
+ 
+@@ -79,7 +79,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+    * Get the hash of default options for the installer. Some come from the info
+    * read from `package.json`, and some are hardcoded.
+    */
+-  async generateDefaults () {
++  async generateDefaults() {
+     const electronVersion = await common.readElectronVersion(this.userSupplied.src)
+     const [pkg, requires] = await Promise.all([
+       (async () => (await common.readMetadata(this.userSupplied)) || {})(),
+@@ -104,7 +104,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+   /**
+    * Get the hash of options for the installer.
+    */
+-  generateOptions () {
++  generateOptions() {
+     super.generateOptions()
+ 
+     this.options.name = common.sanitizeName(this.options.name, '-._+a-zA-Z0-9')
+@@ -134,7 +134,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+   /**
+    * Read scripts from provided filename and add them to the options
+    */
+-  async generateScripts () {
++  async generateScripts() {
+     const scriptNames = ['pre', 'post', 'preun', 'postun']
+ 
+     return Promise.all(_.map(this.options.scripts, async (item, key) => {
+@@ -145,7 +145,7 @@ class RedhatInstaller extends common.ElectronInstaller {
+     }))
+   }
+ 
+-  normalizeVersion () {
++  normalizeVersion() {
+     const adjustedVersion = util.replaceInvalidVersionCharacters(this.options.version)
+     if (adjustedVersion !== this.options.version) {
+       this.options.logger('Warning: replacing disallowed characters in version to comply with SPEC format.' +

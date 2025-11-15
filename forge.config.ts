@@ -42,6 +42,7 @@ const config: ForgeConfig = {
                 version: version,
                 icon: 'src/renderer/app/assets/icon.png',
                 homepage: 'https://github.com/Zelchi/Techdoro',
+                license: 'MIT',
             },
         }, ['linux']),
         new MakerDeb({
