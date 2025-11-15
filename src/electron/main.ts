@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, nativeImage } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, Notification, Tray, nativeImage, Event, screen } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -60,12 +60,6 @@ const createWindow = () => {
     ipcMain.on('window-minimize', () => {
         win.hide();
     })
-
-    win.on('blur', () => {
-        if (!win.webContents.isDevToolsOpened() && win.isVisible()) {
-            win.hide();
-        }
-    });
 
     const notify = new Notification({
         silent: true,
@@ -147,7 +141,4 @@ if (!app.requestSingleInstanceLock()) {
         });
     });
 
-    app.on("window-all-closed", () => {
-        if (process.platform !== 'darwin') app.quit();
-    });
 }
