@@ -10,10 +10,8 @@
         "make": "electron-forge make",
         "make:win": "electron-forge make --platform=win32",
         "make:linux": "electron-forge make --platform=linux",
-        "make:darwin": "electron-forge make --platform=darwin",
-        "make:all": "npm run make:win && npm run make:linux && npm run make:darwin",
-        "publish": "electron-forge publish",
-        "postinstall": "patch-package"
+        "make:all": "npm run make:win && npm run make:linux",
+        "publish": "electron-forge publish"
     },
     "keywords": [],
     "author": {
@@ -36,13 +34,11 @@
         "electron": "^39.1.0",
         "eslint": "^8.57.1",
         "eslint-plugin-import": "^2.32.0",
-        "patch-package": "^8.0.1",
         "typescript": "^4.5.4",
         "vite": "^7.2.1"
     },
     "dependencies": {
         "@reduxjs/toolkit": "^2.10.1",
-        "electron-installer-redhat": "^3.4.0",
         "electron-squirrel-startup": "^1.0.1",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
