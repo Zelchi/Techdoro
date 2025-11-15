@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export type CyclesState = {
-    cyclesBeforeFinal: number;
+    value: number;
 };
 
 const getLocalStorage = (): CyclesState => {
     const cycles = localStorage.getItem('cyclesBeforeFinal');
     return {
-        cyclesBeforeFinal: cycles ? parseInt(cycles) : 4 
+        value: cycles ? parseInt(cycles) : 4
     };
 };
 
@@ -18,7 +18,7 @@ const cyclesSlice = createSlice({
     initialState: cyclesState,
     reducers: {
         setCyclesBeforeFinal: (state, action) => {
-            state.cyclesBeforeFinal = action.payload;
+            state.value = action.payload;
             localStorage.setItem('cyclesBeforeFinal', action.payload.toString());
         }
     }

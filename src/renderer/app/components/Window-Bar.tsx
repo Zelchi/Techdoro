@@ -1,10 +1,7 @@
-import { MouseEvent, use, useCallback } from 'react'
+import { MouseEvent } from 'react'
 import styled from 'styled-components'
 import icon from '../assets/icon.png'
 import { GoX } from "react-icons/go";
-import { RootState } from '../store/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { setWindow } from '../store/reducers/windowSlice';
 
 const Barra = styled.div`
     width: 100%;

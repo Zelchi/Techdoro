@@ -5,7 +5,7 @@ import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { VitePlugin } from '@electron-forge/plugin-vite';
 
-const version = '2.0.0';
+const version = '2.0.1';
 
 const config: ForgeConfig = {
     packagerConfig: {
@@ -14,12 +14,12 @@ const config: ForgeConfig = {
         appVersion: version,
         buildVersion: version,
         executableName: 'techdoro',
-        icon: 'src/app/assets/icon',
+        icon: 'src/renderer/app/assets/icon',
         extraResource: [
-            'src/app/assets/icon.png',
-            'src/app/assets/icon.ico',
-            'src/app/assets/alarme.mp3',
-            'src/app/assets/click.mp3',
+            'src/renderer/app/assets/icon.png',
+            'src/renderer/app/assets/icon.ico',
+            'src/renderer/app/assets/alarme.mp3',
+            'src/renderer/app/assets/click.mp3',
         ],
     },
     makers: [
@@ -28,7 +28,8 @@ const config: ForgeConfig = {
             authors: 'Zelchi',
             exe: 'techdoro.exe',
             setupExe: `Techdoro-Setup-${version}.exe`,
-            setupIcon: 'src/app/assets/icon.ico',
+            version: version,
+            setupIcon: 'src/renderer/app/assets/icon.ico',
             description: 'A simple Pomodoro timer for your desktop',
         }, ['win32']),
         new MakerRpm({
@@ -38,9 +39,9 @@ const config: ForgeConfig = {
                 genericName: 'Pomodoro Timer',
                 description: 'A simple Pomodoro timer for your desktop',
                 categories: ['Utility', 'Office'],
-                icon: 'src/app/assets/icon.png',
+                version: version,
+                icon: 'src/renderer/app/assets/icon.png',
                 homepage: 'https://github.com/Zelchi/Techdoro',
-                license: 'MIT',
             },
         }, ['linux']),
         new MakerDeb({
@@ -50,15 +51,14 @@ const config: ForgeConfig = {
                 genericName: 'Pomodoro Timer',
                 description: 'A simple Pomodoro timer for your desktop',
                 categories: ['Utility', 'Office'],
-                icon: 'src/app/assets/icon.png',
+                version: version,
+                icon: 'src/renderer/app/assets/icon.png',
                 homepage: 'https://github.com/Zelchi/Techdoro',
                 section: 'utils',
                 priority: 'optional',
             },
         }, ['linux']),
-        new MakerZIP({}, ['win32']),
-        new MakerZIP({}, ['linux']),
-        new MakerZIP({}, ['darwin'])
+        new MakerZIP({}, ['win32', 'linux', 'darwin']),
     ],
     plugins: [
         new VitePlugin({

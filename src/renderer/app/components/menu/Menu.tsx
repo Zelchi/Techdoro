@@ -73,12 +73,11 @@ export default ({ click }: ClockProps) => {
     const dispatch = useDispatch();
     const windowStatus = useSelector((state: RootState) => state.window.value);
     const timeState = useSelector((state: RootState) => state.time);
-    const cyclesState = useSelector((state: RootState) => state.cycles as { cyclesBeforeFinal: number });
+    const cyclesBeforeFinal = useSelector((state: RootState) => state.cycles.value);
 
     const timeLong = timeState.LongMax;
     const timeShort = timeState.ShortMax;
     const timeFinal = timeState.FinalMax;
-    const cyclesBeforeFinal = cyclesState.cyclesBeforeFinal;
 
     const values = {
         long: timeLong,

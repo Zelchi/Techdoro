@@ -1,8 +1,8 @@
 import { useRef, useEffect } from 'react'
-import click from "../assets/click.mp3"
-import alarm from "../assets/alarme.mp3"
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import click from "../assets/click.mp3"
+import alarm from "../assets/alarme.mp3"
 
 const efeitosSonoros = {
     click,

@@ -1,10 +1,10 @@
-import styled from 'styled-components'
-import Clock from './Clock/Clock'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, ReactNode } from 'react'
 import { GoTools, GoIssueReopened } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
 import { setWindow } from '../../store/reducers/windowSlice';
+import { RootState } from '../../store/store';
+import styled from 'styled-components'
+import Clock from './Clock/Clock'
 
 const Container = styled.div`
     display: flex;
@@ -72,13 +72,13 @@ const Box = styled.div<{ $active?: boolean }>`
     transition: background .25s, box-shadow .25s;
 `
 
-type ClockT = { timeNow: number; timeMax: number };
-
 type FrameProps = {
     click: () => void;
     alarm: () => void;
     children: ReactNode;
 }
+
+type ClockT = { timeNow: number; timeMax: number };
 
 export default ({ click, alarm, children }: FrameProps) => {
     const [clock, setClock] = useState<number>(1);
@@ -86,27 +86,35 @@ export default ({ click, alarm, children }: FrameProps) => {
     const [focusCyclesDone, setFocusCyclesDone] = useState<number>(0);
 
     const { LongMax, ShortMax, FinalMax } = useSelector((state: RootState) => state.time);
-    const { cyclesBeforeFinal } = useSelector((state: RootState) => state.cycles);
+    const cyclesBeforeFinal = useSelector((state: RootState) => state.cycles.value);
     const maxima = [LongMax, ShortMax, FinalMax];
 
     const [clocks, setClocks] = useState<ClockT[]>(
-        () => maxima.map(m => ({ timeNow: 3, timeMax: m * 60 }))
+        () => maxima.map(m => ({ timeNow: m * 60, timeMax: m * 60 }))
     );
 
     const [startedAt, setStartedAt] = useState<number | null>(null);
     const [now, setNow] = useState<number>(() => Date.now());
-    const rafRef = useRef<number | null>(null);
+    const intervalRef = useRef<number | null>(null);
+    const prevNowRef = useRef<number | null>(null);
 
     useEffect(() => {
         if (!isRunning) return;
-        const tick = () => {
-            setNow(Date.now());
-            rafRef.current = requestAnimationFrame(tick);
-        };
-        rafRef.current = requestAnimationFrame(tick);
+        prevNowRef.current = Date.now();
+        intervalRef.current = window.setInterval(() => {
+            const newNow = Date.now();
+            if (prevNowRef.current !== newNow) {
+                prevNowRef.current = newNow;
+                setNow(newNow);
+            }
+        }, 200);
+
         return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            rafRef.current = null;
+            if (intervalRef.current != null) {
+                window.clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            prevNowRef.current = null;
         };
     }, [isRunning]);
 

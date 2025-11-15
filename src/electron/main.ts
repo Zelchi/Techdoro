@@ -27,7 +27,9 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: true,
-            sandbox: false
+            sandbox: false,
+            devTools: true,
+            backgroundThrottling: false,
         },
         width: 500,
         height: 600,
@@ -37,14 +39,14 @@ const createWindow = () => {
         frame: false,
         icon: getIconPath(),
         titleBarStyle: 'hidden',
-        vibrancy: 'fullscreen-ui',
+        vibrancy: 'window',
         backgroundMaterial: 'acrylic',
         backgroundColor: '#00000000',
     });
 
     // const isDev = !!MAIN_WINDOW_VITE_DEV_SERVER_URL && !app.isPackaged;
     // if (isDev) {
-    //     mainWindow.webContents.openDevTools({ mode: 'detach' });
+    //     win.webContents.openDevTools({ mode: 'detach' });
     // }
 
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -59,10 +61,17 @@ const createWindow = () => {
         win.hide();
     })
 
+    win.on('blur', () => {
+        if (!win.webContents.isDevToolsOpened() && win.isVisible()) {
+            win.hide();
+        }
+    });
+
     const notify = new Notification({
         silent: true,
         icon: getIconPath(),
         timeoutType: 'default',
+        urgency: 'normal',
     })
 
     ipcMain.on('notifiTimeLong', () => {
@@ -79,9 +88,10 @@ const createWindow = () => {
 
     notify.on('click', () => {
         if (win.isMinimized()) {
+            win.restore();
             win.show();
         } else {
-            win.focus();
+            win.show();
         }
     })
 
@@ -109,11 +119,8 @@ const createWindow = () => {
     tray.setToolTip('Techdoro');
     tray.setContextMenu(contextMenu);
     tray.on('click', () => {
-        if (win.isVisible()) {
-            win.focus();
-        } else {
-            win.show();
-        }
+        if (win.isVisible()) return win.focus();
+        win.show();
     });
 };
 
@@ -124,9 +131,9 @@ if (!app.requestSingleInstanceLock()) {
         const win = BrowserWindow.getAllWindows()[0];
         if (win) {
             if (win.isMinimized()) {
-                win.show(); win.restore();
+                win.restore(); win.show();
             } else {
-                win.show(); win.focus();
+                win.show();
             }
         }
     });
