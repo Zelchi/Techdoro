@@ -59,7 +59,7 @@ const config: ForgeConfig = {
                 priority: 'optional',
             },
         }, ['linux']),
-        new MakerZIP({}, ['win32', 'linux', 'darwin']),
+        new MakerZIP({}, ['win32', 'linux']),
     ],
     plugins: [
         new VitePlugin({
