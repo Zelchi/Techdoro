@@ -133,8 +133,8 @@ if (!app.requestSingleInstanceLock()) {
     });
 
     app.whenReady().then(() => {
-        app.setName(app.name)
-        app.setAppUserModelId(app.name)
+        app.setName("Techdoro");
+        app.setAppUserModelId("Techdoro")
         createWindow();
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) createWindow();
