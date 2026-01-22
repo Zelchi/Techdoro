@@ -31,8 +31,6 @@ sudo apt-get install rpm
 </br>
 
 *Você só pode compilar o pacote deb em máquinas Linux com os `fakeroot` pacotes `dpkg` instalados.*
-
-No Debian ou Ubuntu, você pode fazer algo assim:
 ```bash
 sudo apt-get install fakeroot dpkg
 ```
