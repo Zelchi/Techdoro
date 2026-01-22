@@ -27,7 +27,7 @@ No Debian ou Ubuntu, você precisará fazer o seguinte:
 sudo apt-get install rpm
 ```
 
-> ⚙️ O `MakerRpm` aplica um patch em `electron-installer-redhat` (veja `patches/electron-installer-redhat+3.4.0.patch`) para copiar o conteúdo a partir de `_topdir/BUILD/usr`, garantindo que o `%install` do spec encontre os arquivos empacotados. Após clonar o repositório, sempre rode `npm install` (ou `npm ci`) para garantir que o `patch-package` execute o patch antes de `npm run make:linux`.
+>  O `MakerRpm` aplica um patch em `electron-installer-redhat` (veja `patches/electron-installer-redhat+3.4.0.patch`) para copiar o conteúdo a partir de `_topdir/BUILD/usr`, garantindo que o `%install` do spec encontre os arquivos empacotados. Após clonar o repositório, sempre rode `npm install` (ou `npm ci`) para garantir que o `patch-package` execute o patch antes de `npm run make:linux`.
 </br>
 
 *Você só pode compilar o pacote deb em máquinas Linux com os `fakeroot` pacotes `dpkg` instalados.*
